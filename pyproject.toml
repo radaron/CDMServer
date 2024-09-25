@@ -1,0 +1,23 @@
+[project]
+name = "CDMServer"
+version = "0.1.0"
+description = "A short description of your project"
+authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy[asyncio]",
+    "aiomysql",
+    "cryptography",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pylint"
+]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
