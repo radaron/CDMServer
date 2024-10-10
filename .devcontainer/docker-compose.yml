@@ -16,7 +16,7 @@ services:
 
   devcontainer:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile
     container_name: dev_container
     ports:

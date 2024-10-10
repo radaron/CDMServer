@@ -6,10 +6,16 @@ authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.12"
 dependencies = [
   "fastapi",
+  "fastapi-login",
   "uvicorn",
   "sqlalchemy[asyncio]",
   "aiomysql",
-  "cryptography"
+  "mysqlclient",
+  "cryptography",
+  "python-multipart",
+  "pydantic",
+  "jinja2",
+  "alembic",
 ]
 
 [project.optional-dependencies]
@@ -21,3 +27,6 @@ dev = [
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["api"]
