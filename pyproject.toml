@@ -5,11 +5,11 @@ description = "A short description of your project"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi",
-    "uvicorn",
-    "sqlalchemy[asyncio]",
-    "aiomysql",
-    "cryptography",
+  "fastapi",
+  "uvicorn",
+  "sqlalchemy[asyncio]",
+  "aiomysql",
+  "cryptography"
 ]
 
 [project.optional-dependencies]

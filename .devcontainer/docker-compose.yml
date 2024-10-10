@@ -16,7 +16,7 @@ services:
 
   devcontainer:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     container_name: dev_container
     ports:
@@ -24,6 +24,8 @@ services:
     depends_on:
       - mysql
     command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ..:/app
 
 volumes:
   mysql_data:
