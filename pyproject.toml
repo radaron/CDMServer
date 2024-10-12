@@ -13,7 +13,7 @@ dependencies = [
   "mysqlclient",
   "cryptography",
   "python-multipart",
-  "pydantic",
+  "pydantic[email]",
   "jinja2",
   "alembic",
 ]
@@ -29,4 +29,4 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["api"]
+packages = ["service"]
