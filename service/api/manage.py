@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from auth import manager
+from service.util.auth import manager
 
 router = APIRouter()
 
