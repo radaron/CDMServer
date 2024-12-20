@@ -9,15 +9,14 @@ export const Login = () => {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
-  const [show, setShow] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     try {
-      event.preventDefault();
-      const resp = await fetch("/api/auth/token", {
+      const resp = await fetch("/api/auth/token/", {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -29,13 +28,14 @@ export const Login = () => {
       })
       const data = await resp.json()
       if (resp.status === 200) {
-        alert("Success")
+        window.location.href = "/manage"
       }
       else {
-        setShow(true);
+        setAlertMessage("Incorrect email or password.")
       }
       console.log(data)
   } catch (error) {
+    setAlertMessage("Unexpected error occurred.")
     console.log(error)
   }
     setLoading(false);
@@ -43,45 +43,37 @@ export const Login = () => {
 
   return (
     <div
-      className="sign-in__wrapper"
+      className="log-in__wrapper"
       style={{ backgroundImage: `url(${BackgroundImage})` }}
     >
-      {/* Overlay */}
       <div className="sign-in__backdrop"></div>
-      {/* Form */}
       <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>
-        {/* Header */}
         <img
           className="img-thumbnail mx-auto d-block mb-2"
           src={Logo}
           alt="logo"
         />
         <div className="h4 mb-2 text-center">Sign In</div>
-        {/* ALert */}
-        {show ? (
+        {alertMessage && (
           <Alert
             className="mb-2"
             variant="danger"
-            onClose={() => setShow(false)}
+            onClose={() => setAlertMessage("")}
             dismissible
           >
-            Incorrect username or password.
+            {alertMessage}
           </Alert>
-        ) : (
-          <div />
         )}
         <Form.Group className="mb-2" controlId="email">
-          <Form.Label>Email</Form.Label>
           <Form.Control
             type="text"
             value={inputEmail}
-            placeholder="Username"
+            placeholder="Email"
             onChange={(e) => setInputEmail(e.target.value)}
             required
           />
         </Form.Group>
         <Form.Group className="mb-2" controlId="password">
-          <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             value={inputPassword}

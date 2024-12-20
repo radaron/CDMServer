@@ -4,59 +4,6 @@
     <title>Test form</title>
 </head>
 <body>
-    <h2>Login</h2>
-    <form action="/api/auth/token" method="post">
-        <div>
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
-    <h2>Register</h2>
-    <form action="/api/auth/users" method="post">
-        <div>
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <input type="checkbox" id="isAdmin" name="isAdmin" />
-            <label for="isAdmin">Is Admin</label>
-          </div>
-        <div>
-            <button type="submit">Register</button>
-        </div>
-    </form>
+    <h1>Test form</h1>
 </body>
-<script>
-    const forms = document.querySelectorAll('form');
-    console.log(forms);
-    forms.forEach(form => {
-        form.onsubmit = async (event) => {
-            try {
-                event.preventDefault();
-                const resp = await fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(Object.fromEntries(new FormData(form)))
-                });
-                const data = await resp.json();
-                console.log(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    });
-</script>
 </html>

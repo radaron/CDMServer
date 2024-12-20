@@ -1,5 +1,4 @@
-/* ---------- SIGN IN ---------- */
-.sign-in__wrapper {
+.log-in__wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,14 +17,14 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.sign-in__wrapper form {
+.log-in__wrapper form {
   width: 24rem;
   max-width: 90%;
   z-index: 1;
   animation: showSignInForm 1s;
 }
 
-.sign-in__wrapper form img {
+.log-in__wrapper form img {
   width: 4rem;
 }
 
