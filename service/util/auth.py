@@ -4,7 +4,8 @@ from service.models.database import AsyncSessionLocal, User
 
 
 SECRET = "your-secret-key"
-manager = LoginManager(SECRET, token_url="/auth/token", use_cookie=True)
+COOKIE_NAME = "access-token"
+manager = LoginManager(SECRET, token_url="/api/auth/token/", use_cookie=True, cookie_name=COOKIE_NAME)
 
 
 @manager.user_loader()

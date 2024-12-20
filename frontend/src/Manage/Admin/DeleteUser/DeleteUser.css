@@ -1,0 +1,8 @@
+.delete-user__wrapper {
+  flex-direction: column;
+  max-width: 300px;
+  justify-content: left;
+  align-items: left;
+  width: 30vw;
+  margin: 2rem;
+}

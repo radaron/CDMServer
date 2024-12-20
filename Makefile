@@ -17,3 +17,6 @@ lock: virtualenv
 
 reqs:
 	$(ACTIVATE) && pip install -r requirements-dev.txt
+
+format:
+	$(ACTIVATE) && black service/

@@ -3,7 +3,7 @@ name = "CDMServer"
 version = "0.1.0"
 description = "A short description of your project"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
   "fastapi",
   "fastapi-login",
@@ -14,14 +14,19 @@ dependencies = [
   "cryptography",
   "python-multipart",
   "pydantic[email]",
+  "passlib[bcrypt]",
   "jinja2",
   "alembic",
+
+  # It is need because: https://github.com/pyca/bcrypt/issues/684
+  "bcrypt==3.2.2",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest",
-  "pylint"
+  "pylint",
+  "black",
 ]
 
 [build-system]
@@ -30,3 +35,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["service"]
+
+[tool.black]
+line-length = 120
