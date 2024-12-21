@@ -6,7 +6,9 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette import status
 from service.api.auth import router as login_router
-from service.api.manage import router as manage_router
+from service.api.users import router as users_router
+from service.api.devices import router as devices_router
+from service.api.client import router as client_router
 from service.util.logger import logger
 
 
@@ -16,7 +18,9 @@ origins = [
 
 app = FastAPI()
 app.include_router(login_router, prefix="/api/auth")
-app.include_router(manage_router, prefix="/api/manage")
+app.include_router(users_router, prefix="/api/users")
+app.include_router(devices_router, prefix="/api/devices")
+app.include_router(client_router, prefix="/api/client")
 app.add_middleware(
     CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )

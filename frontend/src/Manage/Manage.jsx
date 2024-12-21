@@ -17,7 +17,7 @@ export const Manage = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const resp = await fetch("/api/manage/me/", {
+        const resp = await fetch("/api/users/me/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

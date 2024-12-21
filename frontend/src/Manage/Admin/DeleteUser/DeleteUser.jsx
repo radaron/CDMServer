@@ -13,7 +13,7 @@ export const DeleteUser = () => {
     useEffect(() => {
       const getUsers = async () => {
         try {
-          const resp = await fetch("/api/auth/users/", {
+          const resp = await fetch("/api/users/", {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export const DeleteUser = () => {
     event.preventDefault()
     const id = users.filter(user => user.email===selectedUser)[0].id
     try {
-      const resp = await fetch(`/api/auth/users/${id}/`, {
+      const resp = await fetch(`/api/users/${id}/`, {
           method: 'DELETE',
           headers: {
               'Content-Type': 'application/json',
