@@ -1,0 +1,5 @@
+.add-device__wrapper {
+  flex-direction: column;
+  width: 30vw;
+  margin: 2rem;
+}

@@ -2,7 +2,6 @@ import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 import { DEVICE, ADMIN, DOWNLOAD, STATUS } from "./../constant"
 
 export const Header = ({ userInfo, setSelectedTab, logOut }) => {
-  console.log(userInfo)
   return (
     <Navbar bg="dark" data-bs-theme="dark" className="mb-4" expand="lg">
       <Container>

@@ -9,7 +9,7 @@ class BaseData(BaseModel):
         return super().model_dump(by_alias=True, **kwargs)
 
 
-class RegisterData(BaseData):
+class NewUserData(BaseData):
     email: EmailStr
     password: str
     is_admin: bool
@@ -24,4 +24,8 @@ class LoginData(BaseData):
 class MeData(BaseData):
     email: EmailStr
     is_admin: bool
+    name: str
+
+
+class NewDeviceData(BaseData):
     name: str

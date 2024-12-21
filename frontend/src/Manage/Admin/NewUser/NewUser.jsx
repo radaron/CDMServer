@@ -13,7 +13,7 @@ export const NewUser = () => {
     const handleSubmit = async (event) => {
       event.preventDefault()
       try {
-        const resp = await fetch("/api/auth/users/", {
+        const resp = await fetch("/api/users/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

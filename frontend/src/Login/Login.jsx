@@ -16,7 +16,7 @@ export const Login = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const resp = await fetch("/api/auth/token/", {
+      const resp = await fetch("/api/auth/login/", {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
