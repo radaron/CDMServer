@@ -32,8 +32,8 @@ export const Device = () => {
 
   useEffect(() => {
     getDevices()
-    // const intervalId = setInterval(getDevices, 5000)
-    // return () => clearInterval(intervalId)
+    const intervalId = setInterval(getDevices, 5000)
+    return () => clearInterval(intervalId)
   }, [])
 
   return (
