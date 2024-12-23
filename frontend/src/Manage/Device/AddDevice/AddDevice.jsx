@@ -20,6 +20,7 @@ export const AddDevice = ({refetch}) => {
           })
       })
       if (resp.status === 200) {
+        setDeviceName("")
         refetch()
       }
       else {

@@ -26,7 +26,9 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
 
 
 @router.get("/download/{file_id}")
-async def download_file(session: AsyncSession = Depends(get_session), x_api_key: str = Header(None), file_id: str = None):
+async def download_file(
+    session: AsyncSession = Depends(get_session), x_api_key: str = Header(None), file_id: str = None
+):
     devices = await session.execute(select(Device).where(Device.token == x_api_key))
     device = devices.scalars().first()
     if device is None:
@@ -45,9 +47,15 @@ async def download_file(session: AsyncSession = Depends(get_session), x_api_key:
     return FileResponse(path=file_path, media_type="application/octet-stream", filename=file_name)
 
 
-@router.post("/")
-async def add_device(data: NewDeviceData, user=Depends(manager), session: AsyncSession = Depends(get_session)):
-    new_device = Device(user=user, name=data.name, token=token_hex(16))
-    session.add(new_device)
-    await session.commit()
-    return JSONResponse({"message": "Device added successfully"})
+@router.post("/status/")
+async def add_device(
+    data: NewDeviceData,
+    session: AsyncSession = Depends(get_session),
+    x_api_key: str = Header(None),
+    file_id: str = None,
+):
+    devices = await session.execute(select(Device).where(Device.token == x_api_key))
+    device = devices.scalars().first()
+    if device is None:
+        return JSONResponse({"message": "Unathorized"}, status_code=401)
+    return JSONResponse({"message": "Not implemented"}, status_code=501)

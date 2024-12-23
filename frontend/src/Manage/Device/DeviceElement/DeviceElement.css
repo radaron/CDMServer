@@ -11,7 +11,7 @@
 }
 
 .status-indicator.green {
-  background-color: green;
+  background-color: rgb(27, 227, 20);
 }
 
 .status-indicator.red {

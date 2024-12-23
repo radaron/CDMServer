@@ -12,8 +12,8 @@ clean:
 virtualenv: .venv
 
 lock: virtualenv
-	$(ACTIVATE) && pip-compile --strip-extras --generate-hashes pyproject.toml --output-file requirements.txt
-	$(ACTIVATE) && pip-compile --strip-extras --generate-hashes --extra dev pyproject.toml --output-file requirements-dev.txt
+	$(ACTIVATE) && pip-compile --upgrade --strip-extras --generate-hashes pyproject.toml --output-file requirements.txt
+	$(ACTIVATE) && pip-compile --upgrade --strip-extras --generate-hashes --extra dev pyproject.toml --output-file requirements-dev.txt
 
 reqs:
 	$(ACTIVATE) && pip install -r requirements-dev.txt

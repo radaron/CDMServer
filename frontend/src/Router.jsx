@@ -6,11 +6,11 @@ import { Manage } from './Manage';
 
 export const Router = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/manage" element={<Manage/>} />
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login/>} />
+          <Route path="/manage" element={<Manage/>} />
+        </Routes>
+      </BrowserRouter>
   )
 }

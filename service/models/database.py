@@ -13,15 +13,10 @@ from sqlalchemy import (  # pylint: disable=unused-import # noqa
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Mapped, mapped_column
+from service.util.configuration import DB_HOST, DB_NAME, DB_PASSWORD, DB_USER
 
 
-# Define the connection string
-USERNAME = "myuser"
-PASSWORD = "mypassword"
-HOSTNAME = "localhost"
-DATABASE_NAME = "mydatabase"
-
-DATABASE_URL = f"mysql+aiomysql://{USERNAME}:{PASSWORD}@{HOSTNAME}/{DATABASE_NAME}"
+DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = async_sessionmaker(engine)

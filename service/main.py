@@ -9,6 +9,7 @@ from service.api.auth import router as login_router
 from service.api.users import router as users_router
 from service.api.devices import router as devices_router
 from service.api.client import router as client_router
+from service.api.download import router as download_router
 from service.util.logger import logger
 
 
@@ -16,11 +17,12 @@ origins = [
     "http://localhost:3000",
 ]
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 app.include_router(login_router, prefix="/api/auth")
 app.include_router(users_router, prefix="/api/users")
 app.include_router(devices_router, prefix="/api/devices")
 app.include_router(client_router, prefix="/api/client")
+app.include_router(download_router, prefix="/api/download")
 app.add_middleware(
     CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
