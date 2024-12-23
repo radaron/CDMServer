@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, createContext } from "react"
+import { Toast } from "react-bootstrap"
 import { Admin } from "./Admin"
 import { Header } from "./Header"
 import { Device } from "./Device"
@@ -9,10 +10,13 @@ import "./Manage.css"
 
 import BackgroundImage from "../background.png"
 
+export const manageContext = createContext(null)
+
 export const Manage = () => {
 
   const [userInfo, setUserInfo] = useState({})
   const [selectedTab, setSelectedTab] = useState(DEVICE)
+  const [toastData, setToastData] = useState({})
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -65,14 +69,26 @@ export const Manage = () => {
   return (
     <div
       style={{ backgroundImage: `url(${BackgroundImage})` }}
+      className="manage__wrapper"
     >
-      <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut}/>
-      <div className="manage__wrapper">
+        <Toast
+          show={Object.keys(toastData).length > 0}
+          onClose={() => setToastData({})}
+          bg={toastData?.type?.toLowerCase()}
+          className="toaster"
+        >
+            <Toast.Header>
+              <strong className="me-auto"></strong>
+            </Toast.Header>
+            <Toast.Body>{toastData.message}</Toast.Body>
+        </Toast>
+      <manageContext.Provider value={{setToastData}}>
+        <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut}/>
         {selectedTab === ADMIN && <Admin />}
         {selectedTab === DEVICE && <Device />}
         {selectedTab === DOWNLOAD && <Download />}
         {selectedTab === STATUS && <Status />}
-      </div>
+      </manageContext.Provider>
     </div>
   )
 }

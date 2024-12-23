@@ -1,0 +1,42 @@
+.search {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.category {
+  width: 10rem;
+}
+
+.results {
+  overflow: scroll;
+  margin: 2rem;
+}
+
+.result {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.result:hover {
+  background-color: #f9f9f9;
+}
+
+.result > * {
+  flex: 1; /* Ensure all children have the same width */
+  margin-right: 1rem; /* Optional: add space between children */
+}
+
+.result > *:last-child {
+  margin-right: 0; /* Remove margin from the last child */
+}

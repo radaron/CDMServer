@@ -8,3 +8,11 @@
   background-size: cover;
   position: relative;
 }
+
+.toaster {
+  position: absolute;
+  top: 1vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}

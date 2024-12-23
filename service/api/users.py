@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post("/")
-async def register(data: NewUserData, session: AsyncSession = Depends(get_session), user=Depends(manager)):
+async def register(data: NewUserData, session: AsyncSession = Depends(get_session), user: User = Depends(manager)):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     try:
@@ -26,7 +26,7 @@ async def register(data: NewUserData, session: AsyncSession = Depends(get_sessio
 
 
 @router.get("/")
-async def get_users(session: AsyncSession = Depends(get_session), user=Depends(manager)):
+async def get_users(session: AsyncSession = Depends(get_session), user: User = Depends(manager)):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     user_objects = await session.execute(select(User))
@@ -35,7 +35,7 @@ async def get_users(session: AsyncSession = Depends(get_session), user=Depends(m
 
 
 @router.delete("/{user_id}/")
-async def delete_user(session: AsyncSession = Depends(get_session), user=Depends(manager), user_id: int = None):
+async def delete_user(session: AsyncSession = Depends(get_session), user: User = Depends(manager), user_id: int = None):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
 
@@ -52,7 +52,7 @@ async def delete_user(session: AsyncSession = Depends(get_session), user=Depends
 
 
 @router.get("/me/")
-def protected_route(user=Depends(manager)):
+def protected_route(user: User = Depends(manager)):
     return JSONResponse(MeData(email=user.email, is_admin=user.is_admin, name=user.name).model_dump(), status_code=200)
 
 

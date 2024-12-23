@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager
 from service.models.api import NewDeviceData
-from service.models.database import AsyncSession, get_session, select, Device
+from service.models.database import AsyncSession, get_session, select, Device, User
 
 
 ACTIVE_THRESHOLD = timedelta(minutes=1)
@@ -14,14 +14,14 @@ router = APIRouter()
 
 
 @router.get("/")
-async def get_devices(user=Depends(manager), session: AsyncSession = Depends(get_session)):
+async def get_devices(user: User = Depends(manager), session: AsyncSession = Depends(get_session)):
     devices = await session.execute(select(Device).where(Device.user_id == user.id))
     devices = devices.scalars().all()
     return JSONResponse({"data": {"devices": [dump_device(d) for d in devices]}})
 
 
 @router.post("/")
-async def add_device(data: NewDeviceData, user=Depends(manager), session: AsyncSession = Depends(get_session)):
+async def add_device(data: NewDeviceData, user: User = Depends(manager), session: AsyncSession = Depends(get_session)):
     new_device = Device(user=user, name=data.name, token=token_hex(16))
     session.add(new_device)
     await session.commit()
@@ -29,7 +29,9 @@ async def add_device(data: NewDeviceData, user=Depends(manager), session: AsyncS
 
 
 @router.delete("/{device_id}/")
-async def delete_device(user=Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None):
+async def delete_device(
+    user: User = Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None
+):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
 

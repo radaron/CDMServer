@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 
 SECRET = "your-secret-key"
 COOKIE_NAME = "access-token"
-manager = LoginManager(SECRET, token_url="/api/auth/token/", use_cookie=True, cookie_name=COOKIE_NAME)
+manager = LoginManager(SECRET, token_url="/api/auth/login/", use_cookie=True, cookie_name=COOKIE_NAME)
 
 
 @manager.user_loader()
