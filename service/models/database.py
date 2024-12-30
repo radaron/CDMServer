@@ -3,8 +3,10 @@ from typing import AsyncGenerator
 from sqlalchemy import (  # pylint: disable=unused-import # noqa
     Column,
     Integer,
+    BigInteger,
     String,
     select,
+    desc,
     Boolean,
     ForeignKey,
     DateTime,
@@ -47,3 +49,19 @@ class Device(Base):
     updated = Column(DateTime, default=datetime.now(tz=timezone.utc))
     user_id: Mapped[int] = Column(Integer, ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="devices")
+    torrents: Mapped[list["Torrent"]] = relationship(back_populates="device")
+
+
+class Torrent(Base):
+    __tablename__ = "torrents"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    torrent_id = Column(Integer)
+    name = Column(String(255))
+    status = Column(String(255))
+    progress = Column(Integer)
+    download_dir = Column(String(255))
+    added_date = Column(DateTime)
+    total_size = Column(BigInteger)
+    eta = Column(Integer, nullable=True)
+    device_id: Mapped[int] = Column(Integer, ForeignKey("devices.id"))
+    device: Mapped["Device"] = relationship(back_populates="torrents")
