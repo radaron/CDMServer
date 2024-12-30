@@ -1,42 +1,18 @@
-.search {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.search-box {
   margin: 0 2rem;
 }
 
-.form-row {
-  display: flex;
-  gap: 1rem;
-}
-
-.category {
-  width: 10rem;
-}
-
 .results {
-  overflow: scroll;
+  overflow: auto;
+  overflow-x: hidden;
   margin: 2rem;
 }
 
-.result {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+.result-element:hover {
+  background-color: #adadad;
 }
 
-.result:hover {
-  background-color: #f9f9f9;
-}
-
-.result > * {
-  flex: 1; /* Ensure all children have the same width */
-  margin-right: 1rem; /* Optional: add space between children */
-}
-
-.result > *:last-child {
-  margin-right: 0; /* Remove margin from the last child */
+a[target="_blank"]:after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin: 0 3px 0 5px;
 }

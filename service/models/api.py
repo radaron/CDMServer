@@ -29,3 +29,8 @@ class MeData(BaseData):
 
 class NewDeviceData(BaseData):
     name: str
+
+
+class AddDownloadData(BaseData):
+    torrent_id: int
+    device_id: int

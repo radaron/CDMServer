@@ -344,9 +344,9 @@ mysqlclient==2.2.6 \
     --hash=sha256:e94a92858203d97fd584bdb6d7ee8c56f2590db8d77fd44215c0dcf5e739bc37 \
     --hash=sha256:f3efb849d6f7ef4b9788a0eda2e896b975e0ebf1d6bf3dcabea63fd698e5b0b5
     # via CDMServer (pyproject.toml)
-ncoreparser==3.1.1 \
-    --hash=sha256:04384f91c95bb6a193cd0a9330ef2a835dacf7442bb191ea1f56fb977e149752 \
-    --hash=sha256:82fcf2bcda448b9f867a55cc1ce6065f807103d386351e02c317640e9cee1aa9
+ncoreparser==3.2.0 \
+    --hash=sha256:2d8e0fbf09701ad453f287427b272fc277062f4411c073fba74cd95b59d79d64 \
+    --hash=sha256:d0192c5644cedf74861a6abae81cde74c1070ba2e2b3b5738f100c204a2a4b36
     # via CDMServer (pyproject.toml)
 passlib==1.7.4 \
     --hash=sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1 \

@@ -1,19 +1,5 @@
 .device__wrapper {
   flex-direction: column;
-  width: 30vw;
-  margin: 2rem;
-}
-
-.status-indicator {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.status-indicator.green {
-  background-color: rgb(27, 227, 20);
-}
-
-.status-indicator.red {
-  background-color: red;
+  width: 40vw;
+  margin: 1rem;
 }

@@ -1,39 +1,12 @@
-import { Form, Button, Alert } from "react-bootstrap"
-import { useEffect, useState } from "react"
-import "./DeleteUser.css"
+import { Form, Button } from 'react-bootstrap'
+import { useState, useContext } from 'react'
+import { manageContext } from '../../Manage'
+import './DeleteUser.css'
 
-export const DeleteUser = () => {
+export const DeleteUser = ({fetchUsers, users}) => {
 
-    const [users, setUsers] = useState([])
-    const [selectedUser, setSelectedUser] = useState("")
-    const [alertMessage, setAlertMessage] = useState("")
-
-    console.log(selectedUser)
-
-    useEffect(() => {
-      const getUsers = async () => {
-        try {
-          const resp = await fetch("/api/users/", {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          })
-          const data = await resp.json()
-          if (resp.status === 200) {
-            setUsers(data.data.users)
-            setSelectedUser(data.data.users[0].email)
-          }
-          else {
-            setAlertMessage("Could not fetch users.")
-          }
-        } catch (error) {
-          setAlertMessage("Unexpected error occurred.")
-          console.log(error)
-        }
-      }
-      getUsers()
-  }, [])
+    const [selectedUser, setSelectedUser] = useState(users[0]?.email)
+    const { setToastData } = useContext(manageContext)
 
   const handleDelete = async (event) => {
     event.preventDefault()
@@ -46,36 +19,27 @@ export const DeleteUser = () => {
           }
       })
       if (resp.status === 200) {
-        alert("Success")
+        setToastData({message: 'User deleted.', type: 'success'})
       }
       else {
-        setAlertMessage("Could not fetch users.")
+        setToastData({message: 'Could not delete user.', type: 'danger'})
       }
     } catch (error) {
-      setAlertMessage("Unexpected error occurred.")
+      setToastData({message: 'Unexpected error occurred.', type: 'danger'})
       console.log(error)
     }
+    fetchUsers()
   }
 
   return (
-    <Form className="shadow p-4 bg-white rounded new-user__wrapper" onSubmit={handleDelete}>
-      <div className="h4 mb-2 text-center">Delete user</div>
-      {alertMessage && (
-        <Alert
-          className="mb-2"
-          variant="danger"
-          onClose={() => setAlertMessage("")}
-          dismissible
-        >
-          {alertMessage}
-        </Alert>
-      )}
-      <Form.Group className="mb-2">
-        <Form.Select aria-label="Default select example" onChange={(e) => setSelectedUser(e.target.value)}>
+    <Form className='shadow p-4 bg-white rounded new-user__wrapper' onSubmit={handleDelete}>
+      <div className='h4 mb-2 text-center'>Delete user</div>
+      <Form.Group className='mb-2'>
+        <Form.Select aria-label='Default select example' onChange={(e) => setSelectedUser(e.target.value)}>
           {users.map(user => <option key={user.email} value={user.email}>{user.email}</option>)}
         </Form.Select>
       </Form.Group>
-      <Button className="w-100" variant="danger" type="submit">
+      <Button className='w-100' variant='danger' type='submit'>
         Delete user
       </Button>
     </Form>

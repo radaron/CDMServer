@@ -1,19 +1,22 @@
-import { useState, useContext } from "react";
-import { Form, Button } from "react-bootstrap"
+import { useState, useContext, useEffect } from "react";
+import { Form, Button, Spinner, Container, Row, Col, Dropdown } from "react-bootstrap"
 import { manageContext } from "../Manage"
 import { searchWhere, searchCategory } from "../constant"
 import "./Download.css";
-
 
 export const Download = () => {
 
   const [pattern, setPattern] = useState("")
   const [selectedSearchType, setSelectedSearchType] = useState(searchCategory[0])
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
+  const [devices, setDevices] = useState([])
+  const [isLoading, setLoading] = useState(false)
   const [searchResults, setSearchResults] = useState([])
   const { setToastData } = useContext(manageContext)
 
-  const search = async () => {
+  const search = async (event) => {
+    event.preventDefault()
+    setLoading(true)
     try {
       const resp = await fetch(
         `/api/download/search/?pattern=${pattern}&where=${selectedSearchWhere}&category=${selectedSearchType}`,
@@ -27,7 +30,9 @@ export const Download = () => {
       if (resp.status === 200) {
         const data = await resp.json()
         setSearchResults(data.data.torrents)
-        console.log(data)
+      }
+      else if (resp.status === 401) {
+        window.location.href = "/login"
       }
       else {
         setToastData({message: "Failed to perform search", type: "danger"})
@@ -36,46 +41,164 @@ export const Download = () => {
       setToastData({message: "Unexpected error occurred", type: "danger"})
       console.log(error)
     }
+    setLoading(false)
   }
+
+  const getDevices = async () => {
+    try {
+      const resp = await fetch('/api/devices/',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      if (resp.status === 200) {
+        const data = await resp.json()
+        setDevices(data.data.devices)
+      }
+      else if (resp.status === 401) {
+        window.location.href = "/login"
+      }
+      else {
+        setToastData({message: "Failed to get devices", type: "danger"})
+      }
+    } catch (error) {
+      setToastData({message: "Unexpected error occurred", type: "danger"})
+      console.log(error)
+    }
+  }
+
+  const addToDownloadQueue = async (torrentId, deviceId) => {
+    try {
+      const resp = await fetch('/api/download/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            torrentId: torrentId,
+            deviceId: deviceId,
+          }),
+        }
+      )
+      if (resp.status === 200) {
+        await resp.json()
+        setToastData({message: "Added to download queue", type: "success"})
+      }
+      else if (resp.status === 401) {
+        window.location.href = "/login"
+      }
+      else {
+        setToastData({message: "Failed to download", type: "danger"})
+      }
+    } catch (error) {
+      setToastData({message: "Unexpected error occurred", type: "danger"})
+      console.log(error)
+    }
+  }
+
+  useEffect(() => { getDevices() }, [])
 
   return (
     <>
-      <div className="shadow p-4 bg-white rounded search">
-      <div className="form-row mb-2">
-        <Form.Control
-          type="text"
-          value={pattern}
-          placeholder="Search pattern"
-          onChange={(e) => setPattern(e.target.value)}
-          required
-          className="w-75"
-        />
-        <Form.Select onChange={(e) => setSelectedSearchType(e.target.value)} className="w-25">
-          {searchCategory.map((category) => (
-            <option key={category} value={category}>{category}</option>
-          ))}
-        </Form.Select>
-        <Form.Select onChange={(e) => setSelectedSearchWhere(e.target.value)} className="w-25">
-          {searchWhere.map((category) => (
-            <option key={category} value={category}>{category}</option>
-          ))}
-        </Form.Select>
-        <Button variant="info" onClick={() => search()} className="w-25">
-          Search
-        </Button>
-      </div>
-    </div>
-    {searchResults.length > 0 && <div className="shadow p-4 bg-white rounded results">
+      <Form className="shadow p-4 bg-white rounded search-box" onSubmit={search}>
+        <Container>
+          <Row>
+            <Col xs={6}>
+              <Form.Control
+                type="text"
+                value={pattern}
+                placeholder="Search pattern"
+                onChange={(e) => setPattern(e.target.value)}
+                required
+              />
+            </Col>
+            <Col xs={true}>
+              <Form.Select onChange={(e) => setSelectedSearchType(e.target.value)}>
+                {searchCategory.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </Form.Select>
+            </Col>
+            <Col xs={true}>
+              <Form.Select onChange={(e) => setSelectedSearchWhere(e.target.value)}>
+                {searchWhere.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </Form.Select>
+            </Col>
+            <Col xs={true}>
+              <Button
+                variant="info"
+                type="submit"
+                disabled={isLoading}
+                className="w-100"
+              >
+                {isLoading ? (
+                  <Spinner animation="border" role="status" size="sm">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>)
+                  : 'Search'}
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </Form>
+    {
+      searchResults.length > 0
+      && <Container className="shadow p-2 pt-0 bg-white rounded results" fluid="true">
+        <Row className="bg-info p-3">
+          <Col xs={6}>Title</Col>
+          <Col xs={true}>Category</Col>
+          <Col xs={true}>Size</Col>
+          <Col xs={true}>Seeders</Col>
+          <Col xs={true}>Leechers</Col>
+          <Col xs={true}></Col>
+        </Row>
       {searchResults.map((result) => (
-        <div key={result.id} className="result">
-          <div className="result-title">{result.title}</div>
-          <div className="result-category">{result.category}</div>
-          <div className="result-size">{result.size}</div>
-          <div className="result-seeders">{result.seeders}</div>
-          <div className="result-leechers">{result.leechers}</div>
+        <div key={result.id}>
+          <hr className="m-0"/>
+          <Row className="result-element p-2">
+            <Col xs={6}>
+              <a href={result.url} target="_blank" rel="noreferrer">{result.title}</a>
+            </Col>
+            <Col xs={true}>{result.category}</Col>
+            <Col xs={true}>{result.size}</Col>
+            <Col xs={true}>{result.seeders}</Col>
+            <Col xs={true}>{result.leechers}</Col>
+            <Col xs={true}>
+              {Object.keys(devices).length > 1
+                ? <Dropdown>
+                    <Dropdown.Toggle variant="success" size="sm">
+                      Download
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {devices.map((device) => (
+                        <Dropdown.Item
+                          key={device.id}
+                          onClick={() => addToDownloadQueue(result.id, device.id)}
+                        >
+                          {device.name}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                : <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}>
+                    Download
+                  </Button>
+              }
+            </Col>
+          </Row>
         </div>
       ))}
-    </div>}
+      </Container>
+    }
   </>
   )
 }

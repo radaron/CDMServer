@@ -5,10 +5,19 @@ import { Header } from "./Header"
 import { Device } from "./Device"
 import { Download } from "./Download"
 import { Status } from "./Status"
-import { DEVICE, ADMIN, DOWNLOAD, STATUS } from "./constant"
+import { DEVICE, ADMIN, DOWNLOAD, STATUS, SETTINGS, IMDB } from "./constant"
 import "./Manage.css"
 
 import BackgroundImage from "../background.png"
+
+const tabComponents = {
+  [ADMIN]: <Admin />,
+  [DEVICE]: <Device />,
+  [DOWNLOAD]: <Download />,
+  [STATUS]: <Status />,
+  [SETTINGS]: <Status />,
+  [IMDB]: <Status />
+};
 
 export const manageContext = createContext(null)
 
@@ -53,8 +62,8 @@ export const Manage = () => {
               'Content-Type': 'application/json',
           },
       })
-      await resp.json()
       if (resp.status === 200) {
+        await resp.json()
         window.location.href = "/login"
       }
       else {
@@ -84,10 +93,7 @@ export const Manage = () => {
         </Toast>
       <manageContext.Provider value={{setToastData}}>
         <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut}/>
-        {selectedTab === ADMIN && <Admin />}
-        {selectedTab === DEVICE && <Device />}
-        {selectedTab === DOWNLOAD && <Download />}
-        {selectedTab === STATUS && <Status />}
+        {tabComponents[selectedTab]}
       </manageContext.Provider>
     </div>
   )
