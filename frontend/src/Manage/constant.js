@@ -2,6 +2,8 @@ export const ADMIN = 'admin'
 export const DEVICE = 'device'
 export const DOWNLOAD = 'download'
 export const STATUS = 'status'
+export const SETTINGS = 'settings'
+export const IMDB = 'imdb'
 
 export const searchWhere = [
   'name',
