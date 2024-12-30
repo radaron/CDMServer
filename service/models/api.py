@@ -34,3 +34,18 @@ class NewDeviceData(BaseData):
 class AddDownloadData(BaseData):
     torrent_id: int
     device_id: int
+
+
+class StatusDataItem(BaseData):
+    id: int
+    name: str
+    status: str
+    progress: int
+    download_dir: str
+    added_date: int
+    total_size: int
+    eta: int | None
+
+
+class StatusData(BaseData):
+    data: list[StatusDataItem]

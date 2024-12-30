@@ -81,10 +81,12 @@ export const Manage = () => {
       className="manage__wrapper"
     >
         <Toast
+          delay={3000}
           show={Object.keys(toastData).length > 0}
           onClose={() => setToastData({})}
           bg={toastData?.type?.toLowerCase()}
           className="toaster"
+          autohide
         >
             <Toast.Header>
               <strong className="me-auto"></strong>

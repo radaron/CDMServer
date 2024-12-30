@@ -1,7 +1,12 @@
+.select-box {
+  margin: 1rem;
+  max-width: 70%;
+  align-self: center;
+}
+
 .status {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  color: white;
+  overflow: auto;
+  overflow-x: hidden;
+  margin: 2rem;
+  align-self: center;
 }

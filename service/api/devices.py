@@ -32,16 +32,13 @@ async def add_device(data: NewDeviceData, user: User = Depends(manager), session
 async def delete_device(
     user: User = Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None
 ):
-    if not user.is_admin:
-        return JSONResponse({"message": "Forbidden"}, status_code=403)
-
     result = await session.execute(select(Device).where(Device.user_id == user.id, Device.id == device_id))
-    user_object = result.scalars().first()
+    device = result.scalars().first()
 
-    if user_object is None:
-        return JSONResponse({"message": "User not found"}, status_code=404)
+    if device is None:
+        return JSONResponse({"message": "Device not found"}, status_code=404)
 
-    await session.delete(user_object)
+    await session.delete(device)
     await session.commit()
 
     return JSONResponse({"message": f"Device {device_id=} deleted successfully"})

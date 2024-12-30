@@ -1,10 +1,9 @@
+import os
 from datetime import datetime, timezone
-from secrets import token_hex
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi import APIRouter, Depends, Header
-from service.util.auth import manager
-from service.models.api import NewDeviceData
-from service.models.database import AsyncSession, get_session, select, Device
+from service.models.api import StatusData
+from service.models.database import AsyncSession, get_session, select, Device, Torrent
 
 
 router = APIRouter()
@@ -16,8 +15,6 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
     device = devices.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
-    # add new file to the device
-    # device.file_list = {"2345": "/Users/radaron/projects/sandbox/CDMServer/test.torrent"}
     files = device.file_list
     device.updated = datetime.now(tz=timezone.utc)
     session.add(device)
@@ -35,8 +32,10 @@ async def download_file(
         return JSONResponse({"message": "Unathorized"}, status_code=401)
     if file_id not in device.file_list:
         return JSONResponse({"message": "File not found"}, status_code=404)
-
     file_path = device.file_list[file_id]
+    if not os.path.exists(file_path):
+        return JSONResponse({"message": "File not found"}, status_code=404)
+
     file_name = file_path.split("/")[-1]
     files = device.file_list.copy()
     files.pop(file_id)
@@ -48,14 +47,36 @@ async def download_file(
 
 
 @router.post("/status/")
-async def add_device(
-    data: NewDeviceData,
-    session: AsyncSession = Depends(get_session),
-    x_api_key: str = Header(None),
-    file_id: str = None,
-):
+async def add_device(data: StatusData, session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)):
     devices = await session.execute(select(Device).where(Device.token == x_api_key))
     device = devices.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
-    return JSONResponse({"message": "Not implemented"}, status_code=501)
+
+    for item in data.data:
+        result = await session.execute(select(Torrent).where(Torrent.device_id == device.id, Torrent.torrent_id == item.id))
+        torrent = result.scalars().first()
+        if torrent is None:
+            added_date = datetime.fromtimestamp(item.added_date, tz=timezone.utc)
+            new_torrent = Torrent(
+                device_id=device.id,
+                torrent_id=item.id,
+                name=item.name,
+                added_date=added_date,
+                status=item.status,
+                progress=item.progress,
+                download_dir=item.download_dir,
+                total_size=item.total_size,
+                eta=item.eta,
+            )
+            session.add(new_torrent)
+        else:
+            torrent.status = item.status
+            torrent.progress = item.progress
+            torrent.download_dir = item.download_dir
+            torrent.total_size = item.total_size
+            torrent.eta = item.eta
+            session.add(torrent)
+    await session.commit()
+
+    return JSONResponse({"message": "Status updated"}, status_code=200)
