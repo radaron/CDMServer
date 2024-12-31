@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import { DeviceElement } from "./DeviceElement"
 import { AddDevice } from "./AddDevice"
+import { SettingsModal } from "./SettingsModal";
 import "./Device.css"
 
 export const Device = () => {
 
   const [devices, setDevices] = useState([])
+  const [selectedDeviceData, setSelectedDeviceData] = useState({})
 
   const getDevices = async () => {
     try {
@@ -34,12 +36,13 @@ export const Device = () => {
     getDevices()
     const intervalId = setInterval(getDevices, 5000)
     return () => clearInterval(intervalId)
-  }, [])
+  }, [selectedDeviceData])
 
   return (
     <div className="device">
+      <SettingsModal data={selectedDeviceData} setData={setSelectedDeviceData}/>
       {devices.map((device) => (
-        <DeviceElement key={device.id} deviceData={device} refetch={getDevices}/>
+        <DeviceElement key={device.id} deviceData={device} refetch={getDevices} setSelectedDeviceData={setSelectedDeviceData}/>
       ))}
       <AddDevice refetch={getDevices}/>
     </div>

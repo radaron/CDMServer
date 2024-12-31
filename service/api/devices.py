@@ -3,7 +3,7 @@ from datetime import timedelta, datetime, timezone
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager
-from service.models.api import NewDeviceData
+from service.models.api import NewDeviceData, EditDeviceData
 from service.models.database import AsyncSession, get_session, select, Device, User
 
 
@@ -25,6 +25,25 @@ async def add_device(data: NewDeviceData, user: User = Depends(manager), session
     new_device = Device(user=user, name=data.name, token=token_hex(16))
     session.add(new_device)
     await session.commit()
+    return JSONResponse({"message": "Device added successfully"})
+
+
+@router.put("/{device_id}/")
+async def modify_device(
+    data: EditDeviceData,
+    user: User = Depends(manager),
+    session: AsyncSession = Depends(get_session),
+    device_id: int = None,
+):
+    result = await session.execute(select(Device).where(Device.user_id == user.id, Device.id == device_id))
+    device = result.scalars().first()
+
+    if device is None:
+        return JSONResponse({"message": "Device not found"}, status_code=404)
+
+    device.settings = data.settings
+    await session.commit()
+
     return JSONResponse({"message": "Device added successfully"})
 
 
@@ -52,4 +71,5 @@ def dump_device(device: Device) -> dict:
         "active": updated_utc > datetime.now(tz=timezone.utc) - ACTIVE_THRESHOLD,
         "updated": updated_utc.timestamp(),
         "token": device.token,
+        "settings": device.settings,
     }

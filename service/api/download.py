@@ -7,6 +7,7 @@ from service.util.auth import manager
 from service.models.api import AddDownloadData
 from service.models.database import AsyncSession, get_session, select, Device, User
 from service.util.configuration import NCORE_USERNAME, NCORE_PASSWORD
+from service.constant import map_category_path
 
 
 router = APIRouter()
@@ -46,9 +47,10 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
     if torrent is None:
         return JSONResponse({"message": "Torrent not found"}, status_code=404)
     file_path = await client.download(torrent, tempfile.gettempdir(), override=True)
+    download_path = [setting for setting in device.settings if setting["name"] == map_category_path(torrent["type"])][0]["value"]
 
     existing_files = copy(device.file_list)
-    existing_files[data.torrent_id] = file_path
+    existing_files[data.torrent_id] = {"file_path": file_path, "downloading_path": download_path}
     device.file_list = existing_files
 
     session.add(device)
