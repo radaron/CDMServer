@@ -31,6 +31,10 @@ class NewDeviceData(BaseData):
     name: str
 
 
+class EditDeviceData(BaseData):
+    settings: list[dict[str, str]]
+
+
 class AddDownloadData(BaseData):
     torrent_id: int
     device_id: int

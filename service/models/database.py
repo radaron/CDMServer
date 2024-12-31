@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from service.util.configuration import DB_HOST, DB_NAME, DB_PASSWORD, DB_USER
+from service.constant import DEFAULT_DEVICE_SETTINGS
 
 
 DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
@@ -46,6 +47,7 @@ class Device(Base):
     name = Column(String(255))
     token = Column(String(255))
     file_list = Column(JSON, default={})
+    settings = Column(JSON, default=DEFAULT_DEVICE_SETTINGS)
     updated = Column(DateTime, default=datetime.now(tz=timezone.utc))
     user_id: Mapped[int] = Column(Integer, ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="devices")

@@ -1,9 +1,10 @@
 import { Button, Container, Row, Col, Badge } from "react-bootstrap";
+import { GearFill } from 'react-bootstrap-icons';
 import { useState, useContext } from "react"
 import { manageContext } from "../../Manage"
 import "./DeviceElement.css"
 
-export const DeviceElement = ({deviceData, refetch}) => {
+export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
 
   const [isTokenVisible, setIsTokenVisible] = useState(false)
   const { setToastData } = useContext(manageContext)
@@ -37,8 +38,14 @@ export const DeviceElement = ({deviceData, refetch}) => {
   return (
     <Container className="shadow p-3 bg-white rounded device__wrapper">
       <Row>
+        <Col/>
         <Col>
           <div className="h4 mb-2 text-center">{deviceData.name}</div>
+        </Col>
+        <Col>
+          <Button variant="outline-secondary" className="float-end" onClick={() => setSelectedDeviceData(deviceData)}>
+            <GearFill/>
+          </Button>
         </Col>
       </Row>
       <Row className="mb-2">

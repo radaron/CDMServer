@@ -25,7 +25,7 @@ export const Header = ({ userInfo, setSelectedTab, logOut }) => {
         </Nav>
         <Nav>
           <NavDropdown title={userInfo.name} className="text-white">
-            <NavDropdown.Item onClick={() => setSelectedTab(SETTINGS)}>Settings</NavDropdown.Item>
+            {/* <NavDropdown.Item onClick={() => setSelectedTab(SETTINGS)}>Settings</NavDropdown.Item> */}
             <NavDropdown.Item onClick={() => logOut()}>Logout</NavDropdown.Item>
           </NavDropdown>
         </Nav>
