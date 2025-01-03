@@ -5,6 +5,8 @@ import { Header } from "./Header"
 import { Device } from "./Device"
 import { Download } from "./Download"
 import { Status } from "./Status"
+import { Settings } from "./Settings"
+import { Imdb } from "./Imdb"
 import { DEVICE, ADMIN, DOWNLOAD, STATUS, SETTINGS, IMDB } from "./constant"
 import "./Manage.css"
 
@@ -13,10 +15,10 @@ import BackgroundImage from "../background.png"
 const tabComponents = {
   [ADMIN]: <Admin />,
   [DEVICE]: <Device />,
+  [IMDB]: <Imdb />,
   [DOWNLOAD]: <Download />,
   [STATUS]: <Status />,
-  [SETTINGS]: <Status />,
-  [IMDB]: <Status />
+  [SETTINGS]: <Settings />
 };
 
 export const manageContext = createContext(null)
