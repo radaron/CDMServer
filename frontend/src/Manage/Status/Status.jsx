@@ -32,8 +32,10 @@ export const Status = () => {
       })
       if (resp.status === 200) {
         const data = await resp.json()
-        setDevices(data.data.devices)
-        setSelectedDeviceId(data.data.devices[0].id)
+        if (data.data.devices.length > 0) {
+          setDevices(data.data.devices)
+          setSelectedDeviceId(data.data.devices[0].id)
+        }
       }
       else if (resp.status === 401) {
         window.location.href = '/login'
