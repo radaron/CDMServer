@@ -39,3 +39,7 @@ packages = ["service"]
 
 [tool.black]
 line-length = 120
+
+[tool.pylint]
+disable = ["missing-docstring"]
+max-line-length = 120
