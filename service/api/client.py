@@ -1,3 +1,4 @@
+from copy import copy
 import os
 from datetime import datetime, timezone
 from fastapi.responses import JSONResponse, FileResponse
@@ -19,7 +20,7 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
     device.updated = datetime.now(tz=timezone.utc)
     session.add(device)
     await session.commit()
-    return JSONResponse({"data": {"files": list(files.keys())}})
+    return JSONResponse({"data": {"files": {key: value["downloading_path"] for key, value in files.items()}}})
 
 
 @router.get("/download/{file_id}")
@@ -32,12 +33,17 @@ async def download_file(
         return JSONResponse({"message": "Unathorized"}, status_code=401)
     if file_id not in device.file_list:
         return JSONResponse({"message": "File not found"}, status_code=404)
-    file_path = device.file_list[file_id]
+    file_path = device.file_list[file_id].get("file_path", "")
     if not os.path.exists(file_path):
+        files = copy(device.file_list)
+        files.pop(file_id)
+        device.file_list = files
+        session.add(device)
+        await session.commit()
         return JSONResponse({"message": "File not found"}, status_code=404)
 
     file_name = file_path.split("/")[-1]
-    files = device.file_list.copy()
+    files = copy(device.file_list)
     files.pop(file_id)
     device.file_list = files
     session.add(device)
@@ -54,7 +60,9 @@ async def add_device(data: StatusData, session: AsyncSession = Depends(get_sessi
         return JSONResponse({"message": "Unathorized"}, status_code=401)
 
     for item in data.data:
-        result = await session.execute(select(Torrent).where(Torrent.device_id == device.id, Torrent.torrent_id == item.id))
+        result = await session.execute(
+            select(Torrent).where(Torrent.device_id == device.id, Torrent.torrent_id == item.id)
+        )
         torrent = result.scalars().first()
         if torrent is None:
             added_date = datetime.fromtimestamp(item.added_date, tz=timezone.utc)

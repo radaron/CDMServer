@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Form, Button, Alert } from "react-bootstrap";
-import "./Login.css";
+import React, { useState } from "react"
+import { Form, Button, Alert } from "react-bootstrap"
+import "./Login.css"
 
-import BackgroundImage from "../background.png";
-import Logo from "../logo.png";
+import BackgroundImage from "../background.png"
+import { CloudArrowDownFill } from "react-bootstrap-icons"
+
 
 export const Login = () => {
   const [inputEmail, setInputEmail] = useState("");
@@ -48,12 +49,7 @@ export const Login = () => {
     >
       <div className="sign-in__backdrop"></div>
       <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>
-        <img
-          className="img-thumbnail mx-auto d-block mb-2"
-          src={Logo}
-          alt="logo"
-        />
-        <div className="h4 mb-2 text-center">Sign In</div>
+        <CloudArrowDownFill size={50} className="mx-auto d-block mb-2"/>
         {alertMessage && (
           <Alert
             className="mb-2"

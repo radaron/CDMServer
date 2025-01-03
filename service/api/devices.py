@@ -44,7 +44,7 @@ async def modify_device(
     device.settings = data.settings
     await session.commit()
 
-    return JSONResponse({"message": "Device added successfully"})
+    return JSONResponse({"message": "Device modified successfully"})
 
 
 @router.delete("/{device_id}/")
