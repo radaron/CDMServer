@@ -47,7 +47,9 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
     if torrent is None:
         return JSONResponse({"message": "Torrent not found"}, status_code=404)
     file_path = await client.download(torrent, tempfile.gettempdir(), override=True)
-    download_path = [setting for setting in device.settings if setting["name"] == map_category_path(torrent["type"])][0]["value"]
+    download_path = [setting for setting in device.settings if setting["name"] == map_category_path(torrent["type"])][
+        0
+    ]["value"]
 
     existing_files = copy(device.file_list)
     existing_files[data.torrent_id] = {"file_path": file_path, "downloading_path": download_path}

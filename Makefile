@@ -20,3 +20,15 @@ reqs:
 
 format:
 	$(ACTIVATE) && black service/
+
+lint:
+	$(ACTIVATE) && python -m pylint service/
+
+start-backend:
+	source .env.sh && $(ACTIVATE) && uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
+
+start-frontent:
+	cd frontend && npm start
+
+start-db:
+	docker compose up
