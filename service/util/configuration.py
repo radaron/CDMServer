@@ -9,3 +9,5 @@ DB_PORT = environ["DB_PORT"]
 DB_NAME = environ["DB_NAME"]
 DB_USER = environ["DB_USER"]
 DB_PASSWORD = environ["DB_PASSWORD"]
+
+DEFAULT_LANGUAGE = environ["DEFAULT_LANGUAGE"]

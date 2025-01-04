@@ -12,6 +12,7 @@ from service.api.client import router as client_router
 from service.api.download import router as download_router
 from service.api.status import router as status_router
 from service.util.logger import logger
+from service.util.configuration import DEFAULT_LANGUAGE
 
 
 origins = [
@@ -35,8 +36,8 @@ templates = Jinja2Templates(directory="templates")
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
     logger.warning(exc)
-    # if exc.status_code in (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED):
-    #     return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    if exc.status_code in (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED):
+        return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/login", status_code=status.HTTP_302_FOUND)
     return HTMLResponse(
         status_code=exc.status_code,
         content=f"<h1>{exc.status_code}</h1><p>{exc.detail}</p>",
@@ -44,7 +45,16 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
 
 
 @app.get("/", response_class=HTMLResponse)
-@app.get("/login", response_class=HTMLResponse)
-@app.get("/manage", response_class=HTMLResponse)
-async def main(request: Request):
+async def root(request: Request):
+    return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/login", status_code=status.HTTP_302_FOUND)
+
+
+@app.get("/favicon.png", response_class=HTMLResponse)
+async def favicon(request: Request):
+    return RedirectResponse(url="/static/favicon.png", status_code=status.HTTP_302_FOUND)
+
+
+@app.get("/{lang}/login", response_class=HTMLResponse)
+@app.get("/{lang}/manage", response_class=HTMLResponse)
+async def application(request: Request, lang: str = "en"):
     return templates.TemplateResponse(request=request, name="index.html")

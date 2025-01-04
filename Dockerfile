@@ -1,7 +1,9 @@
 FROM python:3.12 AS builder
 WORKDIR /app
-COPY service /app
-COPY templates /app
+COPY service/ /app/service/
+COPY templates/ /app/templates/
+COPY static/ /app/static/
+COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --no-deps -r requirements.txt -t /app
 
 FROM python:3.12-slim
