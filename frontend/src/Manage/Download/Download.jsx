@@ -2,10 +2,13 @@ import { useState, useContext, useEffect } from "react";
 import { Form, Button, Spinner, Container, Row, Col, Dropdown } from "react-bootstrap"
 import { manageContext } from "../Manage"
 import { searchWhere, searchCategory } from "../constant"
-import "./Download.css";
+import "./Download.css"
+import { useTranslation } from "react-i18next"
+import { LOGIN_PAGE, redirectToPage } from "../../util"
 
 export const Download = () => {
 
+  const { t } = useTranslation()
   const [pattern, setPattern] = useState("")
   const [selectedSearchType, setSelectedSearchType] = useState(searchCategory[0])
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
@@ -32,13 +35,13 @@ export const Download = () => {
         setSearchResults(data.data.torrents)
       }
       else if (resp.status === 401) {
-        window.location.href = "/login"
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        setToastData({message: "Failed to perform search", type: "danger"})
+        setToastData({message: t('SEARCH_ERROR'), type: "danger"})
       }
     } catch (error) {
-      setToastData({message: "Unexpected error occurred", type: "danger"})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
       console.log(error)
     }
     setLoading(false)
@@ -59,13 +62,13 @@ export const Download = () => {
         setDevices(data.data.devices)
       }
       else if (resp.status === 401) {
-        window.location.href = "/login"
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        setToastData({message: "Failed to get devices", type: "danger"})
+        setToastData({message: t('GET_DEVICES_ERROR'), type: "danger"})
       }
     } catch (error) {
-      setToastData({message: "Unexpected error occurred", type: "danger"})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
       console.log(error)
     }
   }
@@ -86,16 +89,16 @@ export const Download = () => {
       )
       if (resp.status === 200) {
         await resp.json()
-        setToastData({message: "Added to download queue", type: "success"})
+        setToastData({message: t('DOWNLOAD_ADDED'), type: "success"})
       }
       else if (resp.status === 401) {
-        window.location.href = "/login"
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        setToastData({message: "Failed to download", type: "danger"})
+        setToastData({message: t('DOWNLOAD_FAILED'), type: "danger"})
       }
     } catch (error) {
-      setToastData({message: "Unexpected error occurred", type: "danger"})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
       console.log(error)
     }
   }
@@ -111,7 +114,7 @@ export const Download = () => {
               <Form.Control
                 type="text"
                 value={pattern}
-                placeholder="Search pattern"
+                placeholder={t('SEARCH_PLACEHOLDER')}
                 onChange={(e) => setPattern(e.target.value)}
                 required
               />
@@ -139,9 +142,9 @@ export const Download = () => {
               >
                 {isLoading ? (
                   <Spinner animation="border" role="status" size="sm">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">{t('LOADING')}...</span>
                   </Spinner>)
-                  : 'Search'}
+                  : t('SEARCH')}
               </Button>
             </Col>
           </Row>
@@ -151,11 +154,11 @@ export const Download = () => {
       searchResults.length > 0
       && <Container className="shadow p-2 pt-0 bg-white rounded results" fluid="true">
         <Row className="bg-info p-3">
-          <Col xs={6}>Title</Col>
-          <Col xs={true}>Category</Col>
-          <Col xs={true}>Size</Col>
-          <Col xs={true}>Seeders</Col>
-          <Col xs={true}>Leechers</Col>
+          <Col xs={6}>{t('TITLE')}</Col>
+          <Col xs={true}>{t('CATEGORY')}</Col>
+          <Col xs={true}>{t('SIZE')}</Col>
+          <Col xs={true}>{t('SEEDERS')}</Col>
+          <Col xs={true}>{t('LEECHERS')}</Col>
           <Col xs={true}></Col>
         </Row>
       {searchResults.map((result) => (
@@ -173,7 +176,7 @@ export const Download = () => {
               {Object.keys(devices).length > 1
                 ? <Dropdown>
                     <Dropdown.Toggle variant="success" size="sm">
-                      Download
+                      {t('DOWNLOAD')}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       {devices.map((device) => (
@@ -190,7 +193,7 @@ export const Download = () => {
                   variant="success"
                   size="sm"
                   onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}>
-                    Download
+                    {t('DOWNLOAD_BUTTON')}
                   </Button>
               }
             </Col>

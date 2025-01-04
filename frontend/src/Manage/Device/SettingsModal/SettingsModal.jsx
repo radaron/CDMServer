@@ -1,8 +1,11 @@
 import { Button, Modal, Form } from 'react-bootstrap'
 import { useContext } from "react"
 import { manageContext } from "../../Manage"
+import { useTranslation } from "react-i18next"
+import { LOGIN_PAGE, redirectToPage } from "../../../util"
 
 export const SettingsModal = ({ data, setData }) => {
+  const { t } = useTranslation()
   const handleClose = () => setData({})
   const { setToastData } = useContext(manageContext)
 
@@ -20,16 +23,16 @@ export const SettingsModal = ({ data, setData }) => {
       })
       if (resp.status === 200) {
         setData({})
-        setToastData({message: "Settings updated.", type: "success"})
+        setToastData({message: t('DEVICE_SETTINGS_UPDATE_SUCCESS'), type: "success"})
       }
       else if (resp.status === 401) {
-        window.location.href = "/login"
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        setToastData({message: "Failed to update device.", type: "danger"})
+        setToastData({message: t('DEVICE_SETTINGS_UPDATE_ERROR'), type: "danger"})
       }
     } catch (error) {
-      setToastData({message: "Unexpected error occurred.", type: "danger"})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
       console.log(error)
     }
     setData({})
@@ -38,7 +41,7 @@ export const SettingsModal = ({ data, setData }) => {
   return (
     <Modal show={data?.settings && data.settings.length > 0} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Settings</Modal.Title>
+        <Modal.Title>{t('DEVICE_SETTINGS_TITLE')}</Modal.Title>
       </Modal.Header>
       <Form onSubmit={handleSave}>
         <Modal.Body>
@@ -57,8 +60,8 @@ export const SettingsModal = ({ data, setData }) => {
             ))}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Close</Button>
-          <Button variant="primary" type='submit'>Save</Button>
+          <Button variant="secondary" onClick={handleClose}>{t('DEVICE_SETTINGS_CLOSE')}</Button>
+          <Button variant="primary" type='submit'>{t('DEVICE_SETTINGS_SAVE')}</Button>
         </Modal.Footer>
       </Form>
     </Modal>

@@ -9,6 +9,8 @@ import { Settings } from "./Settings"
 import { Imdb } from "./Imdb"
 import { DEVICE, ADMIN, DOWNLOAD, STATUS, SETTINGS, IMDB } from "./constant"
 import "./Manage.css"
+import { useTranslation } from "react-i18next"
+import { LOGIN_PAGE, redirectToPage } from "../util"
 
 import BackgroundImage from "../background.png"
 
@@ -25,6 +27,7 @@ export const manageContext = createContext(null)
 
 export const Manage = () => {
 
+  const { t } = useTranslation()
   const [userInfo, setUserInfo] = useState({})
   const [selectedTab, setSelectedTab] = useState(DEVICE)
   const [toastData, setToastData] = useState({})
@@ -43,7 +46,7 @@ export const Manage = () => {
           setUserInfo(data)
         }
         else if (resp.status === 401) {
-          window.location.href = "/login"
+          redirectToPage(LOGIN_PAGE)
         }
         else {
           setUserInfo({})
@@ -66,10 +69,10 @@ export const Manage = () => {
       })
       if (resp.status === 200) {
         await resp.json()
-        window.location.href = "/login"
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        console.log("Failed to logout")
+        console.log(t('LOGOUT_FAILED'))
       }
     } catch (error) {
       console.log(error)

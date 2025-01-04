@@ -2,11 +2,12 @@ import { useState, useEffect, useContext } from 'react'
 import { Form, Container, Row, Col, ProgressBar } from 'react-bootstrap'
 import { manageContext } from '../Manage'
 import './Status.css'
-
-
+import { useTranslation } from 'react-i18next'
+import { LOGIN_PAGE, redirectToPage } from '../../util'
 
 export const Status = () => {
 
+  const { t } = useTranslation()
   const [devices, setDevices] = useState([])
   const [selectedDeviceId, setSelectedDeviceId] = useState(null)
   const [statusData, setStatusData] = useState([])
@@ -38,13 +39,13 @@ export const Status = () => {
         }
       }
       else if (resp.status === 401) {
-        window.location.href = '/login'
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        setToastData({message: 'Could not fetch devices.', type: 'danger'})
+        setToastData({message: t('FETCHING_DEVICE_ERROR'), type: 'danger'})
       }
     } catch (error) {
-      setToastData({message: 'Unexpected error occurred.', type: 'danger'})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
       console.log(error)
     }
   }
@@ -68,13 +69,13 @@ export const Status = () => {
             setStatusData(data.data.torrents)
           }
           else if (resp.status === 401) {
-            window.location.href = '/login'
+            redirectToPage(LOGIN_PAGE)
           }
           else {
-            setToastData({message: 'Could not fetch status.', type: 'danger'})
+            setToastData({message: t('FETCHING_STATUS_ERROR'), type: 'danger'})
           }
         } catch (error) {
-          setToastData({message: 'Unexpected error occurred.', type: 'danger'})
+          setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
           console.log(error)
         }
       }
