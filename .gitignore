@@ -121,6 +121,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env.sh
 .venv
 env/
 venv/
@@ -161,4 +162,6 @@ cython_debug/
 
 node_modules
 
-.env.sh
+
+static/*
+templates/*

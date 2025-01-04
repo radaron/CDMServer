@@ -21,7 +21,7 @@ from service.constant import DEFAULT_DEVICE_SETTINGS
 
 DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL)
 AsyncSessionLocal = async_sessionmaker(engine)
 Base = declarative_base()
 
