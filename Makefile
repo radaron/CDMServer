@@ -30,15 +30,16 @@ start-backend:
 start-frontent:
 	cd frontend && npm start
 
-start-db:
-	docker compose up
-
 build-frontend:
+	rm -rf static/* templates/*
 	cd frontend && npm run build
-	cp -r frontend/build/static static
+	cp -r frontend/build/static/ static/
 	cp -r frontend/build/favicon.png static/favicon.png
 	cp -r frontend/build/index.html templates/index.html
 
+docker-compose: build-frontend
+	docker compose up --build
+
 .PHONY: build
 build: build-frontend
-	docker build -t "cdm-service:${VERSION}" .
+	docker build -t "cdm-server:${VERSION}" .
