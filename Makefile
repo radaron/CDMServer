@@ -1,6 +1,6 @@
 VIRTUALENV = .venv
 ACTIVATE = source $(VIRTUALENV)/bin/activate
-
+VERSION = $(shell grep 'version' pyproject.toml | awk -F' = ' '{print $$2}' | tr -d '"')
 
 .venv:
 	python3 -m venv $(VIRTUALENV)
@@ -32,3 +32,13 @@ start-frontent:
 
 start-db:
 	docker compose up
+
+build-frontend:
+	cd frontend && npm run build
+	cp -r frontend/build/static static
+	cp -r frontend/build/favicon.png static/favicon.png
+	cp -r frontend/build/index.html templates/index.html
+
+.PHONY: build
+build: build-frontend
+	docker build -t "cdm-service:${VERSION}" .
