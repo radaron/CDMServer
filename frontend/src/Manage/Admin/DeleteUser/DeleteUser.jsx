@@ -2,11 +2,13 @@ import { Form, Button } from 'react-bootstrap'
 import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './DeleteUser.css'
+import { useTranslation } from 'react-i18next'
 
 export const DeleteUser = ({fetchUsers, users}) => {
 
-    const [selectedUser, setSelectedUser] = useState(users[0]?.email)
-    const { setToastData } = useContext(manageContext)
+  const { t } = useTranslation()
+  const [selectedUser, setSelectedUser] = useState(users[0]?.email)
+  const { setToastData } = useContext(manageContext)
 
   const handleDelete = async (event) => {
     event.preventDefault()
@@ -19,13 +21,13 @@ export const DeleteUser = ({fetchUsers, users}) => {
           }
       })
       if (resp.status === 200) {
-        setToastData({message: 'User deleted.', type: 'success'})
+        setToastData({message: t('USER_DELETE_SUCCESS'), type: 'success'})
       }
       else {
-        setToastData({message: 'Could not delete user.', type: 'danger'})
+        setToastData({message: t('USER_DELETE_ERROR'), type: 'danger'})
       }
     } catch (error) {
-      setToastData({message: 'Unexpected error occurred.', type: 'danger'})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
       console.log(error)
     }
     fetchUsers()
@@ -33,14 +35,14 @@ export const DeleteUser = ({fetchUsers, users}) => {
 
   return (
     <Form className='shadow p-4 bg-white rounded new-user__wrapper' onSubmit={handleDelete}>
-      <div className='h4 mb-2 text-center'>Delete user</div>
+      <div className='h4 mb-2 text-center'>{t('DELETE_USER_TITLE')}</div>
       <Form.Group className='mb-2'>
         <Form.Select aria-label='Default select example' onChange={(e) => setSelectedUser(e.target.value)}>
           {users.map(user => <option key={user.email} value={user.email}>{user.email}</option>)}
         </Form.Select>
       </Form.Group>
       <Button className='w-100' variant='danger' type='submit'>
-        Delete user
+        {t('DELETE_USER_BUTTON')}
       </Button>
     </Form>
 )}

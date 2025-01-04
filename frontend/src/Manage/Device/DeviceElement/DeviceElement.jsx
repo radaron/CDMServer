@@ -3,9 +3,11 @@ import { GearFill } from 'react-bootstrap-icons';
 import { useState, useContext } from "react"
 import { manageContext } from "../../Manage"
 import "./DeviceElement.css"
+import { useTranslation } from "react-i18next";
 
 export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
 
+  const { t } = useTranslation()
   const [isTokenVisible, setIsTokenVisible] = useState(false)
   const { setToastData } = useContext(manageContext)
 
@@ -26,10 +28,10 @@ export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
           refetch()
         }
         else {
-          setToastData({message: "Failed to delete device.", type: "danger"})
+          setToastData({message: t('DEVICE_DELETE_ERROR'), type: "danger"})
         }
       } catch (error) {
-        setToastData({message: "Unexpected error occurred.", type: "danger"})
+        setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
         console.log(error)
       }
     }
@@ -52,14 +54,14 @@ export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
         <Col sm={3} className="fw-bold">Status</Col>
         <Col sm={true}>
         {deviceData.active ? (
-          <Badge bg="success">Active</Badge>
+          <Badge bg="success">{t('ACTIVE_BADGE')}</Badge>
         ) : (
-          <Badge bg="danger">Inactive</Badge>
+          <Badge bg="danger">{t('INACTIVE_BADGE')}</Badge>
         )}
         </Col>
       </Row>
       <Row className="mb-2">
-        <Col sm={3} className="fw-bold">Token</Col>
+        <Col sm={3} className="fw-bold">{t('TOKEN_TITLE')}</Col>
         <Col sm={true}>
           <div onClick={toggleTokenVisibility}>
             {isTokenVisible ? deviceData.token : '••••••••••'}
@@ -67,7 +69,7 @@ export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
         </Col>
       </Row>
       <Button className="w-100" variant="danger" onClick={deleteDevice}>
-        Delete Device
+        {t('DELETE_DEVICE_BUTTON')}
       </Button>
     </Container>
   );

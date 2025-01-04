@@ -2,9 +2,11 @@ import { Form, Button } from 'react-bootstrap'
 import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './NewUser.css'
+import { useTranslation } from 'react-i18next'
 
 export const NewUser = ({ fetchUsers }) => {
 
+    const { t } = useTranslation()
     const [inputEmail, setInputEmail] = useState('')
     const [inputPassword, setInputPassword] = useState('')
     const [inputName, setInputName] = useState('')
@@ -27,26 +29,26 @@ export const NewUser = ({ fetchUsers }) => {
             })
         })
         if (resp.status === 200) {
-          setToastData({message: 'User addedd successfully.', type: 'success'})
+          setToastData({message: t('USER_ADD_SUCCESS'), type: 'success'})
           fetchUsers()
         }
         else {
-          setToastData({message: 'Could not add user.', type: 'danger'})
+          setToastData({message: t('USER_ADD_ERROR'), type: 'danger'})
         }
       } catch (error) {
-        setToastData({message: 'Unexpected error occurred.', type: 'danger'})
+        setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
         console.log(error)
       }
     }
 
   return (
     <Form className='shadow p-4 bg-white rounded new-user__wrapper' onSubmit={handleSubmit}>
-      <div className='h4 mb-2 text-center'>Add new user</div>
+      <div className='h4 mb-2 text-center'>{t('ADD_NEW_USER_TITLE')}</div>
       <Form.Group className='mb-2'>
         <Form.Control
           type='text'
           value={inputEmail}
-          placeholder='Email'
+          placeholder={t('EMAIL_PLACEHOLDER')}
           onChange={(e) => setInputEmail(e.target.value)}
           required
         />
@@ -55,7 +57,7 @@ export const NewUser = ({ fetchUsers }) => {
         <Form.Control
           type='password'
           value={inputPassword}
-          placeholder='Password'
+          placeholder={t('PASSWORD_PLACEHOLDER')}
           onChange={(e) => setInputPassword(e.target.value)}
           required
         />
@@ -64,7 +66,7 @@ export const NewUser = ({ fetchUsers }) => {
         <Form.Control
           type='text'
           value={inputName}
-          placeholder='Name'
+          placeholder={t('NAME_PLACEHOLDER')}
           onChange={(e) => setInputName(e.target.value)}
           required
         />
@@ -72,12 +74,12 @@ export const NewUser = ({ fetchUsers }) => {
       <Form.Group className='mb-3'>
         <Form.Check
           type='switch'
-          label='Is admin'
+          label={t('IS_ADMIN_CHECKBOX')}
           onChange={(e) => setInputIsAdmin(e.target.checked)}
         />
       </Form.Group>
       <Button className='w-100' variant='primary' type='submit'>
-        Create user
+        {t('CREATE_USER_BUTTON')}
       </Button>
     </Form>
 )}

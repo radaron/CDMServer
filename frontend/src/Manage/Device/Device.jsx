@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { DeviceElement } from "./DeviceElement"
 import { AddDevice } from "./AddDevice"
 import { SettingsModal } from "./SettingsModal";
+import { manageContext } from "../Manage"
 import "./Device.css"
+import { useTranslation } from "react-i18next"
+import { LOGIN_PAGE, redirectToPage } from "../../util"
 
 export const Device = () => {
 
+  const { t } = useTranslation()
+  const { setToastData } = useContext(manageContext)
   const [devices, setDevices] = useState([])
   const [selectedDeviceData, setSelectedDeviceData] = useState({})
 
@@ -22,12 +27,13 @@ export const Device = () => {
         setDevices(data.data.devices)
       }
       else if (resp.status === 401) {
-        window.location.href = "/login"
+        redirectToPage(LOGIN_PAGE)
       }
       else {
-        console.log("Failed to get devices")
+        setToastData({message: t('FETCHING_DEVICE_ERROR'), type: 'danger'})
       }
     } catch (error) {
+      setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
       console.log(error)
     }
   }

@@ -3,9 +3,11 @@ import { useEffect, useState, useContext } from 'react'
 import { manageContext } from '../Manage'
 import { DeleteUser } from "./DeleteUser"
 import "./Admin.css"
+import { useTranslation } from "react-i18next"
 
 export const Admin = () => {
 
+  const { t } = useTranslation()
   const [users, setUsers] = useState([])
   const { setToastData } = useContext(manageContext)
 
@@ -22,10 +24,10 @@ export const Admin = () => {
         setUsers(data.data.users)
       }
       else {
-        setToastData({message: 'Could not fetch users.', type: 'danger'})
+        setToastData({message: t('USER_FETCH_ERROR'), type: 'danger'})
       }
     } catch (error) {
-      setToastData({message: 'Unexpected error occurred.', type: 'danger'})
+      setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
       console.log(error)
     }
   }

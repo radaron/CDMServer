@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import { Form, Button, Alert } from "react-bootstrap"
 import "./Login.css"
-
+import { useTranslation } from "react-i18next"
 import BackgroundImage from "../background.png"
 import { CloudArrowDownFill } from "react-bootstrap-icons"
+import { MANAGE_PAGE, redirectToPage } from "../util"
 
 
 export const Login = () => {
+  const { t } = useTranslation()
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
@@ -29,14 +31,14 @@ export const Login = () => {
       })
       const data = await resp.json()
       if (resp.status === 200) {
-        window.location.href = "/manage"
+        redirectToPage(MANAGE_PAGE)
       }
       else {
-        setAlertMessage("Incorrect email or password.")
+        setAlertMessage(t('LOGIN_FAILED'))
       }
       console.log(data)
   } catch (error) {
-    setAlertMessage("Unexpected error occurred.")
+    setAlertMessage(t('UNEXPECTED_ERROR'))
     console.log(error)
   }
     setLoading(false);
@@ -64,7 +66,7 @@ export const Login = () => {
           <Form.Control
             type="text"
             value={inputEmail}
-            placeholder="Email"
+            placeholder={t('EMAIL_PLACEHOLDER')}
             onChange={(e) => setInputEmail(e.target.value)}
             required
           />
@@ -73,18 +75,18 @@ export const Login = () => {
           <Form.Control
             type="password"
             value={inputPassword}
-            placeholder="Password"
+            placeholder={t('PASSWORD_PLACEHOLDER')}
             onChange={(e) => setInputPassword(e.target.value)}
             required
           />
         </Form.Group>
         {!loading ? (
           <Button className="w-100" variant="primary" type="submit">
-            Log In
+            {t('LOGIN')}
           </Button>
         ) : (
           <Button className="w-100" variant="primary" type="submit" disabled>
-            Logging In...
+            {t('LOGGING_IN')}...
           </Button>
         )}
       </Form>
