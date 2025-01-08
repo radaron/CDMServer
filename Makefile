@@ -1,6 +1,5 @@
 VIRTUALENV = .venv
 ACTIVATE = source $(VIRTUALENV)/bin/activate
-VERSION = $(shell grep 'version' pyproject.toml | awk -F' = ' '{print $$2}' | tr -d '"')
 
 .venv:
 	python3 -m venv $(VIRTUALENV)
@@ -39,7 +38,3 @@ build-frontend:
 
 docker-compose: build-frontend
 	docker compose up --build
-
-.PHONY: build
-build: build-frontend
-	docker build -t "cdm-server:${VERSION}" .
