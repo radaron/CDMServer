@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -15,7 +15,7 @@ from service.api.status import router as status_router
 from service.models.database import init_db
 from service.util.logger import logger
 from service.util.configuration import DEFAULT_LANGUAGE
-from service.util.auth import create_admin_user
+from service.util.auth import create_admin_user, manager
 
 
 @asynccontextmanager
@@ -50,17 +50,23 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
     )
 
 
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/login", status_code=status.HTTP_302_FOUND)
-
-
 @app.get("/favicon.png", response_class=HTMLResponse)
 async def favicon(request: Request):
     return RedirectResponse(url="/static/favicon.png", status_code=status.HTTP_302_FOUND)
 
 
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/manage", status_code=status.HTTP_302_FOUND)
+
+
 @app.get("/{lang}/login", response_class=HTMLResponse)
+async def login(request: Request, lang: str = "en"):
+    return templates.TemplateResponse(request=request, name="index.html")
+
+
 @app.get("/{lang}/manage", response_class=HTMLResponse)
-async def application(request: Request, lang: str = "en"):
+async def manage(request: Request, lang: str = "en", user=Depends(manager)):
+    if user is None:
+        return RedirectResponse(url=f"/{lang}/login", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse(request=request, name="index.html")
