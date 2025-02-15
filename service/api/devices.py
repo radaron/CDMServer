@@ -4,7 +4,15 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager
 from service.models.api import NewDeviceData, EditDeviceData
-from service.models.database import AsyncSession, get_session, select, Device, User
+from service.models.database import (
+    AsyncSession,
+    get_session,
+    select,
+    Device,
+    User,
+    user_device_association,
+    selectinload,
+)
 
 
 ACTIVE_THRESHOLD = timedelta(minutes=1)
@@ -15,14 +23,22 @@ router = APIRouter()
 
 @router.get("/")
 async def get_devices(user: User = Depends(manager), session: AsyncSession = Depends(get_session)):
-    devices = await session.execute(select(Device).where(Device.user_id == user.id))
-    devices = devices.scalars().all()
+    result = await session.execute(
+        select(Device)
+        .join(user_device_association)
+        .where(user_device_association.c.user_id == user.id)
+        # Lazyload is buggy in async mode
+        # See: https://stackoverflow.com/questions/68195361/how-to-properly-handle-many-to-many-in-async-sqlalchemy
+        .options(selectinload(Device.users))
+    )
+    devices = result.scalars().all()
     return JSONResponse({"data": {"devices": [dump_device(d) for d in devices]}})
 
 
 @router.post("/")
 async def add_device(data: NewDeviceData, user: User = Depends(manager), session: AsyncSession = Depends(get_session)):
-    new_device = Device(user=user, name=data.name, token=token_hex(16))
+    new_device = Device(name=data.name, token=token_hex(16))
+    new_device.users.append(user)
     session.add(new_device)
     await session.commit()
     return JSONResponse({"message": "Device added successfully"})
@@ -35,13 +51,29 @@ async def modify_device(
     session: AsyncSession = Depends(get_session),
     device_id: int = None,
 ):
-    result = await session.execute(select(Device).where(Device.user_id == user.id, Device.id == device_id))
+    result = await session.execute(
+        select(Device)
+        .join(user_device_association)
+        .where(user_device_association.c.user_id == user.id, Device.id == device_id)
+        # Lazyload is buggy in async mode
+        # See: https://stackoverflow.com/questions/68195361/how-to-properly-handle-many-to-many-in-async-sqlalchemy
+        .options(selectinload(Device.users))
+    )
     device = result.scalars().first()
 
     if device is None:
         return JSONResponse({"message": "Device not found"}, status_code=404)
 
     device.settings = data.settings
+
+    result = await session.execute(select(User).where(User.email.in_(data.user_emails)))
+    users = result.scalars().all()
+
+    if len(users) == 0:
+        return JSONResponse({"message": "At least 1 user should be added."}, status_code=400)
+
+    device.users = users
+
     await session.commit()
 
     return JSONResponse({"message": "Device modified successfully"})
@@ -51,7 +83,11 @@ async def modify_device(
 async def delete_device(
     user: User = Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None
 ):
-    result = await session.execute(select(Device).where(Device.user_id == user.id, Device.id == device_id))
+    result = await session.execute(
+        select(Device)
+        .join(user_device_association)
+        .where(user_device_association.c.user_id == user.id, Device.id == device_id)
+    )
     device = result.scalars().first()
 
     if device is None:
@@ -72,4 +108,5 @@ def dump_device(device: Device) -> dict:
         "updated": updated_utc.timestamp(),
         "token": device.token,
         "settings": device.settings,
+        "userEmails": [user.email for user in device.users],
     }
