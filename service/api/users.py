@@ -56,14 +56,5 @@ def protected_route(user: User = Depends(manager)):
     return JSONResponse(MeData(email=user.email, is_admin=user.is_admin, name=user.name).model_dump(), status_code=200)
 
 
-# TODO: Remove this endpoint
-@router.get("/hack/")
-async def hack(session: AsyncSession = Depends(get_session)):
-    new_user = User(email="admin@admin.hu", password=Hasher.get_password_hash("admin"), is_admin=True, name="Admin")
-    session.add(new_user)
-    await session.commit()
-    return JSONResponse({"message": "User created successfully"})
-
-
 def dump_user(user: User) -> dict:
     return {"id": user.id, "email": user.email, "name": user.name, "is_admin": user.is_admin}

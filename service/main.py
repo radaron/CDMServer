@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,15 +12,20 @@ from service.api.devices import router as devices_router
 from service.api.client import router as client_router
 from service.api.download import router as download_router
 from service.api.status import router as status_router
+from service.models.database import init_db
 from service.util.logger import logger
 from service.util.configuration import DEFAULT_LANGUAGE
+from service.util.auth import create_admin_user
 
 
-origins = [
-    "http://localhost:3000",
-]
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    await create_admin_user()
+    yield
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
 app.include_router(login_router, prefix="/api/auth")
 app.include_router(users_router, prefix="/api/users")
 app.include_router(devices_router, prefix="/api/devices")
@@ -27,7 +33,7 @@ app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")
 app.include_router(status_router, prefix="/api/status")
 app.add_middleware(
-    CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
+    CORSMiddleware, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
