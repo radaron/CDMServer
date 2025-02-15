@@ -8,10 +8,7 @@ export const Header = ({ userInfo, setSelectedTab, logOut }) => {
   return (
     <Navbar bg="dark" data-bs-theme="dark" className="mb-4" expand="lg">
       <Container>
-        <Navbar.Brand href="/manage">
-          <CloudArrowDownFill size={30} className="mx-2"/>
-          CDM
-        </Navbar.Brand>
+        <Navbar.Brand><CloudArrowDownFill size={30} className="mx-2"/>CDM</Navbar.Brand>
         <Nav className="justify-content-space-between">
           <Nav.Link onClick={() => setSelectedTab(DEVICE)}>{t('HEADER_DEVICES')}</Nav.Link>
           <Nav.Link onClick={() => setSelectedTab(IMDB)}>{t('HEADER_IMDB')}</Nav.Link>
