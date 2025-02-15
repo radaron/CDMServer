@@ -19,10 +19,15 @@ async def load_user(email: str):
 
 async def create_admin_user():
     async with AsyncSessionLocal() as session:
-        new_user = User(
-            email=ADMIN_EMAIL, password=Hasher.get_password_hash(ADMIN_PASSWORD), is_admin=True, name="Admin"
-        )
-        session.add(new_user)
+        result = await session.execute(select(User).where(User.email == ADMIN_EMAIL))
+        admin_user = result.scalars().first()
+        if admin_user:
+            admin_user.password = Hasher.get_password_hash(ADMIN_PASSWORD)
+        else:
+            admin_user = User(
+                email=ADMIN_EMAIL, password=Hasher.get_password_hash(ADMIN_PASSWORD), is_admin=True, name="Admin"
+            )
+            session.add(admin_user)
         await session.commit()
 
 
