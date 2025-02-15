@@ -30,6 +30,10 @@ jobs:
           VERSION=$(grep 'version' pyproject.toml | awk -F' = ' '{print $2}' | tr -d '"')
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Build frontend
+        run: |
+          make build-frontend
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
