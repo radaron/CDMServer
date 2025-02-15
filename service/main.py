@@ -19,7 +19,7 @@ from service.util.auth import create_admin_user, manager
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app_obj: FastAPI):  # pylint: disable=unused-argument
     await init_db()
     await create_admin_user()
     yield
@@ -40,7 +40,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):  # pylint: disable=unused-argument
     logger.warning(exc)
     if exc.status_code in (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED):
         return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/login", status_code=status.HTTP_302_FOUND)
@@ -51,17 +51,17 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
 
 
 @app.get("/favicon.png", response_class=HTMLResponse)
-async def favicon(request: Request):
+async def favicon(request: Request):  # pylint: disable=unused-argument
     return RedirectResponse(url="/static/favicon.png", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(request: Request):  # pylint: disable=unused-argument
     return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/manage", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/{lang}/login", response_class=HTMLResponse)
-async def login(request: Request, lang: str = "en"):
+async def login(request: Request, lang: str = "en"):  # pylint: disable=unused-argument
     return templates.TemplateResponse(request=request, name="index.html")
 
 
