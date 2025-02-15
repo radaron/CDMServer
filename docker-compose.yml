@@ -11,8 +11,6 @@ services:
       MYSQL_PASSWORD: mypassword
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
   cdm-server:
     build: .
     container_name: cdm_container
@@ -22,6 +20,3 @@ services:
       - mysql
     env_file:
       - .env
-
-volumes:
-  mysql_data:
