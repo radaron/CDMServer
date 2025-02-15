@@ -35,9 +35,9 @@ start-frontent:
 build-frontend:
 	rm -rf static/* templates/*
 	cd frontend && CI=false npm run build
-	cp -r frontend/build/static/ static/
-	cp -r frontend/build/favicon.png static/favicon.png
-	cp -r frontend/build/index.html templates/index.html
+	cp -r frontend/build/static/* static/
+	cp frontend/build/favicon.png static/favicon.png
+	cp frontend/build/index.html templates/index.html
 
 docker-compose: build-frontend
 	docker compose up --build
