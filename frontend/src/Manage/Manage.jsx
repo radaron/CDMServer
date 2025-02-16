@@ -29,7 +29,7 @@ export const Manage = () => {
 
   const { t } = useTranslation()
   const [userInfo, setUserInfo] = useState({})
-  const [selectedTab, setSelectedTab] = useState(DEVICE)
+  const [selectedTab, setSelectedTab] = useState(DOWNLOAD)
   const [toastData, setToastData] = useState({})
   const [torrentSearchResults, setTorrentSearchResults] = useState([])
 
