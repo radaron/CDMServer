@@ -23,7 +23,7 @@ async def login(data: LoginData):
 
 
 @router.post("/logout/")
-async def logout(user=Depends(manager)):
+async def logout(_=Depends(manager)):
     response = JSONResponse({"message": "Successfully logged out"})
     response.delete_cookie(COOKIE_NAME)
     return response

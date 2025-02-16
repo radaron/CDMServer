@@ -15,6 +15,7 @@ from sqlalchemy import (
     JSON,
     Table,
 )
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Mapped, mapped_column, selectinload
@@ -76,7 +77,7 @@ class User(Base):
 class Device(Base):
     __tablename__ = "devices"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name = Column(String(255))
+    name = Column(String(255), unique=True)
     token = Column(String(255))
     file_list = Column(JSON, default={})
     settings = Column(JSON, default=DEFAULT_DEVICE_SETTINGS)

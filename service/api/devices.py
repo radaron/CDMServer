@@ -12,6 +12,7 @@ from service.models.database import (
     User,
     user_device_association,
     selectinload,
+    IntegrityError,
 )
 
 
@@ -40,7 +41,13 @@ async def add_device(data: NewDeviceData, user: User = Depends(manager), session
     new_device = Device(name=data.name, token=token_hex(16))
     new_device.users.append(user)
     session.add(new_device)
-    await session.commit()
+    try:
+        await session.commit()
+    except IntegrityError as e:
+        await session.rollback()
+        if "Duplicate entry" in str(e.orig):
+            return JSONResponse({"message": "Device name already exists"}, status_code=409)
+        raise
     return JSONResponse({"message": "Device added successfully"})
 
 

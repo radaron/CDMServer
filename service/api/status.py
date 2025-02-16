@@ -11,8 +11,12 @@ router = APIRouter()
 async def get_devices(
     user: User = Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None
 ):
-    devices = await session.execute(select(Device).where(Device.user_id == user.id, Device.id == device_id))
-    device = devices.scalars().first()
+    result = await session.execute(
+        select(Device)
+        .join(user_device_association)
+        .where(user_device_association.c.user_id == user.id, Device.id == device_id)
+    )
+    device = result.scalars().first()
     if device is None:
         return JSONResponse({"message": "Device not found"}, status_code=404)
 
