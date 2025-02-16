@@ -77,7 +77,7 @@ async def modify_device(
     users = result.scalars().all()
 
     if len(users) == 0:
-        return JSONResponse({"message": "At least 1 user should be added."}, status_code=400)
+        return JSONResponse({"message": "At least 1 valid user should be added."}, status_code=400)
 
     device.users = users
 

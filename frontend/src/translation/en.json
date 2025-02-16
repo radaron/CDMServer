@@ -12,6 +12,7 @@
   "DELETE_USER_BUTTON": "Delete",
   "DELETE_USER_TITLE": "Delete User",
   "DEVICE_DELETE_ERROR": "Could not delete device.",
+  "DEVICE_MISSING_SHARING_EMAILS": "At least 1 valid user should be added.",
   "DEVICE_NAME_EXISTS": "Device name already exists. Try another one.",
   "DEVICE_NAME_PLACEHOLDER": "Device Name",
   "DEVICE_OWNERS_TITLE": "Device Owners",
