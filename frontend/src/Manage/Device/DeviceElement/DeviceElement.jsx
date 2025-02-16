@@ -4,6 +4,7 @@ import { useState, useContext } from "react"
 import { manageContext } from "../../Manage"
 import "./DeviceElement.css"
 import { useTranslation } from "react-i18next";
+import { LOGIN_PAGE, redirectToPage } from "../util"
 
 export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
 
@@ -26,6 +27,9 @@ export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
         })
         if (resp.status === 200) {
           refetch()
+        }
+        else if (resp.status === 401) {
+          redirectToPage(LOGIN_PAGE)
         }
         else {
           setToastData({message: t('DEVICE_DELETE_ERROR'), type: "danger"})
