@@ -31,6 +31,7 @@ export const Manage = () => {
   const [userInfo, setUserInfo] = useState({})
   const [selectedTab, setSelectedTab] = useState(DEVICE)
   const [toastData, setToastData] = useState({})
+  const [torrentSearchResults, setTorrentSearchResults] = useState([])
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -97,7 +98,7 @@ export const Manage = () => {
             </Toast.Header>
             <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
-      <manageContext.Provider value={{setToastData}}>
+      <manageContext.Provider value={{setToastData, setTorrentSearchResults, torrentSearchResults}}>
         <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut}/>
         {tabComponents[selectedTab]}
       </manageContext.Provider>
