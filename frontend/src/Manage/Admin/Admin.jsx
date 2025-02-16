@@ -4,7 +4,7 @@ import { manageContext } from '../Manage'
 import { DeleteUser } from "./DeleteUser"
 import "./Admin.css"
 import { useTranslation } from "react-i18next"
-import { LOGIN_PAGE, redirectToPage } from "../util"
+import { LOGIN_PAGE, redirectToPage } from "../../util"
 
 export const Admin = () => {
 

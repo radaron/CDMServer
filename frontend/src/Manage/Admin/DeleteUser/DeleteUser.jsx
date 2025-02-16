@@ -3,7 +3,7 @@ import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './DeleteUser.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from "../util"
+import { LOGIN_PAGE, redirectToPage } from "../../../util"
 
 export const DeleteUser = ({fetchUsers, users}) => {
 
