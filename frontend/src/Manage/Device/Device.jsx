@@ -47,7 +47,12 @@ export const Device = () => {
     <div className="device">
       <SettingsModal data={selectedDeviceData} setData={setSelectedDeviceData}/>
       {devices.map((device) => (
-        <DeviceElement key={device.id} deviceData={device} refetch={getDevices} setSelectedDeviceData={setSelectedDeviceData}/>
+        <DeviceElement
+          key={device.id}
+          deviceData={device}
+          refetch={getDevices}
+          setSelectedDeviceData={setSelectedDeviceData}
+        />
       ))}
       <AddDevice refetch={getDevices}/>
     </div>

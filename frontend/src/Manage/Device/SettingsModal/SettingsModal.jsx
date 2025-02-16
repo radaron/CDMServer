@@ -31,13 +31,15 @@ export const SettingsModal = ({ data, setData }) => {
       else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       }
+      else if (resp.status === 400) {
+        setToastData({message: t('DEVICE_MISSING_SHARING_EMAILS'), type: "danger"})
+      }
       else {
         setToastData({message: t('DEVICE_SETTINGS_UPDATE_ERROR'), type: "danger"})
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
     }
-    setData({})
   }
 
   return (

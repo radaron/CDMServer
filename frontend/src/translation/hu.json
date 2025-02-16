@@ -12,6 +12,7 @@
   "DELETE_USER_BUTTON": "Törlés",
   "DELETE_USER_TITLE": "Felhasználó törlése",
   "DEVICE_DELETE_ERROR": "Az eszközt nem sikerült törölni.",
+  "DEVICE_MISSING_SHARING_EMAILS": "Legalább 1 érvényes felhasználót hozzá kell adni.",
   "DEVICE_NAME_EXISTS": "Az eszköz név már létezik. Próbáljon másikat.",
   "DEVICE_NAME_PLACEHOLDER": "Eszköz neve",
   "DEVICE_OWNERS_TITLE": "Eszkoz tulajdonosok",
