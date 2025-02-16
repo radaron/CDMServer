@@ -36,7 +36,6 @@ export const DeviceElement = ({deviceData, refetch, setSelectedDeviceData}) => {
         }
       } catch (error) {
         setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-        console.log(error)
       }
     }
   }

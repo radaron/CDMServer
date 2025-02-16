@@ -53,7 +53,6 @@ export const Manage = () => {
         }
     } catch (error) {
       setUserInfo({})
-      console.log(error)
     }
   }
   getUserInfo()
@@ -72,10 +71,10 @@ export const Manage = () => {
         redirectToPage(LOGIN_PAGE)
       }
       else {
-        console.log(t('LOGOUT_FAILED'))
+        setToastData({message: t('LOGOUT_FAILED'), type: 'danger'})
       }
     } catch (error) {
-      console.log(error)
+      setToastData({message: t('LOGOUT_FAILED'), type: 'danger'})
     }
   }
 

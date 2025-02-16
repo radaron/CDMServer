@@ -36,7 +36,6 @@ export const SettingsModal = ({ data, setData }) => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
     setData({})
   }

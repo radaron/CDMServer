@@ -32,7 +32,6 @@ export const Admin = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
-      console.log(error)
     }
   }
 
