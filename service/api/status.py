@@ -1,7 +1,16 @@
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager
-from service.models.database import AsyncSession, get_session, select, desc, Device, User, Torrent
+from service.models.database import (
+    AsyncSession,
+    get_session,
+    select,
+    desc,
+    Device,
+    User,
+    Torrent,
+    user_device_association,
+)
 
 
 router = APIRouter()
