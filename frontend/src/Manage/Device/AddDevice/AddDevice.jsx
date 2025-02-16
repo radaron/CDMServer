@@ -30,6 +30,9 @@ export const AddDevice = ({refetch}) => {
       else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       }
+      else if (resp.status === 409) {
+        setToastData({message: t('DEVICE_NAME_EXISTS'), type: 'danger'})
+      }
       else {
         setToastData({message: t('ADD_DEVICE_FAILED'), type: 'danger'})
       }
