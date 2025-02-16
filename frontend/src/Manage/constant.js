@@ -5,6 +5,14 @@ export const STATUS = 'status'
 export const SETTINGS = 'settings'
 export const IMDB = 'imdb'
 
+const MOVIES_PATH_NAME = 'movies_path'
+const SERIES_PATH_NAME = 'series_path'
+const MUSICS_PATH_NAME = 'musics_path'
+const BOOKS_PATH_NAME = 'books_path'
+const PROGRAMS_PATH_NAME = 'programs_path'
+const GAMES_PATH_NAME = 'games_path'
+const DEFAULT_PATH_NAME = 'default_path'
+
 export const searchWhere = [
   'name',
   'imdb',
@@ -40,3 +48,13 @@ export const searchCategory = [
   'misc',
   'mobil',
 ]
+
+export const DownloadFolders = {
+  [MOVIES_PATH_NAME]: 'MOVIES_PATH_TITLE',
+  [SERIES_PATH_NAME]: 'SERIES_PATH_TITLE',
+  [MUSICS_PATH_NAME]: 'MUSICS_PATH_TITLE',
+  [BOOKS_PATH_NAME]: 'BOOKS_PATH_TITLE',
+  [PROGRAMS_PATH_NAME]: 'PROGRAMS_PATH_TITLE',
+  [GAMES_PATH_NAME]: 'GAMES_PATH_TITLE',
+  [DEFAULT_PATH_NAME]: 'DEFAULT_PATH_TITLE',
+}
