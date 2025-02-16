@@ -54,8 +54,8 @@ async def download_file(
 
 @router.post("/status/")
 async def add_device(data: StatusData, session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)):
-    devices = await session.execute(select(Device).where(Device.token == x_api_key))
-    device = devices.scalars().first()
+    result = await session.execute(select(Device).where(Device.token == x_api_key))
+    device = result.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
 

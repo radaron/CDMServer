@@ -14,8 +14,7 @@ export const Download = () => {
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
   const [devices, setDevices] = useState([])
   const [isLoading, setLoading] = useState(false)
-  const [searchResults, setSearchResults] = useState([])
-  const { setToastData } = useContext(manageContext)
+  const { setToastData, setTorrentSearchResults, torrentSearchResults } = useContext(manageContext)
 
   const search = async (event) => {
     event.preventDefault()
@@ -32,7 +31,7 @@ export const Download = () => {
       )
       if (resp.status === 200) {
         const data = await resp.json()
-        setSearchResults(data.data.torrents)
+        setTorrentSearchResults(data.data.torrents)
       }
       else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
@@ -42,7 +41,6 @@ export const Download = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
     setLoading(false)
   }
@@ -69,7 +67,6 @@ export const Download = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
   }
 
@@ -99,7 +96,6 @@ export const Download = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
   }
 
@@ -151,7 +147,7 @@ export const Download = () => {
         </Container>
       </Form>
     {
-      searchResults.length > 0
+      torrentSearchResults.length > 0
       && <Container className="shadow p-2 pt-0 bg-white rounded results" fluid="true">
         <Row className="bg-info p-3">
           <Col xs={6}>{t('TITLE')}</Col>
@@ -161,7 +157,7 @@ export const Download = () => {
           <Col xs={true}>{t('LEECHERS')}</Col>
           <Col xs={true}></Col>
         </Row>
-      {searchResults.map((result) => (
+      {torrentSearchResults.map((result) => (
         <div key={result.id}>
           <hr className="m-0"/>
           <Row className="result-element p-2">
@@ -190,10 +186,11 @@ export const Download = () => {
                     </Dropdown.Menu>
                   </Dropdown>
                 : <Button
-                  variant="success"
-                  size="sm"
-                  onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}>
-                    {t('DOWNLOAD_BUTTON')}
+                    disabled={devices.length === 0}
+                    variant={devices.length === 0 ? "secondary" : "success"}
+                    size="sm"
+                    onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}>
+                      {t('DOWNLOAD_BUTTON')}
                   </Button>
               }
             </Col>

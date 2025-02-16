@@ -10,15 +10,15 @@ GAMES_PATH_NAME = "games_path"
 DEFAULT_PATH_NAME = "default_path"
 
 
-DEFAULT_DEVICE_SETTINGS = [
-    {"title": "Movies path", "value": "/movies", "name": MOVIES_PATH_NAME},
-    {"title": "Series path", "value": "/series", "name": SERIES_PATH_NAME},
-    {"title": "Musics path", "value": "/musics", "name": MOVIES_PATH_NAME},
-    {"title": "Books path", "value": "/books", "name": BOOKS_PATH_NAME},
-    {"title": "Programs path", "value": "/programs", "name": PROGRAMS_PATH_NAME},
-    {"title": "Games path", "value": "/games", "name": GAMES_PATH_NAME},
-    {"title": "Default path", "value": "/downloads", "name": DEFAULT_PATH_NAME},
-]
+DEFAULT_DEVICE_SETTINGS = {
+    MOVIES_PATH_NAME: "/movies",
+    SERIES_PATH_NAME: "/series",
+    MUSICS_PATH_NAME: "/musics",
+    BOOKS_PATH_NAME: "/books",
+    PROGRAMS_PATH_NAME: "/programs",
+    GAMES_PATH_NAME: "/games",
+    DEFAULT_PATH_NAME: "/downloads",
+}
 
 
 def map_category_path(category: SearchParamType) -> str:

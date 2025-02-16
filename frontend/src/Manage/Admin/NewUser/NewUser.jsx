@@ -3,6 +3,7 @@ import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './NewUser.css'
 import { useTranslation } from 'react-i18next'
+import { LOGIN_PAGE, redirectToPage } from "../util"
 
 export const NewUser = ({ fetchUsers }) => {
 
@@ -32,12 +33,14 @@ export const NewUser = ({ fetchUsers }) => {
           setToastData({message: t('USER_ADD_SUCCESS'), type: 'success'})
           fetchUsers()
         }
+        else if (resp.status === 401) {
+          redirectToPage(LOGIN_PAGE)
+        }
         else {
           setToastData({message: t('USER_ADD_ERROR'), type: 'danger'})
         }
       } catch (error) {
         setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
-        console.log(error)
       }
     }
 

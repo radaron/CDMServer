@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext } from "react"
-import { Toast } from "react-bootstrap"
+import { Toast, ToastContainer } from "react-bootstrap"
 import { Admin } from "./Admin"
 import { Header } from "./Header"
 import { Device } from "./Device"
@@ -31,6 +31,7 @@ export const Manage = () => {
   const [userInfo, setUserInfo] = useState({})
   const [selectedTab, setSelectedTab] = useState(DEVICE)
   const [toastData, setToastData] = useState({})
+  const [torrentSearchResults, setTorrentSearchResults] = useState([])
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -53,7 +54,6 @@ export const Manage = () => {
         }
     } catch (error) {
       setUserInfo({})
-      console.log(error)
     }
   }
   getUserInfo()
@@ -72,10 +72,10 @@ export const Manage = () => {
         redirectToPage(LOGIN_PAGE)
       }
       else {
-        console.log(t('LOGOUT_FAILED'))
+        setToastData({message: t('LOGOUT_FAILED'), type: 'danger'})
       }
     } catch (error) {
-      console.log(error)
+      setToastData({message: t('LOGOUT_FAILED'), type: 'danger'})
     }
   }
 
@@ -85,20 +85,18 @@ export const Manage = () => {
       style={{ backgroundImage: `url(${BackgroundImage})` }}
       className="manage__wrapper"
     >
+      <ToastContainer position="bottom-start" className="p-3">
         <Toast
-          delay={3000}
+          delay={5000}
           show={Object.keys(toastData).length > 0}
           onClose={() => setToastData({})}
           bg={toastData?.type?.toLowerCase()}
-          className="toaster"
           autohide
         >
-            <Toast.Header>
-              <strong className="me-auto"></strong>
-            </Toast.Header>
-            <Toast.Body>{toastData.message}</Toast.Body>
+          <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
-      <manageContext.Provider value={{setToastData}}>
+      </ToastContainer>
+      <manageContext.Provider value={{setToastData, setTorrentSearchResults, torrentSearchResults}}>
         <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut}/>
         {tabComponents[selectedTab]}
       </manageContext.Provider>
