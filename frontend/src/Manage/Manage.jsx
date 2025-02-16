@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext } from "react"
-import { Toast } from "react-bootstrap"
+import { Toast, ToastContainer } from "react-bootstrap"
 import { Admin } from "./Admin"
 import { Header } from "./Header"
 import { Device } from "./Device"
@@ -85,19 +85,17 @@ export const Manage = () => {
       style={{ backgroundImage: `url(${BackgroundImage})` }}
       className="manage__wrapper"
     >
+      <ToastContainer position="bottom-start" className="p-3">
         <Toast
-          delay={3000}
+          delay={5000}
           show={Object.keys(toastData).length > 0}
           onClose={() => setToastData({})}
           bg={toastData?.type?.toLowerCase()}
-          className="toaster"
           autohide
         >
-            <Toast.Header>
-              <strong className="me-auto"></strong>
-            </Toast.Header>
-            <Toast.Body>{toastData.message}</Toast.Body>
+          <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
+      </ToastContainer>
       <manageContext.Provider value={{setToastData, setTorrentSearchResults, torrentSearchResults}}>
         <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut}/>
         {tabComponents[selectedTab]}
