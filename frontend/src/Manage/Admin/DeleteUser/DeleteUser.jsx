@@ -3,6 +3,7 @@ import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './DeleteUser.css'
 import { useTranslation } from 'react-i18next'
+import { LOGIN_PAGE, redirectToPage } from "../util"
 
 export const DeleteUser = ({fetchUsers, users}) => {
 
@@ -22,6 +23,9 @@ export const DeleteUser = ({fetchUsers, users}) => {
       })
       if (resp.status === 200) {
         setToastData({message: t('USER_DELETE_SUCCESS'), type: 'success'})
+      }
+      else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
       }
       else {
         setToastData({message: t('USER_DELETE_ERROR'), type: 'danger'})

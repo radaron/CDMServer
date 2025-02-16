@@ -4,7 +4,6 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette import status
 from service.api.auth import router as login_router
 from service.api.users import router as users_router
@@ -12,10 +11,15 @@ from service.api.devices import router as devices_router
 from service.api.client import router as client_router
 from service.api.download import router as download_router
 from service.api.status import router as status_router
-from service.models.database import init_db
-from service.util.logger import logger
+from service.models.database import init_db, User
 from service.util.configuration import DEFAULT_LANGUAGE
 from service.util.auth import create_admin_user, manager
+
+
+allowed_origins = [
+    "http://localhost:3000",
+    "https://cdm.radaron.hu",
+]
 
 
 @asynccontextmanager
@@ -33,21 +37,10 @@ app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")
 app.include_router(status_router, prefix="/api/status")
 app.add_middleware(
-    CORSMiddleware, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
+    CORSMiddleware, allow_origins=allowed_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
-
-@app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):  # pylint: disable=unused-argument
-    logger.warning(exc)
-    if exc.status_code in (status.HTTP_403_FORBIDDEN, status.HTTP_401_UNAUTHORIZED):
-        return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/login", status_code=status.HTTP_302_FOUND)
-    return HTMLResponse(
-        status_code=exc.status_code,
-        content=f"<h1>{exc.status_code}</h1><p>{exc.detail}</p>",
-    )
 
 
 @app.get("/favicon.png", response_class=HTMLResponse)
@@ -66,7 +59,7 @@ async def login(request: Request, lang: str = "en"):  # pylint: disable=unused-a
 
 
 @app.get("/{lang}/manage", response_class=HTMLResponse)
-async def manage(request: Request, lang: str = "en", user=Depends(manager)):
+async def manage(request: Request, lang: str = "en", user: User = Depends(manager.optional)):
     if user is None:
         return RedirectResponse(url=f"/{lang}/login", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse(request=request, name="index.html")

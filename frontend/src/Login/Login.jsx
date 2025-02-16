@@ -29,7 +29,6 @@ export const Login = () => {
               password: inputPassword
           })
       })
-      const data = await resp.json()
       if (resp.status === 200) {
         redirectToPage(MANAGE_PAGE)
       }
