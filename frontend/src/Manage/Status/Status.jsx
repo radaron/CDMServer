@@ -46,7 +46,6 @@ export const Status = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
-      console.log(error)
     }
   }
 
@@ -76,7 +75,6 @@ export const Status = () => {
           }
         } catch (error) {
           setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
-          console.log(error)
         }
       }
     }

@@ -32,7 +32,8 @@ class NewDeviceData(BaseData):
 
 
 class EditDeviceData(BaseData):
-    settings: list[dict[str, str]]
+    settings: dict[str, str]
+    user_emails: list[str]
 
 
 class AddDownloadData(BaseData):

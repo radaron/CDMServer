@@ -3,6 +3,7 @@ import { manageContext } from "../../Manage"
 import { Form, Button } from "react-bootstrap"
 import "./AddDevice.css"
 import { useTranslation } from "react-i18next"
+import { LOGIN_PAGE, redirectToPage } from "../util"
 
 export const AddDevice = ({refetch}) => {
 
@@ -26,12 +27,17 @@ export const AddDevice = ({refetch}) => {
         setDeviceName("")
         refetch()
       }
+      else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      }
+      else if (resp.status === 409) {
+        setToastData({message: t('DEVICE_NAME_EXISTS'), type: 'danger'})
+      }
       else {
         setToastData({message: t('ADD_DEVICE_FAILED'), type: 'danger'})
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
-      console.log(error)
     }
   }
 

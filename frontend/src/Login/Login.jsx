@@ -29,17 +29,14 @@ export const Login = () => {
               password: inputPassword
           })
       })
-      const data = await resp.json()
       if (resp.status === 200) {
         redirectToPage(MANAGE_PAGE)
       }
       else {
         setAlertMessage(t('LOGIN_FAILED'))
       }
-      console.log(data)
   } catch (error) {
     setAlertMessage(t('UNEXPECTED_ERROR'))
-    console.log(error)
   }
     setLoading(false);
   }
