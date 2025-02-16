@@ -42,7 +42,6 @@ export const Download = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
     setLoading(false)
   }
@@ -69,7 +68,6 @@ export const Download = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
   }
 
@@ -99,7 +97,6 @@ export const Download = () => {
       }
     } catch (error) {
       setToastData({message: t('UNEXPECTED_ERROR'), type: "danger"})
-      console.log(error)
     }
   }
 

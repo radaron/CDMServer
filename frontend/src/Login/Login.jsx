@@ -35,10 +35,8 @@ export const Login = () => {
       else {
         setAlertMessage(t('LOGIN_FAILED'))
       }
-      console.log(data)
   } catch (error) {
     setAlertMessage(t('UNEXPECTED_ERROR'))
-    console.log(error)
   }
     setLoading(false);
   }
