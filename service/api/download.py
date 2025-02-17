@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from ncoreparser import AsyncClient, SearchParamWhere, SearchParamType, Torrent, ParamSort, ParamSeq
 from service.util.auth import manager
 from service.models.api import AddDownloadData
-from service.models.database import AsyncSession, get_session, select, Device, User
+from service.models.database import AsyncSession, get_session, select, Device, User, user_device_association
 from service.util.configuration import NCORE_USERNAME, NCORE_PASSWORD
 from service.constant import map_category_path
 
@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.get("/search/")
 async def get_order(
-    user: User = Depends(manager),
+    _: User = Depends(manager),
     pattern: str = None,
     category: str = SearchParamType.ALL_OWN.value,
     where: str = SearchParamWhere.NAME.value,
@@ -35,7 +35,11 @@ async def get_order(
 
 @router.post("/")
 async def add_download(data: AddDownloadData, user=Depends(manager), session: AsyncSession = Depends(get_session)):
-    result = await session.execute(select(Device).where(Device.user_id == user.id, Device.id == data.device_id))
+    result = await session.execute(
+        select(Device)
+        .join(user_device_association)
+        .where(user_device_association.c.user_id == user.id, Device.id == data.device_id)
+    )
     device = result.scalars().first()
 
     if device is None:
@@ -47,9 +51,9 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
     if torrent is None:
         return JSONResponse({"message": "Torrent not found"}, status_code=404)
     file_path = await client.download(torrent, tempfile.gettempdir(), override=True)
-    download_path = [setting for setting in device.settings if setting["name"] == map_category_path(torrent["type"])][
-        0
-    ]["value"]
+    download_path = [
+        value for setting_name, value in device.settings.items() if setting_name == map_category_path(torrent["type"])
+    ][0]
 
     existing_files = copy(device.file_list)
     existing_files[data.torrent_id] = {"file_path": file_path, "downloading_path": download_path}
