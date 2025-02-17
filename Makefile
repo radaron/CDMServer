@@ -1,5 +1,5 @@
 VIRTUALENV = .venv
-ACTIVATE = source $(VIRTUALENV)/bin/activate
+ACTIVATE = . $(VIRTUALENV)/bin/activate
 
 .venv:
 	python3 -m venv $(VIRTUALENV)
@@ -25,6 +25,7 @@ format:
 
 lint:
 	$(ACTIVATE) && python -m pylint service/
+	cd frontend && pnpm lint
 
 start-backend:
 	source .env.sh && $(ACTIVATE) && uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
