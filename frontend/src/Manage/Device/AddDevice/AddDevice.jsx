@@ -1,59 +1,55 @@
-import { useState, useContext } from "react"
-import { manageContext } from "../../Manage"
-import { Form, Button } from "react-bootstrap"
-import "./AddDevice.css"
-import { useTranslation } from "react-i18next"
-import { LOGIN_PAGE, redirectToPage } from "../../../util"
+import { useState, useContext } from 'react'
+import { manageContext } from '../../Manage'
+import { Form, Button } from 'react-bootstrap'
+import './AddDevice.css'
+import { useTranslation } from 'react-i18next'
+import { LOGIN_PAGE, redirectToPage } from '../../../util'
 
-export const AddDevice = ({refetch}) => {
-
+export const AddDevice = ({ refetch }) => {
   const { t } = useTranslation()
-  const [deviceName, setDeviceName] = useState("")
+  const [deviceName, setDeviceName] = useState('')
   const { setToastData } = useContext(manageContext)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const resp = await fetch("/api/devices/", {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              name: deviceName,
-          })
+      const resp = await fetch('/api/devices/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: deviceName
+        })
       })
       if (resp.status === 200) {
-        setDeviceName("")
+        setDeviceName('')
         refetch()
-      }
-      else if (resp.status === 401) {
+      } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
-      }
-      else if (resp.status === 409) {
-        setToastData({message: t('DEVICE_NAME_EXISTS'), type: 'danger'})
-      }
-      else {
-        setToastData({message: t('ADD_DEVICE_FAILED'), type: 'danger'})
+      } else if (resp.status === 409) {
+        setToastData({ message: t('DEVICE_NAME_EXISTS'), type: 'danger' })
+      } else {
+        setToastData({ message: t('ADD_DEVICE_FAILED'), type: 'danger' })
       }
     } catch (error) {
-      setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
   }
 
   return (
-    <Form className="shadow p-4 bg-white rounded add-device__wrapper" onSubmit={handleSubmit}>
-      <div className="h4 mb-2 text-center">{t('ADD_DEVICE_TITLE')}</div>
-      <Form.Group className="mb-2">
+    <Form className='shadow p-4 bg-white rounded add-device__wrapper' onSubmit={handleSubmit}>
+      <div className='h4 mb-2 text-center'>{t('ADD_DEVICE_TITLE')}</div>
+      <Form.Group className='mb-2'>
         <Form.Control
-          type="text"
+          type='text'
           value={deviceName}
           placeholder={t('DEVICE_NAME_PLACEHOLDER')}
           onChange={(e) => setDeviceName(e.target.value)}
           required
         />
       </Form.Group>
-      <Button className="w-100" variant="primary" type="submit">
+      <Button className='w-100' variant='primary' type='submit'>
         {t('ADD_DEVICE_BUTTON')}
       </Button>
     </Form>

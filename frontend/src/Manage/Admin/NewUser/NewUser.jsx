@@ -3,46 +3,43 @@ import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './NewUser.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from "../../../util"
+import { LOGIN_PAGE, redirectToPage } from '../../../util'
 
 export const NewUser = ({ fetchUsers }) => {
+  const { t } = useTranslation()
+  const [inputEmail, setInputEmail] = useState('')
+  const [inputPassword, setInputPassword] = useState('')
+  const [inputName, setInputName] = useState('')
+  const [inputIsAdmin, setInputIsAdmin] = useState(false)
+  const { setToastData } = useContext(manageContext)
 
-    const { t } = useTranslation()
-    const [inputEmail, setInputEmail] = useState('')
-    const [inputPassword, setInputPassword] = useState('')
-    const [inputName, setInputName] = useState('')
-    const [inputIsAdmin, setInputIsAdmin] = useState(false)
-    const { setToastData } = useContext(manageContext)
-
-    const handleSubmit = async (event) => {
-      event.preventDefault()
-      try {
-        const resp = await fetch('/api/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: inputEmail,
-                isAdmin: inputIsAdmin,
-                name: inputName,
-                password: inputPassword,
-            })
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const resp = await fetch('/api/users/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: inputEmail,
+          isAdmin: inputIsAdmin,
+          name: inputName,
+          password: inputPassword
         })
-        if (resp.status === 200) {
-          setToastData({message: t('USER_ADD_SUCCESS'), type: 'success'})
-          fetchUsers()
-        }
-        else if (resp.status === 401) {
-          redirectToPage(LOGIN_PAGE)
-        }
-        else {
-          setToastData({message: t('USER_ADD_ERROR'), type: 'danger'})
-        }
-      } catch (error) {
-        setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
+      })
+      if (resp.status === 200) {
+        setToastData({ message: t('USER_ADD_SUCCESS'), type: 'success' })
+        fetchUsers()
+      } else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      } else {
+        setToastData({ message: t('USER_ADD_ERROR'), type: 'danger' })
       }
+    } catch (error) {
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
+  }
 
   return (
     <Form className='shadow p-4 bg-white rounded new-user__wrapper' onSubmit={handleSubmit}>
@@ -85,4 +82,5 @@ export const NewUser = ({ fetchUsers }) => {
         {t('CREATE_USER_BUTTON')}
       </Button>
     </Form>
-)}
+  )
+}
