@@ -1,5 +1,5 @@
 import { NewUser } from './NewUser'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useCallback } from 'react'
 import { manageContext } from '../Manage'
 import { DeleteUser } from './DeleteUser'
 import './Admin.css'
@@ -11,7 +11,7 @@ export const Admin = () => {
   const [users, setUsers] = useState([])
   const { setToastData } = useContext(manageContext)
 
-  const getUsers = async () => {
+  const getUsers = useCallback(async () => {
     try {
       const resp = await fetch('/api/users/', {
         method: 'GET',
@@ -30,11 +30,11 @@ export const Admin = () => {
     } catch (error) {
       setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
-  }
+  }, [setToastData, t])
 
   useEffect(() => {
     getUsers()
-  }, [])
+  }, [getUsers])
 
   return (
     <div className='admin'>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useCallback } from 'react'
 import { DeviceElement } from './DeviceElement'
 import { AddDevice } from './AddDevice'
 import { SettingsModal } from './SettingsModal'
@@ -13,7 +13,7 @@ export const Device = () => {
   const [devices, setDevices] = useState([])
   const [selectedDeviceData, setSelectedDeviceData] = useState({})
 
-  const getDevices = async () => {
+  const getDevices = useCallback(async () => {
     try {
       const resp = await fetch('/api/devices/', {
         method: 'GET',
@@ -32,13 +32,13 @@ export const Device = () => {
     } catch (error) {
       setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
-  }
+  }, [setToastData, t])
 
   useEffect(() => {
     getDevices()
     const intervalId = setInterval(getDevices, 5000)
     return () => clearInterval(intervalId)
-  }, [selectedDeviceData])
+  }, [selectedDeviceData, getDevices])
 
   return (
     <div className='device'>
