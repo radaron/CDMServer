@@ -3,20 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
     "bootstrap": "^5.3.3",
-    "i18next": "^24.2.0",
-    "react": "^18.3.1",
-    "react-bootstrap": "^2.10.5",
+    "i18next": "^24.2.2",
+    "react": "^19.0.0",
+    "react-router": "^7.1.5",
+    "react-bootstrap": "^2.10.9",
     "react-bootstrap-icons": "^1.11.5",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.0.0",
     "react-i18next": "^15.4.0",
-    "react-router-dom": "^6.27.0",
     "react-scripts": "^5.0.1",
-    "sass": "^1.79.5",
-    "web-vitals": "^2.1.4"
+    "sass": "^1.85.0",
+    "web-vitals": "^4.2.4"
   },
   "devDependencies": {
     "standard": "^17.1.2"
@@ -45,5 +45,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
 }
