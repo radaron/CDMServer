@@ -18,6 +18,7 @@ dependencies = [
   "jinja2",
   "alembic",
   "ncoreparser",
+  "cryptography",
 
   # It is need because: https://github.com/pyca/bcrypt/issues/684
   "bcrypt==3.2.2",

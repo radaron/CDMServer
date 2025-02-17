@@ -68,6 +68,8 @@ class User(Base):
     password = Column(String(255))
     is_admin = Column(Boolean(), default=False)
     devices: Mapped[list["Device"]] = relationship("Device", secondary=user_device_association, back_populates="users")
+    ncore_user = Column(String(255), nullable=True)
+    ncore_pass = Column(String(255), nullable=True)
 
 
 class Device(Base):

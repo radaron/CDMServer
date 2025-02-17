@@ -13,7 +13,14 @@ class NewUserData(BaseData):
     email: EmailStr
     password: str
     is_admin: bool
-    name: str = ""
+    name: str
+
+
+class ModifyMyData(BaseData):
+    password: str | None = None
+    name: str | None = None
+    ncore_user: str | None = None
+    ncore_pass: str | None = None
 
 
 class LoginData(BaseData):
@@ -25,6 +32,8 @@ class MeData(BaseData):
     email: EmailStr
     is_admin: bool
     name: str
+    ncore_user: str | None = None
+    is_ncore_credentials_set: bool
 
 
 class NewDeviceData(BaseData):

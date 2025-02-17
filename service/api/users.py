@@ -1,12 +1,15 @@
+from cryptography.fernet import Fernet
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager, Hasher
+from service.util.configuration import SECRET_KEY
 from service.util.logger import logger
 from service.models.database import AsyncSession, User, get_session, select
-from service.models.api import NewUserData, MeData
+from service.models.api import NewUserData, MeData, ModifyMyData
 
 
 router = APIRouter()
+cipher_suite = Fernet(SECRET_KEY)
 
 
 @router.post("/")
@@ -51,9 +54,34 @@ async def delete_user(session: AsyncSession = Depends(get_session), user: User =
     return JSONResponse({"message": f"User {user_id} deleted successfully"})
 
 
+@router.patch("/me/")
+async def modify_user(data: ModifyMyData, session: AsyncSession = Depends(get_session), user: User = Depends(manager)):
+    result = await session.execute(select(User).where(User.id == user.id))
+    user_object = result.scalars().first()
+
+    if user_object is None:
+        return JSONResponse({"message": "Forbidden"}, status_code=403)
+
+    if data.ncore_user:
+        user_object.ncore_user = data.ncore_user
+    if data.ncore_pass:
+        user_object.ncore_pass = cipher_suite.encrypt(data.ncore_pass.encode("utf-8"))
+    await session.commit()
+    return JSONResponse({"message": f"User {user.id} updated successfully"})
+
+
 @router.get("/me/")
 def protected_route(user: User = Depends(manager)):
-    return JSONResponse(MeData(email=user.email, is_admin=user.is_admin, name=user.name).model_dump(), status_code=200)
+    return JSONResponse(
+        MeData(
+            email=user.email,
+            is_admin=user.is_admin,
+            name=user.name,
+            ncore_user=user.ncore_user,
+            is_ncore_credentials_set=user.ncore_user is not None and user.ncore_pass is not None,
+        ).model_dump(),
+        status_code=200,
+    )
 
 
 def dump_user(user: User) -> dict:
