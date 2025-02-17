@@ -15,7 +15,7 @@ lock: virtualenv
 	$(ACTIVATE) && pip-compile --upgrade --strip-extras --generate-hashes --extra dev pyproject.toml --output-file requirements-dev.txt
 
 reqs-fe:
-	cd frontend && npm install --legacy-peer-deps
+	cd frontend && rm -rf node_modules && pnpm install
 
 reqs:
 	$(ACTIVATE) && pip install -r requirements-dev.txt
@@ -30,11 +30,11 @@ start-backend:
 	source .env.sh && $(ACTIVATE) && uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
 
 start-frontent:
-	cd frontend && npm start
+	cd frontend && pnpm start
 
 build-frontend:
 	rm -rf static/* templates/*
-	cd frontend && CI=false npm run build
+	cd frontend && pnpm build
 	cp -r frontend/build/static/* static/
 	cp frontend/build/favicon.png static/favicon.png
 	cp frontend/build/index.html templates/index.html
