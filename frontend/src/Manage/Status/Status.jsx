@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useCallback } from 'react'
 import { Form, Container, Row, Col, ProgressBar } from 'react-bootstrap'
 import { manageContext } from '../Manage'
 import './Status.css'
@@ -22,7 +22,7 @@ export const Status = () => {
     seeding: 'success'
   }
 
-  const getDevices = async () => {
+  const getDevices = useCallback(async () => {
     try {
       const resp = await fetch('/api/devices/', {
         method: 'GET',
@@ -44,11 +44,11 @@ export const Status = () => {
     } catch (error) {
       setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
-  }
+  }, [setToastData, t])
 
   useEffect(() => {
     getDevices()
-  }, [])
+  }, [getDevices])
 
   useEffect(() => {
     const getStatus = async () => {
@@ -77,7 +77,7 @@ export const Status = () => {
     getStatus()
     const intervalId = setInterval(getStatus, 5000)
     return () => clearInterval(intervalId)
-  }, [selectedDeviceId, setToastData])
+  }, [selectedDeviceId, setToastData, t])
 
   return (
     <>

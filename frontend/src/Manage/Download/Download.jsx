@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useCallback } from 'react'
 import { Form, Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap'
 import { manageContext } from '../Manage'
 import { searchWhere, searchCategory } from '../constant'
@@ -15,7 +15,7 @@ export const Download = () => {
   const [isLoading, setLoading] = useState(false)
   const { setToastData, setTorrentSearchResults, torrentSearchResults } = useContext(manageContext)
 
-  const search = async (event) => {
+  const search = useCallback(async (event) => {
     event.preventDefault()
     setLoading(true)
     try {
@@ -40,9 +40,9 @@ export const Download = () => {
       setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
     setLoading(false)
-  }
+  }, [pattern, selectedSearchType, selectedSearchWhere, setToastData, setTorrentSearchResults, t])
 
-  const getDevices = async () => {
+  const getDevices = useCallback(async () => {
     try {
       const resp = await fetch('/api/devices/',
         {
@@ -63,7 +63,7 @@ export const Download = () => {
     } catch (error) {
       setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
-  }
+  }, [setToastData, t])
 
   const addToDownloadQueue = async (torrentId, deviceId) => {
     try {
@@ -92,7 +92,7 @@ export const Download = () => {
     }
   }
 
-  useEffect(() => { getDevices() }, [])
+  useEffect(() => { getDevices() }, [getDevices])
 
   return (
     <>
