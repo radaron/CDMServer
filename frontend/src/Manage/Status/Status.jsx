@@ -86,11 +86,13 @@ export const Status = () => {
 
   return (
     <>
-      <Form.Select className="shadow bg-white rounded select-box" onChange={(e) => setSelectedDeviceId(e.target.value)}>
+      <Container className='m-4 select-box'>
+          <Form.Select className=" bg-white rounded" onChange={(e) => setSelectedDeviceId(e.target.value)}>
             {devices.map((device) => (
               <option key={device.id} value={device.id}>{device.name}</option>
             ))}
           </Form.Select>
+      </Container>
       <Container className='shadow m-4 m-1 bg-white rounded status'>
           {statusData.map((torrent) => (
                 <Row key={torrent.name} className='p-4'>
