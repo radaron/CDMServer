@@ -3,35 +3,32 @@ import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './DeleteUser.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from "../../../util"
+import { LOGIN_PAGE, redirectToPage } from '../../../util'
 
-export const DeleteUser = ({fetchUsers, users}) => {
-
+export const DeleteUser = ({ fetchUsers, users }) => {
   const { t } = useTranslation()
   const [selectedUser, setSelectedUser] = useState(users[0]?.email)
   const { setToastData } = useContext(manageContext)
 
   const handleDelete = async (event) => {
     event.preventDefault()
-    const id = users.filter(user => user.email===selectedUser)[0].id
+    const id = users.filter(user => user.email === selectedUser)[0].id
     try {
       const resp = await fetch(`/api/users/${id}/`, {
-          method: 'DELETE',
-          headers: {
-              'Content-Type': 'application/json',
-          }
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
       if (resp.status === 200) {
-        setToastData({message: t('USER_DELETE_SUCCESS'), type: 'success'})
-      }
-      else if (resp.status === 401) {
+        setToastData({ message: t('USER_DELETE_SUCCESS'), type: 'success' })
+      } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
-      }
-      else {
-        setToastData({message: t('USER_DELETE_ERROR'), type: 'danger'})
+      } else {
+        setToastData({ message: t('USER_DELETE_ERROR'), type: 'danger' })
       }
     } catch (error) {
-      setToastData({message: t('UNEXPECTED_ERROR'), type: 'danger'})
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
     }
     fetchUsers()
   }
@@ -48,4 +45,5 @@ export const DeleteUser = ({fetchUsers, users}) => {
         {t('DELETE_USER_BUTTON')}
       </Button>
     </Form>
-)}
+  )
+}

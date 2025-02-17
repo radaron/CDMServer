@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router'
 import { Login } from './Login'
 import { Manage } from './Manage'
 import { initI18next } from './translation'
@@ -11,12 +11,12 @@ export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"/>
-          <Route path=":lang" >
-            <Route path="login" element={<Login/>} />
-            <Route path="manage" element={<Manage/>} />
-          </Route>
-        <Route/>
+        <Route path='/' />
+        <Route path=':lang'>
+          <Route path='login' element={<Login />} />
+          <Route path='manage' element={<Manage />} />
+        </Route>
+        <Route />
       </Routes>
     </BrowserRouter>
   )
