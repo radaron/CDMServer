@@ -14,7 +14,7 @@ from ncoreparser import (
     NcoreConnectionError,
 )
 from service.util.auth import manager
-from service.models.api import AddDownloadData
+from service.models.api import AddDownloadData, TorrentData
 from service.models.database import AsyncSession, get_session, select, Device, User, user_device_association
 from service.util.configuration import NCORE_USERNAME, NCORE_PASSWORD, SECRET_KEY
 from service.constant import map_category_path
@@ -82,6 +82,17 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
 
 
 def dump_torrent(torrent: Torrent) -> dict:
+    return TorrentData(
+        id=torrent["id"],
+        title=torrent["title"],
+        size=str(torrent["size"]),
+        seeders=torrent["seed"],
+        leechers=torrent["leech"],
+        category=torrent["type"].value,
+        url=torrent["url"],
+    ).model_dump()
+
+
 def get_ncore_credential(user: User):
     cipher_suite = Fernet(SECRET_KEY)
     if user.ncore_user and user.ncore_pass:

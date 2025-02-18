@@ -36,6 +36,12 @@ class MeData(BaseData):
     is_ncore_credential_set: bool
 
 
+class UserData(BaseData):
+    id: int
+    email: EmailStr
+    name: str
+
+
 class NewDeviceData(BaseData):
     name: str
 
@@ -45,9 +51,39 @@ class EditDeviceData(BaseData):
     user_emails: list[str]
 
 
+class DeviceData(BaseData):
+    id: int
+    name: str
+    active: bool
+    updated: int
+    token: str
+    settings: dict
+    userEmails: list
+
+
 class AddDownloadData(BaseData):
     torrent_id: int
     device_id: int
+
+
+class TorrentData(BaseData):
+    id: int
+    title: str
+    size: str
+    seeders: str
+    leechers: str
+    category: str
+    url: str
+
+
+class TorrentStatusData(BaseData):
+    id: int
+    name: str
+    status: str
+    progress: int
+    eta: int
+    downloadDir: str
+    totalSize: int
 
 
 class StatusDataItem(BaseData):
