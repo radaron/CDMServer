@@ -105,7 +105,6 @@ export const Download = () => {
                 value={pattern}
                 placeholder={t('SEARCH_PLACEHOLDER')}
                 onChange={(e) => setPattern(e.target.value)}
-                required
               />
             </Col>
             <Col xs>

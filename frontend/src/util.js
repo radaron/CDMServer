@@ -12,3 +12,15 @@ export const getLanguageFromUrl = () => {
   const language = path.split('/')[1]
   return language
 }
+
+const setLanguageToUrl = (language) => {
+  const pathParts = window.location.pathname.split('/')
+  pathParts[1] = language
+  window.location.pathname = pathParts.join('/')
+}
+
+export const toggleLanguage = () => {
+  const language = getLanguageFromUrl()
+  const newLanguage = language === 'en' ? 'hu' : 'en'
+  setLanguageToUrl(newLanguage)
+}

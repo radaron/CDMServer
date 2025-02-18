@@ -16,7 +16,7 @@ export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) =>
   }
 
   const deleteDevice = async () => {
-    if (window.confirm('Are you sure you want to delete this device?')) {
+    if (window.confirm(t('DELETE_DEVICE_CONFIRM'))) {
       try {
         const resp = await fetch(`/api/devices/${deviceData.id}/`, {
           method: 'DELETE',

@@ -3,7 +3,7 @@ from datetime import timedelta, datetime, timezone
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager
-from service.models.api import NewDeviceData, EditDeviceData
+from service.models.api import NewDeviceData, EditDeviceData, DeviceData
 from service.models.database import (
     AsyncSession,
     get_session,
@@ -108,12 +108,12 @@ async def delete_device(
 
 def dump_device(device: Device) -> dict:
     updated_utc = device.updated.replace(tzinfo=timezone.utc)
-    return {
-        "id": device.id,
-        "name": device.name,
-        "active": updated_utc > datetime.now(tz=timezone.utc) - ACTIVE_THRESHOLD,
-        "updated": updated_utc.timestamp(),
-        "token": device.token,
-        "settings": device.settings,
-        "userEmails": [user.email for user in device.users],
-    }
+    return DeviceData(
+        id=device.id,
+        name=device.name,
+        active=updated_utc > datetime.now(tz=timezone.utc) - ACTIVE_THRESHOLD,
+        updated=updated_utc.timestamp(),
+        token=device.token,
+        settings=device.settings,
+        userEmails=[user.email for user in device.users],
+    ).model_dump()

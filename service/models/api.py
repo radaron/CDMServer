@@ -13,7 +13,14 @@ class NewUserData(BaseData):
     email: EmailStr
     password: str
     is_admin: bool
-    name: str = ""
+    name: str
+
+
+class ModifyMyData(BaseData):
+    password: str | None = None
+    name: str | None = None
+    ncore_user: str | None = None
+    ncore_pass: str | None = None
 
 
 class LoginData(BaseData):
@@ -24,6 +31,14 @@ class LoginData(BaseData):
 class MeData(BaseData):
     email: EmailStr
     is_admin: bool
+    name: str
+    ncore_user: str | None = None
+    is_ncore_credential_set: bool
+
+
+class UserData(BaseData):
+    id: int
+    email: EmailStr
     name: str
 
 
@@ -36,9 +51,39 @@ class EditDeviceData(BaseData):
     user_emails: list[str]
 
 
+class DeviceData(BaseData):
+    id: int
+    name: str
+    active: bool
+    updated: int
+    token: str
+    settings: dict
+    userEmails: list
+
+
 class AddDownloadData(BaseData):
     torrent_id: int
     device_id: int
+
+
+class TorrentData(BaseData):
+    id: int
+    title: str
+    size: str
+    seeders: str
+    leechers: str
+    category: str
+    url: str
+
+
+class TorrentStatusData(BaseData):
+    id: int
+    name: str
+    status: str
+    progress: int
+    eta: int
+    downloadDir: str
+    totalSize: int
 
 
 class StatusDataItem(BaseData):
