@@ -43,6 +43,9 @@ async def delete_user(session: AsyncSession = Depends(get_session), user: User =
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
 
+    if user_id == user.id:
+        return JSONResponse({"message": "Cannot delete yourself"}, status_code=400)
+
     result = await session.execute(select(User).where(User.id == user_id))
     user_object = result.scalars().first()
 
