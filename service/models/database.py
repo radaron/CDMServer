@@ -37,7 +37,7 @@ async def init_db(retries: int = 5, delay: int = 5):
             async with engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
             break
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             if attempt < retries - 1:
                 logger.warning("Database connection failed. Retrying in %s seconds...", delay)
                 await asyncio.sleep(delay)
@@ -68,6 +68,8 @@ class User(Base):
     password = Column(String(255))
     is_admin = Column(Boolean(), default=False)
     devices: Mapped[list["Device"]] = relationship("Device", secondary=user_device_association, back_populates="users")
+    ncore_user = Column(String(255), nullable=True)
+    ncore_pass = Column(String(255), nullable=True)
 
 
 class Device(Base):

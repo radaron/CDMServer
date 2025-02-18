@@ -1,6 +1,7 @@
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
 from service.util.auth import manager
+from service.models.api import TorrentStatusData
 from service.models.database import (
     AsyncSession,
     get_session,
@@ -38,12 +39,12 @@ async def get_devices(
 
 
 def dump_torrent(torrent: Torrent):
-    return {
-        "id": torrent.torrent_id,
-        "name": torrent.name,
-        "status": torrent.status,
-        "progress": torrent.progress,
-        "eta": torrent.eta,
-        "downloadDir": torrent.download_dir,
-        "totalSize": torrent.total_size,
-    }
+    return TorrentStatusData(
+        id=torrent.torrent_id,
+        name=torrent.name,
+        status=torrent.status,
+        progress=torrent.progress,
+        eta=torrent.eta,
+        downloadDir=torrent.download_dir,
+        totalSize=torrent.total_size,
+    ).model_dump()
