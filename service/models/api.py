@@ -81,7 +81,7 @@ class TorrentStatusData(BaseData):
     name: str
     status: str
     progress: int
-    eta: int
+    eta: int | None
     downloadDir: str
     totalSize: int
 
