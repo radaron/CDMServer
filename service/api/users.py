@@ -5,7 +5,7 @@ from service.util.auth import manager, Hasher
 from service.util.configuration import SECRET_KEY
 from service.util.logger import logger
 from service.models.database import AsyncSession, User, get_session, select
-from service.models.api import NewUserData, MeData, ModifyMyData
+from service.models.api import NewUserData, MeData, ModifyMyData, UserData
 
 
 router = APIRouter()
@@ -33,7 +33,9 @@ async def get_users(session: AsyncSession = Depends(get_session), user: User = D
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     user_objects = await session.execute(select(User))
     user_objects = user_objects.scalars().all()
-    return JSONResponse({"data": {"users": [dump_user(u) for u in user_objects]}})
+    return JSONResponse(
+        {"data": {"users": [UserData(id=u.id, email=u.email, name=u.name).model_dump() for u in user_objects]}}
+    )
 
 
 @router.delete("/{user_id}/")
@@ -83,7 +85,3 @@ def get_user(user: User = Depends(manager)):
         ).model_dump(),
         status_code=200,
     )
-
-
-def dump_user(user: User) -> dict:
-    return {"id": user.id, "email": user.email, "name": user.name, "is_admin": user.is_admin}
