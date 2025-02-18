@@ -14,6 +14,7 @@
   "DELETE_DEVICE_CONFIRM": "Are you sure you want to delete device?",
   "DELETE_NCORE_CREDENTIALS_CONFIRM": "Are you sure you want to delete credentials?",
   "DELETE_USER_BUTTON": "Delete",
+  "DELETE_USER_CONFIRM": "Are you sure you want to delete user?",
   "DELETE_USER_TITLE": "Delete User",
   "DEVICE_DELETE_ERROR": "Could not delete device.",
   "DEVICE_MISSING_SHARING_EMAILS": "At least 1 valid user should be added.",
