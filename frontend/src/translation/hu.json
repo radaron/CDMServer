@@ -14,6 +14,7 @@
   "DELETE_DEVICE_CONFIRM": "Biztosan törölni szeretné az eszközt?",
   "DELETE_NCORE_CREDENTIALS_CONFIRM": "Biztosan törölni szeretné a bejelentkezési adatokat?",
   "DELETE_USER_BUTTON": "Törlés",
+  "DELETE_USER_CONFIRM": "Biztosan törölni szeretné a felhasználót?",
   "DELETE_USER_TITLE": "Felhasználó törlése",
   "DEVICE_DELETE_ERROR": "Az eszközt nem sikerült törölni.",
   "DEVICE_MISSING_SHARING_EMAILS": "Legalább 1 érvényes felhasználót hozzá kell adni.",
