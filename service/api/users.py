@@ -9,7 +9,6 @@ from service.models.api import NewUserData, MeData, ModifyMyData
 
 
 router = APIRouter()
-cipher_suite = Fernet(SECRET_KEY)
 
 
 @router.post("/")
@@ -22,7 +21,7 @@ async def register(data: NewUserData, session: AsyncSession = Depends(get_sessio
         )
         session.add(new_user)
         await session.commit()
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logger.error(e)
         return JSONResponse({"message": "User creation failed"}, status_code=400)
     return JSONResponse({"message": "User created successfully"})
@@ -61,24 +60,26 @@ async def modify_user(data: ModifyMyData, session: AsyncSession = Depends(get_se
 
     if user_object is None:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
-
-    if data.ncore_user:
+    if (
+        isinstance(data.ncore_user, str)
+        and isinstance(data.ncore_pass, str)
+    ):
+        cipher_suite = Fernet(SECRET_KEY)
         user_object.ncore_user = data.ncore_user
-    if data.ncore_pass:
-        user_object.ncore_pass = cipher_suite.encrypt(data.ncore_pass.encode("utf-8"))
+        user_object.ncore_pass = cipher_suite.encrypt(data.ncore_pass.encode("utf-8")) if data.ncore_pass else ""
     await session.commit()
     return JSONResponse({"message": f"User {user.id} updated successfully"})
 
 
 @router.get("/me/")
-def protected_route(user: User = Depends(manager)):
+def get_user(user: User = Depends(manager)):
     return JSONResponse(
         MeData(
             email=user.email,
             is_admin=user.is_admin,
             name=user.name,
             ncore_user=user.ncore_user,
-            is_ncore_credentials_set=user.ncore_user is not None and user.ncore_pass is not None,
+            is_ncore_credential_set=bool(user.ncore_user and user.ncore_pass)
         ).model_dump(),
         status_code=200,
     )

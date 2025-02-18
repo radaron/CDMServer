@@ -33,7 +33,7 @@ class MeData(BaseData):
     is_admin: bool
     name: str
     ncore_user: str | None = None
-    is_ncore_credentials_set: bool
+    is_ncore_credential_set: bool
 
 
 class NewDeviceData(BaseData):

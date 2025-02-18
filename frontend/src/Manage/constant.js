@@ -58,3 +58,5 @@ export const DownloadFolders = {
   [GAMES_PATH_NAME]: 'GAMES_PATH_TITLE',
   [DEFAULT_PATH_NAME]: 'DEFAULT_PATH_TITLE'
 }
+
+export const NCORE_PASSWORD_PLACEHOLDER = '********'
