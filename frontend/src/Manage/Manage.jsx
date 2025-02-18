@@ -86,6 +86,7 @@ export const Manage = () => {
           show={Object.keys(toastData).length > 0}
           onClose={() => setToastData({})}
           bg={toastData?.type?.toLowerCase()}
+          className='text-center'
           autohide
         >
           <Toast.Body>{toastData.message}</Toast.Body>
