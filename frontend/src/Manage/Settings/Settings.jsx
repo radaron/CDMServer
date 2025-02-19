@@ -5,7 +5,6 @@ import { manageContext } from '../Manage'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE, redirectToPage } from '../../util'
 import { NCORE_PASSWORD_PLACEHOLDER } from '../constant'
-import './Settings.css'
 
 export const Settings = () => {
   const { t } = useTranslation()
@@ -13,6 +12,8 @@ export const Settings = () => {
   const [userInfo, setUserInfo] = useState({})
   const [ncoreUserName, setNcoreUserName] = useState('')
   const [ncorePassword, setNcorePassword] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -76,15 +77,12 @@ export const Settings = () => {
       try {
         const resp = await fetch('/api/users/me/', {
           method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(
             {
               ncoreUser: '',
               ncorePass: ''
-            }
-          )
+            })
         })
         if (resp.status === 200) {
           setToastData({ message: t('CREDENTIALS_DELETED'), type: 'success' })
@@ -99,47 +97,116 @@ export const Settings = () => {
     }
   }
 
+  const updateLoginCredential = async (event) => {
+    event.preventDefault()
+    try {
+      const resp = await fetch('/api/users/me/', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: loginPassword })
+      })
+      if (resp.status === 200) {
+        setToastData({ message: t('CREDENTIALS_UPDATED'), type: 'success' })
+        setLoginPassword('')
+        setConfirmPassword('')
+      } else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      }
+    } catch (error) {
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+    }
+  }
+
   return (
-    <Container className='shadow p-4 bg-white rounded settings-ncore__wrapper'>
+    <Container>
       <Row>
-        <Col />
-        <Col xs={8} className='mb-2'>
-          <div className='h4 mb-2 text-center'>{t('SET_NCORE_CREDENTIALS')}</div>
+        <Col className='p-4 m-3 bg-white shadow rounded'>
+          <Row>
+            <Col />
+            <Col xs={8} className='mb-2'>
+              <div className='h4 mb-2 text-center'>{t('SET_NCORE_CREDENTIALS')}</div>
+            </Col>
+            <Col>
+              <Button variant='outline-danger' onClick={() => deleteNcoreCredential()}>
+                <EraserFill />
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form onSubmit={updateNcoreCredential}>
+                <Form.Group className='mb-2'>
+                  <Form.Control
+                    type='text'
+                    value={ncoreUserName}
+                    onChange={(e) => setNcoreUserName(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group className='mb-2'>
+                  <Form.Control
+                    type='password'
+                    value={ncorePassword}
+                    onChange={(e) => setNcorePassword(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+                <Button
+                  className='w-100'
+                  variant='primary'
+                  disabled={ncoreUserName === '' || ncorePassword === '' || ncorePassword === NCORE_PASSWORD_PLACEHOLDER}
+                  type='submit'
+                >
+                  {t('SET_NCORE_CREDENTIALS_BUTTON')}
+                </Button>
+              </Form>
+            </Col>
+          </Row>
         </Col>
-        <Col>
-          <Button variant='outline-danger' onClick={() => deleteNcoreCredential()}>
-            <EraserFill />
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Form onSubmit={updateNcoreCredential}>
-            <Form.Group className='mb-2'>
-              <Form.Control
-                type='text'
-                value={ncoreUserName}
-                onChange={(e) => setNcoreUserName(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group className='mb-2'>
-              <Form.Control
-                type='password'
-                value={ncorePassword}
-                onChange={(e) => setNcorePassword(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button
-              className='w-100'
-              variant='primary'
-              disabled={ncoreUserName === '' || ncorePassword === '' || ncorePassword === NCORE_PASSWORD_PLACEHOLDER}
-              type='submit'
-            >
-              {t('SET_NCORE_CREDENTIALS_BUTTON')}
-            </Button>
-          </Form>
+        <Col className='p-4 m-3 bg-white shadow rounded'>
+          <Row>
+            <Col>
+              <div className='h4 mb-2 text-center'>{t('CHANGE_LOGIN_PASSWORD')}</div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form onSubmit={(event) => updateLoginCredential(event)}>
+                <Form.Group className='mb-2'>
+                  <Form.Control
+                    type='text'
+                    value={userInfo.email}
+                    disabled={true}
+                  />
+                </Form.Group>
+                <Form.Group className='mb-2'>
+                  <Form.Control
+                    type='password'
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder={t('NEW_PASSWORD_PLACEHOLDER')}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group className='mb-2'>
+                  <Form.Control
+                    type='password'
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder={t('CONFIRM_PASSWORD_PLACEHOLDER')}
+                    required
+                  />
+                </Form.Group>
+                <Button
+                  className='w-100'
+                  variant='primary'
+                  disabled={loginPassword !== confirmPassword}
+                  type='submit'
+                >
+                  {t('SET_NCORE_CREDENTIALS_BUTTON')}
+                </Button>
+              </Form>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>
