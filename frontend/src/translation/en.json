@@ -65,6 +65,7 @@
   "SIZE": "Size",
   "SERIES_PATH_TITLE": "Series download path",
   "TITLE": "Title",
+  "TOKEN_COPIED": "Token copied to clipboard.",
   "TOKEN_TITLE": "Token",
   "UNEXPECTED_ERROR": "An unexpected error occurred. Try again later.",
   "USER_ADD_ERROR": "Could not add user.",

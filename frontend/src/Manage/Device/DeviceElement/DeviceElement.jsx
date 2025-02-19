@@ -1,6 +1,6 @@
 import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
 import { GearFill } from 'react-bootstrap-icons'
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './DeviceElement.css'
 import { useTranslation } from 'react-i18next'
@@ -8,11 +8,11 @@ import { LOGIN_PAGE, redirectToPage } from '../../../util'
 
 export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) => {
   const { t } = useTranslation()
-  const [isTokenVisible, setIsTokenVisible] = useState(false)
   const { setToastData } = useContext(manageContext)
 
-  const toggleTokenVisibility = () => {
-    setIsTokenVisible(!isTokenVisible)
+  const copyTokenToClipboard = () => {
+    navigator.clipboard.writeText(deviceData.token)
+    setToastData({ message: t('TOKEN_COPIED'), type: 'success' })
   }
 
   const deleteDevice = async () => {
@@ -65,9 +65,7 @@ export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) =>
       <Row className='mb-2'>
         <Col sm={3} className='fw-bold'>{t('TOKEN_TITLE')}</Col>
         <Col sm>
-          <div onClick={toggleTokenVisibility}>
-            {isTokenVisible ? deviceData.token : '••••••••••'}
-          </div>
+          <div onClick={copyTokenToClipboard}>{'••••••••••'}</div>
         </Col>
       </Row>
       <Button className='w-100' variant='danger' onClick={deleteDevice}>
