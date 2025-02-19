@@ -80,15 +80,18 @@ export const Manage = () => {
       style={{ backgroundImage: `url(${BackgroundImage})` }}
       className='manage__wrapper'
     >
-      <ToastContainer position='bottom-start' className='p-3'>
+      <ToastContainer position='top-center' className='p-3'>
         <Toast
-          delay={5000}
+          delay={4000}
           show={Object.keys(toastData).length > 0}
           onClose={() => setToastData({})}
           bg={toastData?.type?.toLowerCase()}
           className='text-center'
           autohide
         >
+          <Toast.Header>
+            <strong className='me-auto'></strong>
+          </Toast.Header>
           <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
       </ToastContainer>
