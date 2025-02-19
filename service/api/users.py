@@ -72,8 +72,11 @@ async def modify_user(data: ModifyMyData, session: AsyncSession = Depends(get_se
         cipher_suite = Fernet(SECRET_KEY)
         user_object.ncore_user = data.ncore_user
         user_object.ncore_pass = cipher_suite.encrypt(data.ncore_pass.encode("utf-8")) if data.ncore_pass else ""
+    if isinstance(data.password, str) and len(data.password) > 0:
+        user_object.password = Hasher.get_password_hash(data.password)
+
     await session.commit()
-    return JSONResponse({"message": f"User {user.id} updated successfully"})
+    return JSONResponse({"message": f"User {user.id} updated successfully"}, status_code=200)
 
 
 @router.get("/me/")
