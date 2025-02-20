@@ -81,7 +81,7 @@ class Device(Base):
     settings = Column(JSON, default=DEFAULT_DEVICE_SETTINGS)
     updated = Column(DateTime, default=datetime.now(tz=timezone.utc))
     users: Mapped[list["User"]] = relationship("User", secondary=user_device_association, back_populates="devices")
-    torrents: Mapped[list["Torrent"]] = relationship(back_populates="device")
+    torrents: Mapped[list["Torrent"]] = relationship("Torrent", back_populates="device", cascade="all, delete-orphan")
 
 
 class Torrent(Base):
@@ -96,4 +96,4 @@ class Torrent(Base):
     total_size = Column(BigInteger)
     eta = Column(Integer, nullable=True)
     device_id: Mapped[int] = Column(Integer, ForeignKey("devices.id"))
-    device: Mapped["Device"] = relationship(back_populates="torrents")
+    device: Mapped["Device"] = relationship("Device", back_populates="torrents")
