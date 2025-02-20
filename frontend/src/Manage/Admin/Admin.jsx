@@ -1,8 +1,8 @@
 import { NewUser } from './NewUser'
 import { useEffect, useState, useContext, useCallback } from 'react'
+import { Container, Row } from 'react-bootstrap'
 import { manageContext } from '../Manage'
 import { DeleteUser } from './DeleteUser'
-import './Admin.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE, redirectToPage } from '../../util'
 
@@ -37,9 +37,11 @@ export const Admin = () => {
   }, [getUsers])
 
   return (
-    <div className='admin'>
-      <NewUser fetchUsers={getUsers} />
-      <DeleteUser fetchUsers={getUsers} users={users} />
-    </div>
+    <Container>
+      <Row>
+        <NewUser fetchUsers={getUsers} />
+        <DeleteUser fetchUsers={getUsers} users={users} />
+      </Row>
+    </Container>
   )
 }

@@ -1,4 +1,4 @@
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Col } from 'react-bootstrap'
 import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './NewUser.css'
@@ -42,45 +42,47 @@ export const NewUser = ({ fetchUsers }) => {
   }
 
   return (
-    <Form className='shadow p-4 bg-white rounded new-user__wrapper' onSubmit={handleSubmit}>
-      <div className='h4 mb-2 text-center'>{t('ADD_NEW_USER_TITLE')}</div>
-      <Form.Group className='mb-2'>
-        <Form.Control
-          type='text'
-          value={inputEmail}
-          placeholder={t('EMAIL_PLACEHOLDER')}
-          onChange={(e) => setInputEmail(e.target.value)}
-          required
-        />
-      </Form.Group>
-      <Form.Group className='mb-2'>
-        <Form.Control
-          type='password'
-          value={inputPassword}
-          placeholder={t('PASSWORD_PLACEHOLDER')}
-          onChange={(e) => setInputPassword(e.target.value)}
-          required
-        />
-      </Form.Group>
-      <Form.Group className='mb-2'>
-        <Form.Control
-          type='text'
-          value={inputName}
-          placeholder={t('NAME_PLACEHOLDER')}
-          onChange={(e) => setInputName(e.target.value)}
-          required
-        />
-      </Form.Group>
-      <Form.Group className='mb-3'>
-        <Form.Check
-          type='switch'
-          label={t('IS_ADMIN_CHECKBOX')}
-          onChange={(e) => setInputIsAdmin(e.target.checked)}
-        />
-      </Form.Group>
-      <Button className='w-100' variant='primary' type='submit'>
-        {t('CREATE_USER_BUTTON')}
-      </Button>
-    </Form>
+    <Col className='p-4 m-3 bg-white shadow rounded'>
+      <Form onSubmit={handleSubmit}>
+        <div className='h4 mb-2 text-center'>{t('ADD_NEW_USER_TITLE')}</div>
+        <Form.Group className='mb-2'>
+          <Form.Control
+            type='text'
+            value={inputEmail}
+            placeholder={t('EMAIL_PLACEHOLDER')}
+            onChange={(e) => setInputEmail(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className='mb-2'>
+          <Form.Control
+            type='password'
+            value={inputPassword}
+            placeholder={t('PASSWORD_PLACEHOLDER')}
+            onChange={(e) => setInputPassword(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className='mb-2'>
+          <Form.Control
+            type='text'
+            value={inputName}
+            placeholder={t('NAME_PLACEHOLDER')}
+            onChange={(e) => setInputName(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className='mb-3'>
+          <Form.Check
+            type='switch'
+            label={t('IS_ADMIN_CHECKBOX')}
+            onChange={(e) => setInputIsAdmin(e.target.checked)}
+          />
+        </Form.Group>
+        <Button className='w-100' variant='primary' type='submit'>
+          {t('CREATE_USER_BUTTON')}
+        </Button>
+      </Form>
+    </Col>
   )
 }
