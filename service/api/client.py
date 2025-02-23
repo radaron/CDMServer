@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi import APIRouter, Depends, Header
 from service.models.api import StatusData
-from service.models.database import AsyncSession, get_session, select, Device, Torrent
+from service.models.database import AsyncSession, get_session, select, delete, Device, Torrent
 
 
 router = APIRouter()
@@ -58,6 +58,8 @@ async def add_device(data: StatusData, session: AsyncSession = Depends(get_sessi
     device = result.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
+
+    await session.execute(delete(Torrent).where(Torrent.device_id == device.id))
 
     for item in data.data:
         result = await session.execute(
