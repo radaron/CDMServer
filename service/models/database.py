@@ -14,6 +14,7 @@ from sqlalchemy import (
     DateTime,
     JSON,
     Table,
+    delete,
 )
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
