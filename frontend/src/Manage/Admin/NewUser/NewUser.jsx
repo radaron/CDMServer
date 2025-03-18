@@ -3,7 +3,8 @@ import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './NewUser.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../../util'
+import { LOGIN_PAGE } from '../../../constant'
+import { redirectToPage } from '../../../util'
 
 export const NewUser = ({ fetchUsers }) => {
   const { t } = useTranslation()

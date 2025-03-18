@@ -4,7 +4,7 @@ import './Login.css'
 import { useTranslation } from 'react-i18next'
 import BackgroundImage from '../background.png'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
-import { MANAGE_PAGE, redirectToPage } from '../util'
+import { DOWNLOAD_PAGE } from '../Manage/constant'
 
 export const Login = () => {
   const { t } = useTranslation()
@@ -29,7 +29,7 @@ export const Login = () => {
         })
       })
       if (resp.status === 200) {
-        redirectToPage(MANAGE_PAGE)
+        redirectToPage(`${MANAGE_PAGE}/${DOWNLOAD_PAGE}`)
       } else {
         setAlertMessage(t('LOGIN_FAILED'))
       }
