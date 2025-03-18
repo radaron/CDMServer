@@ -4,7 +4,8 @@ import { manageContext } from '../Manage'
 import { searchWhere, searchCategory } from '../constant'
 import './Download.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../util'
+import { LOGIN_PAGE } from '../../constant'
+import { redirectToPage } from '../../util'
 
 export const Download = () => {
   const { t } = useTranslation()
