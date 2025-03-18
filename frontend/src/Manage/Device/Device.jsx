@@ -5,7 +5,8 @@ import { SettingsModal } from './SettingsModal'
 import { manageContext } from '../Manage'
 import './Device.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../util'
+import { LOGIN_PAGE } from '../../constant'
+import { redirectToPage } from '../../util'
 
 export const Device = () => {
   const { t } = useTranslation()
