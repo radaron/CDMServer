@@ -4,6 +4,8 @@ import './Login.css'
 import { useTranslation } from 'react-i18next'
 import BackgroundImage from '../background.png'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
+import { MANAGE_PAGE } from '../constant'
+import { redirectToPage } from '../util'
 import { DOWNLOAD_PAGE } from '../Manage/constant'
 
 export const Login = () => {

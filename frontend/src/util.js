@@ -1,6 +1,3 @@
-export const LOGIN_PAGE = 'login'
-export const MANAGE_PAGE = 'manage'
-
 export const redirectToPage = (page) => {
   window.location.pathname = page
 }
