@@ -4,7 +4,8 @@ import { useContext } from 'react'
 import { manageContext } from '../../Manage'
 import './DeviceElement.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../../util'
+import { LOGIN_PAGE } from '../../../constant'
+import { redirectToPage } from '../../../util'
 
 export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) => {
   const { t } = useTranslation()

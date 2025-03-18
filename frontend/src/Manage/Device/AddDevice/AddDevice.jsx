@@ -3,7 +3,8 @@ import { manageContext } from '../../Manage'
 import { Form, Button } from 'react-bootstrap'
 import './AddDevice.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../../util'
+import { LOGIN_PAGE } from '../../../constant'
+import { redirectToPage } from '../../../util'
 
 export const AddDevice = ({ refetch }) => {
   const { t } = useTranslation()

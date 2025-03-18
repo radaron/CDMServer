@@ -3,7 +3,8 @@ import { PersonFillDash, PersonFillAdd } from 'react-bootstrap-icons'
 import { useContext } from 'react'
 import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../../util'
+import { LOGIN_PAGE } from '../../../constant'
+import { redirectToPage } from '../../../util'
 import { DownloadFolders } from '../../constant'
 
 export const SettingsModal = ({ data, setData }) => {
