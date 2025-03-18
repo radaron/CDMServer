@@ -2,7 +2,8 @@ import { Form, Button, Col } from 'react-bootstrap'
 import { useState, useContext, useEffect } from 'react'
 import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../../../util'
+import { LOGIN_PAGE } from '../../../constant'
+import { redirectToPage } from '../../../util'
 
 export const DeleteUser = ({ fetchUsers, users }) => {
   const { t } = useTranslation()

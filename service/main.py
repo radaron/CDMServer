@@ -12,7 +12,6 @@ from service.api.client import router as client_router
 from service.api.download import router as download_router
 from service.api.status import router as status_router
 from service.models.database import init_db, User
-from service.util.configuration import DEFAULT_LANGUAGE
 from service.util.auth import create_admin_user, manager
 
 
@@ -50,16 +49,16 @@ async def favicon(request: Request):  # pylint: disable=unused-argument
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):  # pylint: disable=unused-argument
-    return RedirectResponse(url=f"/{DEFAULT_LANGUAGE}/manage", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(url="/manage/download", status_code=status.HTTP_302_FOUND)
 
 
-@app.get("/{lang}/login", response_class=HTMLResponse)
-async def login(request: Request, lang: str = "en"):  # pylint: disable=unused-argument
+@app.get("/login", response_class=HTMLResponse)
+async def login(request: Request):  # pylint: disable=unused-argument
     return templates.TemplateResponse(request=request, name="index.html")
 
 
-@app.get("/{lang}/manage", response_class=HTMLResponse)
-async def manage(request: Request, lang: str = "en", user: User = Depends(manager.optional)):
+@app.get("/{full_path:path}", response_class=HTMLResponse)
+async def manage(request: Request, user: User = Depends(manager.optional)):
     if user is None:
-        return RedirectResponse(url=f"/{lang}/login", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse(request=request, name="index.html")

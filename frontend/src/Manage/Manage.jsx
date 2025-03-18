@@ -1,34 +1,19 @@
 import React, { useEffect, useState, createContext } from 'react'
 import { Toast, ToastContainer } from 'react-bootstrap'
-import { Admin } from './Admin'
+import { Outlet } from 'react-router'
 import { Header } from './Header'
-import { Device } from './Device'
-import { Download } from './Download'
-import { Status } from './Status'
-import { Settings } from './Settings'
-import { Imdb } from './Imdb'
-import { DEVICE, ADMIN, DOWNLOAD, STATUS, SETTINGS, IMDB } from './constant'
 import './Manage.css'
 import { useTranslation } from 'react-i18next'
-import { LOGIN_PAGE, redirectToPage } from '../util'
+import { LOGIN_PAGE } from '../constant'
+import { redirectToPage } from '../util'
 
 import BackgroundImage from '../background.png'
-
-const tabComponents = {
-  [ADMIN]: <Admin />,
-  [DEVICE]: <Device />,
-  [IMDB]: <Imdb />,
-  [DOWNLOAD]: <Download />,
-  [STATUS]: <Status />,
-  [SETTINGS]: <Settings />
-}
 
 export const manageContext = createContext(null)
 
 export const Manage = () => {
   const { t } = useTranslation()
   const [userInfo, setUserInfo] = useState({})
-  const [selectedTab, setSelectedTab] = useState(DOWNLOAD)
   const [toastData, setToastData] = useState({})
   const [torrentSearchResults, setTorrentSearchResults] = useState([])
 
@@ -66,6 +51,7 @@ export const Manage = () => {
       })
       if (resp.status === 200) {
         await resp.json()
+        window.location.pathname = 'login'
         redirectToPage(LOGIN_PAGE)
       } else {
         setToastData({ message: t('LOGOUT_FAILED'), type: 'danger' })
@@ -96,8 +82,8 @@ export const Manage = () => {
         </Toast>
       </ToastContainer>
       <manageContext.Provider value={{ setToastData, setTorrentSearchResults, torrentSearchResults }}>
-        <Header userInfo={userInfo} setSelectedTab={setSelectedTab} logOut={logOut} />
-        {tabComponents[selectedTab]}
+        <Header userInfo={userInfo} logOut={logOut} />
+        <Outlet/>
       </manageContext.Provider>
     </div>
   )
