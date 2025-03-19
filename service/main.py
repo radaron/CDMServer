@@ -11,6 +11,7 @@ from service.api.devices import router as devices_router
 from service.api.client import router as client_router
 from service.api.download import router as download_router
 from service.api.status import router as status_router
+from service.api.omdb import router as omdb_router
 from service.models.database import init_db, User
 from service.util.auth import create_admin_user, manager
 
@@ -35,6 +36,7 @@ app.include_router(devices_router, prefix="/api/devices")
 app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")
 app.include_router(status_router, prefix="/api/status")
+app.include_router(omdb_router, prefix="/api/omdb")
 app.add_middleware(
     CORSMiddleware, allow_origins=allowed_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
