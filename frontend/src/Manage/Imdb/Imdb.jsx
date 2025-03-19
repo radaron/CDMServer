@@ -90,33 +90,30 @@ export const Imdb = () => {
         <Container className='shadow p-2 pt-0 bg-white rounded results' fluid='true'>
           {searchResults.map((result) => (
             <div key={result.imdbID}>
-              <hr className='m-0' />
-              <Row className='result-element p-2'>
-                <Col xs={4}>
+              <Row className='p-2'>
+                <Col className='d-flex justify-content-center'>
                   <img src={result.Poster} alt={result.Title} />
                 </Col>
                 <Col>
                   <Row>
-                    <Col>
-                      <a href={`https://www.imdb.com/title/${result.imdbID}/`} target='_blank' rel='noreferrer'>
-                        <h1>{result.Title} ({result.Year})</h1>
-                      </a>
-                    </Col>
-                    <Col className='align-self-center' xs={1}>
-                      <Button variant='outline-warning' onClick={() => {
+                    <a href={`https://www.imdb.com/title/${result.imdbID}/`} target='_blank' rel='noreferrer'>
+                      <h1>{result.Title} ({result.Year})</h1>
+                    </a>
+                    <p className='w-75'>{result.Plot}</p>
+                  </Row>
+                  <Row>
+                    <h3><CameraReelsFill size={20} color='#ffc107'/> {t('DIRECTOR')}: {result.Director}</h3>
+                    <h3><StarFill size={20} color='#ffc107'/> {t('RATE')}: {result.imdbRating}</h3>
+                    <Col className='mt-2'>
+                      <Button variant='warning' onClick={() => {
                         redirectToPage(
-                          `${DOWNLOAD_PAGE}`+
-                          `?pattern=${result.imdbID}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
+                          `${DOWNLOAD_PAGE}`
+                          + `?pattern=${result.imdbID}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
                         )
                       }}>
                         <Download />
                       </Button>
                     </Col>
-                    <p>{result.Plot}</p>
-                  </Row>
-                  <Row>
-                    <h3><CameraReelsFill size={20} color='#ffc107'/> {t('DIRECTOR')}: {result.Director}</h3>
-                    <h3><StarFill size={20} color='#ffc107'/> {t('RATE')}: {result.imdbRating}</h3>
                   </Row>
                 </Col>
               </Row>
