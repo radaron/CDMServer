@@ -1,4 +1,13 @@
-.title {
-  color: white;
-  text-align: center;
+.search-box {
+  margin: 0 2rem;
+}
+
+.results {
+  overflow: auto;
+  overflow-x: hidden;
+  margin: 2rem;
+}
+
+.result-element:hover {
+  background-color: #adadad;
 }
