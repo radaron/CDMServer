@@ -15,7 +15,6 @@ export const Manage = () => {
   const { t } = useTranslation()
   const [userInfo, setUserInfo] = useState({})
   const [toastData, setToastData] = useState({})
-  const [torrentSearchResults, setTorrentSearchResults] = useState([])
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -81,7 +80,7 @@ export const Manage = () => {
           <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
       </ToastContainer>
-      <manageContext.Provider value={{ setToastData, setTorrentSearchResults, torrentSearchResults }}>
+      <manageContext.Provider value={{setToastData}}>
         <Header userInfo={userInfo} logOut={logOut} />
         <Outlet/>
       </manageContext.Provider>

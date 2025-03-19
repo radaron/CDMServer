@@ -16,7 +16,8 @@ export const Download = () => {
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
   const [devices, setDevices] = useState([])
   const [isLoading, setLoading] = useState(false)
-  const { setToastData, setTorrentSearchResults, torrentSearchResults } = useContext(manageContext)
+  const [searchResults, setSearchResults] = useState([])
+  const { setToastData } = useContext(manageContext)
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = useCallback(async () => {
@@ -39,7 +40,7 @@ export const Download = () => {
         )
         if (resp.status === 200) {
           const data = await resp.json()
-          setTorrentSearchResults(data.data.torrents)
+          setSearchResults(data.data.torrents)
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
@@ -54,7 +55,7 @@ export const Download = () => {
   }, [
     searchParams,
     setToastData,
-    setTorrentSearchResults,
+    setSearchResults,
     t,
   ])
 
@@ -166,7 +167,7 @@ export const Download = () => {
         </Container>
       </Form>
       {
-      torrentSearchResults.length > 0 &&
+      searchResults.length > 0 &&
         <Container className='shadow p-2 pt-0 bg-white rounded results' fluid='true'>
           <Row className='bg-info p-3'>
             <Col xs={6}>{t('TITLE')}</Col>
@@ -176,7 +177,7 @@ export const Download = () => {
             <Col xs>{t('LEECHERS')}</Col>
             <Col xs />
           </Row>
-          {torrentSearchResults.map((result) => (
+          {searchResults.map((result) => (
             <div key={result.id}>
               <hr className='m-0' />
               <Row className='result-element p-2'>
