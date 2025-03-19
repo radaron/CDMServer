@@ -15,7 +15,7 @@ export const Header = ({ userInfo, logOut }) => {
         </Navbar.Brand>
         <Nav className='justify-content-space-between'>
           <Nav.Link href={DEVICE_PAGE}>{t('HEADER_DEVICES')}</Nav.Link>
-          <Nav.Link href={IMDB_PAGE} disabled={true}>{t('HEADER_IMDB')}</Nav.Link>
+          <Nav.Link href={IMDB_PAGE}>{t('HEADER_IMDB')}</Nav.Link>
           <Nav.Link href={DOWNLOAD_PAGE}>{t('HEADER_DOWNLOADS')}</Nav.Link>
           <Nav.Link href={STATUS_PAGE}>{t('HEADER_STATUS')}</Nav.Link>
           <Nav.Link href={ADMIN_PAGE} disabled={!userInfo.isAdmin}>{t('HEADER_ADMIN')}</Nav.Link>
