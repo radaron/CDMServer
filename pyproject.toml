@@ -1,6 +1,6 @@
 [project]
 name = "CDMServer"
-version = "0.20.0"
+version = "0.21.0"
 description = "A short description of your project"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.13"
@@ -19,6 +19,7 @@ dependencies = [
   "alembic",
   "ncoreparser",
   "cryptography",
+  "httpx",
 
   # It is need because: https://github.com/pyca/bcrypt/issues/684
   "bcrypt==3.2.2",

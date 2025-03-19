@@ -1,11 +1,13 @@
 import { useState, useContext, useEffect, useCallback } from 'react'
 import { Form, Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap'
+import { useSearchParams } from "react-router"
 import { manageContext } from '../Manage'
 import { searchWhere, searchCategory } from '../constant'
 import './Download.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
+import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
 
 export const Download = () => {
   const { t } = useTranslation()
@@ -14,34 +16,57 @@ export const Download = () => {
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
   const [devices, setDevices] = useState([])
   const [isLoading, setLoading] = useState(false)
-  const { setToastData, setTorrentSearchResults, torrentSearchResults } = useContext(manageContext)
+  const [searchResults, setSearchResults] = useState([])
+  const { setToastData } = useContext(manageContext)
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const search = useCallback(async (event) => {
-    event.preventDefault()
-    setLoading(true)
-    try {
-      const resp = await fetch(
-        `/api/download/search/?pattern=${pattern}&where=${selectedSearchWhere}&category=${selectedSearchType}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
+  const search = useCallback(async () => {
+    if (searchParams.has(PATTERN) && searchParams.has(SEARCH_CATEGORY) && searchParams.has(SEARCH_WHERE)) {
+      setPattern(searchParams.get(PATTERN))
+      setSelectedSearchWhere(searchParams.get(SEARCH_WHERE))
+      setSelectedSearchType(searchParams.get(SEARCH_CATEGORY))
+      setLoading(true)
+      try {
+        const resp = await fetch(
+          `/api/download/search/?pattern=${searchParams.get(PATTERN)}`
+          + `&where=${searchParams.get(SEARCH_WHERE)}`
+          + `&category=${searchParams.get(SEARCH_CATEGORY)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
+        )
+        if (resp.status === 200) {
+          const data = await resp.json()
+          setSearchResults(data.data.torrents)
+        } else if (resp.status === 401) {
+          redirectToPage(LOGIN_PAGE)
+        } else {
+          setToastData({ message: t('SEARCH_ERROR'), type: 'danger' })
         }
-      )
-      if (resp.status === 200) {
-        const data = await resp.json()
-        setTorrentSearchResults(data.data.torrents)
-      } else if (resp.status === 401) {
-        redirectToPage(LOGIN_PAGE)
-      } else {
-        setToastData({ message: t('SEARCH_ERROR'), type: 'danger' })
+      } catch (error) {
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        console.log(error)
       }
-    } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setLoading(false)
     }
-    setLoading(false)
-  }, [pattern, selectedSearchType, selectedSearchWhere, setToastData, setTorrentSearchResults, t])
+  }, [
+    searchParams,
+    setToastData,
+    setSearchResults,
+    t,
+  ])
+
+  const submitSearch = useCallback((event) => {
+    event.preventDefault()
+    setSearchParams({
+      pattern,
+      searchWhere: selectedSearchWhere,
+      searchCategory: selectedSearchType
+    })
+  }, [pattern, selectedSearchType, selectedSearchWhere, setSearchParams])
 
   const getDevices = useCallback(async () => {
     try {
@@ -93,11 +118,12 @@ export const Download = () => {
     }
   }
 
+  useEffect(() => {search()}, [search, searchParams])
   useEffect(() => { getDevices() }, [getDevices])
 
   return (
     <>
-      <Form className='shadow p-4 bg-white rounded search-box' onSubmit={search}>
+      <Form className='shadow p-4 bg-white rounded search-box' onSubmit={submitSearch}>
         <Container>
           <Row>
             <Col xs={6}>
@@ -109,14 +135,14 @@ export const Download = () => {
               />
             </Col>
             <Col xs>
-              <Form.Select onChange={(e) => setSelectedSearchType(e.target.value)}>
+              <Form.Select onChange={(e) => setSelectedSearchType(e.target.value)} value={selectedSearchType}>
                 {searchCategory.map((category) => (
                   <option key={category} value={category}>{category}</option>
                 ))}
               </Form.Select>
             </Col>
             <Col xs>
-              <Form.Select onChange={(e) => setSelectedSearchWhere(e.target.value)}>
+              <Form.Select onChange={(e) => setSelectedSearchWhere(e.target.value)} value={selectedSearchWhere}>
                 {searchWhere.map((category) => (
                   <option key={category} value={category}>{category}</option>
                 ))}
@@ -141,7 +167,7 @@ export const Download = () => {
         </Container>
       </Form>
       {
-      torrentSearchResults.length > 0 &&
+      searchResults.length > 0 &&
         <Container className='shadow p-2 pt-0 bg-white rounded results' fluid='true'>
           <Row className='bg-info p-3'>
             <Col xs={6}>{t('TITLE')}</Col>
@@ -151,7 +177,7 @@ export const Download = () => {
             <Col xs>{t('LEECHERS')}</Col>
             <Col xs />
           </Row>
-          {torrentSearchResults.map((result) => (
+          {searchResults.map((result) => (
             <div key={result.id}>
               <hr className='m-0' />
               <Row className='result-element p-2'>

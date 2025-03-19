@@ -1,5 +1,5 @@
-export const redirectToPage = (page) => {
-  window.location.pathname = page
+export const redirectToPage = (path) => {
+  window.location = path
 }
 
 export const getLanguage = () => {
