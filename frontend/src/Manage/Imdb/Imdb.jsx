@@ -64,6 +64,7 @@ export const Imdb = () => {
                 value={pattern}
                 placeholder={t('SEARCH_PLACEHOLDER')}
                 onChange={(e) => setPattern(e.target.value)}
+                required={true}
               />
             </Col>
             <Col xs>
