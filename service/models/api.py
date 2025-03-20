@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
-from pydantic.alias_generators import to_camel
+from typing import Any
+from pydantic import BaseModel, EmailStr, ConfigDict, model_validator
+from pydantic.alias_generators import to_camel, to_pascal
 
 
 class BaseData(BaseModel):
@@ -7,6 +8,32 @@ class BaseData(BaseModel):
 
     def model_dump(self, **kwargs) -> dict:
         return super().model_dump(by_alias=True, **kwargs)
+
+
+class OmdbBaseData(BaseModel):
+    model_config = ConfigDict(alias_generator=to_pascal, populate_by_name=True, model_dump_by_alias=True)
+
+    def model_dump(self, **kwargs) -> dict:
+        return super().model_dump(by_alias=True, **kwargs)
+
+    @model_validator(mode="before")
+    @classmethod
+    def remapping_invalid_case(cls, data: Any) -> Any:
+        new_data = {}
+        if isinstance(data, dict):
+            for key, value in data.items():
+                match key:
+                    case "imdbID":
+                        new_data["imdb_id"] = value
+                    case "imdbRating":
+                        new_data["imdb_rating"] = value
+                    case "imdbVotes":
+                        new_data["imdb_votes"] = value
+                    case "DVD":
+                        new_data["dvd"] = value
+                    case _:
+                        new_data[key] = value
+        return new_data
 
 
 class NewUserData(BaseData):
@@ -99,3 +126,64 @@ class StatusDataItem(BaseData):
 
 class StatusData(BaseData):
     data: list[StatusDataItem]
+
+
+class OmdbRatingData(OmdbBaseData):
+    source: str
+    value: str
+
+
+class OmdbMovieData(OmdbBaseData):
+    title: str
+    year: str
+    rated: str
+    released: str
+    runtime: str
+    genre: str
+    director: str
+    writer: str
+    actors: str
+    plot: str
+    language: str
+    country: str
+    awards: str
+    poster: str
+    ratings: list[OmdbRatingData]
+    metascore: str
+    imdb_rating: str
+    imdb_votes: str
+    imdb_id: str
+    type: str
+    dvd: str | None = None
+    box_office: str | None = None
+    production: str | None = None
+    website: str | None = None
+    response: str
+
+
+class OmdbSearchEntityData(OmdbBaseData):
+    title: str
+    year: str
+    imdb_id: str
+    type: str
+    poster: str
+
+
+class OmdbSearchData(OmdbBaseData):
+    search: list[OmdbSearchEntityData] = []
+    total_results: str | None = None
+    response: str
+
+
+class OmdbSearchEntityResponse(BaseData):
+    director: str
+    imdb_id: str
+    plot: str
+    poster: str
+    rating: str
+    title: str
+    year: str
+
+
+class OmdbSearchResponse(BaseData):
+    data: list[OmdbSearchEntityResponse]
