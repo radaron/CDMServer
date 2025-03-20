@@ -34,7 +34,7 @@ export const Imdb = () => {
           const data = await resp.json()
           setSearchResults(data.data)
           if (data.data.length === 0) {
-            setToastData({ message: t('NO_RESULTS'), type: 'info' })
+            setToastData({ message: t('NO_RESULTS'), type: 'warning' })
           }
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
