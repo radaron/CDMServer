@@ -1,4 +1,4 @@
-.search-box {
+.searchBox {
   margin: 0 2rem;
 }
 
@@ -6,8 +6,4 @@
   overflow: auto;
   overflow-x: hidden;
   margin: 2rem;
-}
-
-.result-element:hover {
-  background-color: #adadad;
 }

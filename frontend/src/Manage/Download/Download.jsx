@@ -3,7 +3,7 @@ import { Form, Button, Spinner, Container, Row, Col, Dropdown } from 'react-boot
 import { useSearchParams } from "react-router"
 import { manageContext } from '../Manage'
 import { searchWhere, searchCategory } from '../constant'
-import './Download.css'
+import styles from './Download.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
@@ -126,7 +126,7 @@ export const Download = () => {
 
   return (
     <>
-      <Form className='shadow p-4 bg-white rounded search-box' onSubmit={submitSearch}>
+      <Form className={`shadow p-4 bg-white rounded ${styles.searchBox}`} onSubmit={submitSearch}>
         <Container>
           <Row>
             <Col xs={6}>
@@ -171,7 +171,7 @@ export const Download = () => {
       </Form>
       {
       searchResults.length > 0 &&
-        <Container className='shadow p-2 pt-0 bg-white rounded results' fluid='true'>
+        <Container className={`shadow p-2 pt-0 bg-white rounded ${styles.results}`} fluid='true'>
           <Row className='bg-info p-3'>
             <Col xs={6}>{t('TITLE')}</Col>
             <Col xs>{t('CATEGORY')}</Col>
@@ -183,7 +183,7 @@ export const Download = () => {
           {searchResults.map((result) => (
             <div key={result.id}>
               <hr className='m-0' />
-              <Row className='result-element p-2'>
+              <Row className={`${styles.resultElement} p-2`}>
                 <Col xs={6}>
                   <a href={result.url} target='_blank' rel='noreferrer'>{result.title}</a>
                 </Col>

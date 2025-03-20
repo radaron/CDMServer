@@ -1,4 +1,4 @@
-.device__wrapper {
+.container {
   flex-direction: column;
   width: 40vw;
   margin: 1rem;
