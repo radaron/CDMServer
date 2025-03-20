@@ -51,7 +51,7 @@ async def favicon(request: Request):  # pylint: disable=unused-argument
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):  # pylint: disable=unused-argument
-    return RedirectResponse(url="/manage/download", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(url="/manage/status", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/login", response_class=HTMLResponse)
