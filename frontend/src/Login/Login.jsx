@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Form, Button, Alert } from 'react-bootstrap'
-import './Login.css'
+import styles from './Login.module.css'
 import { useTranslation } from 'react-i18next'
 import BackgroundImage from '../background.png'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { MANAGE_PAGE } from '../constant'
 import { redirectToPage } from '../util'
-import { DOWNLOAD_PAGE } from '../Manage/constant'
+import { STATUS_PAGE } from '../Manage/constant'
 
 export const Login = () => {
   const { t } = useTranslation()
@@ -31,7 +31,7 @@ export const Login = () => {
         })
       })
       if (resp.status === 200) {
-        redirectToPage(`${MANAGE_PAGE}/${DOWNLOAD_PAGE}`)
+        redirectToPage(`${MANAGE_PAGE}/${STATUS_PAGE}`)
       } else {
         setAlertMessage(t('LOGIN_FAILED'))
       }
@@ -43,11 +43,11 @@ export const Login = () => {
 
   return (
     <div
-      className='log-in__wrapper'
+      className={styles.logInWrapper}
       style={{ backgroundImage: `url(${BackgroundImage})` }}
     >
-      <div className='sign-in__backdrop' />
-      <Form className='shadow p-4 bg-white rounded' onSubmit={handleSubmit}>
+      <div className={styles.signInBackdrop} />
+      <Form className={`shadow p-4 bg-white rounded ${styles.logInWrapperForm}`} onSubmit={handleSubmit}>
         <CloudArrowDownFill size={50} className='mx-auto d-block mb-2' />
         {alertMessage && (
           <Alert

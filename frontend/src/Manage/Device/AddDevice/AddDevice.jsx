@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import { Form, Button } from 'react-bootstrap'
-import './AddDevice.css'
+import styles from './AddDevice.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
@@ -39,7 +39,7 @@ export const AddDevice = ({ refetch }) => {
   }
 
   return (
-    <Form className='shadow p-4 bg-white rounded add-device__wrapper' onSubmit={handleSubmit}>
+    <Form className={`shadow p-4 bg-white rounded ${styles.container}`} onSubmit={handleSubmit}>
       <div className='h4 mb-2 text-center'>{t('ADD_DEVICE_TITLE')}</div>
       <Form.Group className='mb-2'>
         <Form.Control

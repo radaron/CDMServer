@@ -2,7 +2,7 @@ import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
 import { GearFill } from 'react-bootstrap-icons'
 import { useContext } from 'react'
 import { manageContext } from '../../Manage'
-import './DeviceElement.css'
+import styles from './DeviceElement.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
@@ -39,7 +39,7 @@ export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) =>
   }
 
   return (
-    <Container className='shadow p-3 bg-white rounded device__wrapper'>
+    <Container className={`shadow p-3 bg-white rounded ${styles.container}`}>
       <Row>
         <Col />
         <Col>

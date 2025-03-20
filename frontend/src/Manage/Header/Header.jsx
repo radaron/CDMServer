@@ -9,15 +9,15 @@ export const Header = ({ userInfo, logOut }) => {
   return (
     <Navbar bg='dark' data-bs-theme='dark' className='mb-4' expand='lg'>
       <Container>
-        <Navbar.Brand href={`/manage/${DOWNLOAD_PAGE}`}>
+        <Navbar.Brand href={`/manage/${STATUS_PAGE}`}>
           <CloudArrowDownFill size={30} className="mx-2" />
           CDM
         </Navbar.Brand>
         <Nav className='justify-content-space-between'>
-          <Nav.Link href={DEVICE_PAGE}>{t('HEADER_DEVICES')}</Nav.Link>
-          <Nav.Link href={IMDB_PAGE}>{t('HEADER_IMDB')}</Nav.Link>
           <Nav.Link href={DOWNLOAD_PAGE}>{t('HEADER_DOWNLOADS')}</Nav.Link>
+          <Nav.Link href={IMDB_PAGE}>{t('HEADER_IMDB')}</Nav.Link>
           <Nav.Link href={STATUS_PAGE}>{t('HEADER_STATUS')}</Nav.Link>
+          <Nav.Link href={DEVICE_PAGE}>{t('HEADER_DEVICES')}</Nav.Link>
           <Nav.Link href={ADMIN_PAGE} disabled={!userInfo.isAdmin}>{t('HEADER_ADMIN')}</Nav.Link>
         </Nav>
         <Nav>

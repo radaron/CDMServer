@@ -8,7 +8,7 @@ import { LOGIN_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
 import { redirectToPage } from '../../util'
 import { PATTERN } from './constant'
-import './Imdb.css'
+import styles from './Imdb.module.css'
 
 
 export const Imdb = () => {
@@ -34,7 +34,7 @@ export const Imdb = () => {
           const data = await resp.json()
           setSearchResults(data.data)
           if (data.data.length === 0) {
-            setToastData({ message: t('NO_RESULTS'), type: 'info' })
+            setToastData({ message: t('NO_RESULTS'), type: 'warning' })
           }
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
@@ -58,7 +58,7 @@ export const Imdb = () => {
 
   return (
     <>
-      <Form className='shadow p-4 bg-white rounded search-box' onSubmit={submitSearch}>
+      <Form className={`shadow p-4 bg-white rounded ${styles.searchBox}`} onSubmit={submitSearch}>
         <Container fluid='md'>
           <Row>
             <Col xs={10}>
@@ -90,7 +90,7 @@ export const Imdb = () => {
       </Form>
       {
       searchResults.length > 0 &&
-        <Container className='shadow p-2 pt-0 bg-white rounded results' fluid='true'>
+        <Container className={`shadow p-2 pt-0 bg-white rounded ${styles.results}`} fluid='true'>
           {searchResults.map((result) => (
             <div key={result.imdbId}>
               <Row className='p-2'>
