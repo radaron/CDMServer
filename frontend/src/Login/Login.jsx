@@ -6,7 +6,7 @@ import BackgroundImage from '../background.png'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { MANAGE_PAGE } from '../constant'
 import { redirectToPage } from '../util'
-import { DOWNLOAD_PAGE } from '../Manage/constant'
+import { STATUS_PAGE } from '../Manage/constant'
 
 export const Login = () => {
   const { t } = useTranslation()
@@ -31,7 +31,7 @@ export const Login = () => {
         })
       })
       if (resp.status === 200) {
-        redirectToPage(`${MANAGE_PAGE}/${DOWNLOAD_PAGE}`)
+        redirectToPage(`${MANAGE_PAGE}/${STATUS_PAGE}`)
       } else {
         setAlertMessage(t('LOGIN_FAILED'))
       }
