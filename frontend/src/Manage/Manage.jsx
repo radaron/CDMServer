@@ -2,7 +2,7 @@ import React, { useEffect, useState, createContext } from 'react'
 import { Toast, ToastContainer } from 'react-bootstrap'
 import { Outlet } from 'react-router'
 import { Header } from './Header'
-import './Manage.css'
+import styles from './Manage.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
 import { redirectToPage } from '../util'
@@ -63,7 +63,7 @@ export const Manage = () => {
   return (
     <div
       style={{ backgroundImage: `url(${BackgroundImage})` }}
-      className='manage__wrapper'
+      className={styles.container}
     >
       <ToastContainer position='top-center' className='p-3'>
         <Toast

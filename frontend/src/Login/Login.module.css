@@ -1,4 +1,4 @@
-.log-in__wrapper {
+.logInWrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,21 +11,17 @@
   position: relative;
 }
 
-.sign-in__backdrop {
+.signInBackdrop {
   position: absolute;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.log-in__wrapper form {
+.logInWrapperForm {
   width: 24rem;
   max-width: 90%;
   z-index: 1;
   animation: showSignInForm 1s;
-}
-
-.log-in__wrapper form img {
-  width: 4rem;
 }
 
 @keyframes showSignInForm {
