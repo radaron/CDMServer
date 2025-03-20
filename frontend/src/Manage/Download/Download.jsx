@@ -41,6 +41,9 @@ export const Download = () => {
         if (resp.status === 200) {
           const data = await resp.json()
           setSearchResults(data.data.torrents)
+          if (data.data.torrents.length === 0) {
+            setToastData({ message: t('NO_RESULTS'), type: 'info' })
+          }
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
