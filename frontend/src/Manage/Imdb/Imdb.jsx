@@ -89,26 +89,26 @@ export const Imdb = () => {
       searchResults.length > 0 &&
         <Container className='shadow p-2 pt-0 bg-white rounded results' fluid='true'>
           {searchResults.map((result) => (
-            <div key={result.imdbID}>
+            <div key={result.imdbId}>
               <Row className='p-2'>
                 <Col className='d-flex justify-content-center'>
-                  <img src={result.Poster} alt={result.Title} />
+                  <img src={result.poster} alt={result.title} />
                 </Col>
                 <Col>
                   <Row>
-                    <a href={`https://www.imdb.com/title/${result.imdbID}/`} target='_blank' rel='noreferrer'>
-                      <h1>{result.Title} ({result.Year})</h1>
+                    <a href={`https://www.imdb.com/title/${result.imdbId}/`} target='_blank' rel='noreferrer'>
+                      <h1>{result.title} ({result.year})</h1>
                     </a>
-                    <p className='w-75'>{result.Plot}</p>
+                    <p className='w-75'>{result.plot}</p>
                   </Row>
                   <Row>
-                    <h3><CameraReelsFill size={20} color='#ffc107'/> {t('DIRECTOR')}: {result.Director}</h3>
-                    <h3><StarFill size={20} color='#ffc107'/> {t('RATE')}: {result.imdbRating}</h3>
+                    <h3><CameraReelsFill size={20} color='#ffc107'/> {t('DIRECTOR')}: {result.director}</h3>
+                    <h3><StarFill size={20} color='#ffc107'/> {t('RATE')}: {result.rating}</h3>
                     <Col className='mt-2'>
                       <Button variant='warning' onClick={() => {
                         redirectToPage(
                           `${DOWNLOAD_PAGE}`
-                          + `?pattern=${result.imdbID}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
+                          + `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
                         )
                       }}>
                         <Download />
