@@ -4,7 +4,7 @@ import { useState, useContext, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from "react-router"
 import { manageContext } from '../Manage'
-import { LOGIN_PAGE } from '../../constant'
+import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
 import { redirectToPage } from '../../util'
 import { PATTERN } from './constant'
@@ -110,7 +110,7 @@ export const Imdb = () => {
                     <Col className='mt-2'>
                       <Button variant='warning' onClick={() => {
                         redirectToPage(
-                          `${DOWNLOAD_PAGE}`
+                          `${MANAGE_PAGE}/${DOWNLOAD_PAGE}`
                           + `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
                         )
                       }}>
