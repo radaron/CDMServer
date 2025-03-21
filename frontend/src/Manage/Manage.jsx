@@ -50,7 +50,6 @@ export const Manage = () => {
       })
       if (resp.status === 200) {
         await resp.json()
-        window.location.pathname = 'login'
         redirectToPage(LOGIN_PAGE)
       } else {
         setToastData({ message: t('LOGOUT_FAILED'), type: 'danger' })

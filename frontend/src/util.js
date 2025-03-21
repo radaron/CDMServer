@@ -1,5 +1,6 @@
 export const redirectToPage = (path) => {
-  window.location = path
+  const fullRelativePath = `${window.location.origin}/${path}`;
+  window.location = fullRelativePath
 }
 
 export const getLanguage = () => {
