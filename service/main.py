@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from urllib.parse import quote
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -60,7 +61,10 @@ async def login(request: Request):  # pylint: disable=unused-argument
 
 
 @app.get("/{full_path:path}", response_class=HTMLResponse)
-async def manage(request: Request, user: User = Depends(manager.optional)):
+async def other(request: Request, full_path: str, user: User = Depends(manager.optional)):
     if user is None:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+        redirect_url = full_path
+        if query_params := request.query_params:
+            redirect_url += f"?{query_params}"
+        return RedirectResponse(url=f"/login?redirectUrl={quote(redirect_url)}", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse(request=request, name="index.html")
