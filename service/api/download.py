@@ -30,7 +30,7 @@ async def get_order(
     category: str = SearchParamType.ALL_OWN.value,
     where: str = SearchParamWhere.NAME.value,
 ):
-    client = AsyncClient()
+    client = AsyncClient(timeout=5)
     await client.login(NCORE_USERNAME, NCORE_PASSWORD)
     torrents = await client.search(
         pattern=pattern,
@@ -55,7 +55,7 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
     if device is None:
         return JSONResponse({"message": "Device not found"}, status_code=404)
 
-    client = AsyncClient()
+    client = AsyncClient(timeout=5)
     try:
         await client.login(*get_ncore_credential(user))
         torrent = await client.get_torrent(data.torrent_id)
