@@ -23,7 +23,7 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
     return JSONResponse({"data": {"files": {key: value["downloading_path"] for key, value in files.items()}}})
 
 
-@router.get("/download/{file_id}")
+@router.get("/download/{file_id}/")
 async def download_file(
     session: AsyncSession = Depends(get_session), x_api_key: str = Header(None), file_id: str = None
 ):
