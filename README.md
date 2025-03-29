@@ -11,19 +11,19 @@ For comprehensive guidance on using the webpage, refer to the [Usage Guide](doc/
 
 This is a centralized solution where multiple clients can connect to the server, send their download status, and receive torrent files for downloading.
 
-[![](doc/images/diagrams/blocks_high.png)](https://app.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#Hradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks_high.png)
+[![](doc/images/diagrams/blocks_high.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=blocks_high.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks_high.png)
 
 The client connects to the [Transmission](https://transmissionbt.com/) BitTorrent client to retrieve download information and manage downloads. It then communicates with the server to receive the downloadable torrent file and send the download status.
 
-[![](doc/images/diagrams/blocks.png)](https://app.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#Hradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks.png)
+[![](doc/images/diagrams/blocks.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=blocks.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks.png)
 
 The client transmits download status data every 30 seconds, allowing the user to check the status in the browser.
 
-[![](doc/images/diagrams/sequence_status.png)](https://app.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#Hradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_status.png)
+[![](doc/images/diagrams/sequence_status.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=sequence_status.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_status.png)
 
 When the user clicks on "Download" or selects a target device for downloading, the client can retrieve the chosen torrent file and add it to Transmission.
 
-[![](doc/images/diagrams/sequence_download.png)](https://app.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#Hradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_download.png)
+[![](doc/images/diagrams/sequence_download.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=sequence_download.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_download.png)
 
 ## Available Features
 
