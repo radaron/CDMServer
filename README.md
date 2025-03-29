@@ -11,7 +11,7 @@ For comprehensive guidance on using the webpage, refer to the [Usage Guide](doc/
 
 This is a centralized solution where multiple clients can connect to the server, send their download status, and receive torrent files for downloading.
 
-[![](doc/images/diagrams/blocks_high.png)](https://app.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#Hradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fblocks_high.png)
+[![](doc/images/diagrams/blocks_high.png)](https://app.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#Hradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks_high.png)
 
 The client connects to the [Transmission](https://transmissionbt.com/) BitTorrent client to retrieve download information and manage downloads. It then communicates with the server to receive the downloadable torrent file and send the download status.
 
