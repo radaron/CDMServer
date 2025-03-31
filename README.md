@@ -17,7 +17,7 @@ The client connects to the [Transmission](https://transmissionbt.com/) BitTorren
 
 [![](doc/images/diagrams/blocks.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=blocks.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks.png)
 
-The client transmits download status data every 30 seconds, allowing the user to check the status in the browser.
+The client transmits download status data periodically, allowing the user to check the status in the browser.
 
 [![](doc/images/diagrams/sequence_status.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=sequence_status.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_status.png)
 
