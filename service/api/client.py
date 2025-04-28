@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get("/")
 async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)):
-    devices = await session.execute(select(Device).where(Device.token == x_api_key))
+    devices = await session.execute(select(Device).where(Device.token == x_api_key).with_for_update())
     device = devices.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
@@ -27,7 +27,7 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
 async def download_file(
     session: AsyncSession = Depends(get_session), x_api_key: str = Header(None), file_id: str = None
 ):
-    devices = await session.execute(select(Device).where(Device.token == x_api_key))
+    devices = await session.execute(select(Device).where(Device.token == x_api_key).with_for_update())
     device = devices.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
