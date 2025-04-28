@@ -49,6 +49,7 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
         select(Device)
         .join(user_device_association)
         .where(user_device_association.c.user_id == user.id, Device.id == data.device_id)
+        .with_for_update()
     )
     device = result.scalars().first()
 
