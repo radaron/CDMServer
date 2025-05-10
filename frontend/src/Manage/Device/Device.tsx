@@ -26,7 +26,7 @@ export const Device = () => {
       books_path: '',
       programs_path: '',
       games_path: '',
-      default_path: ''
+      default_path: '',
     },
     userEmails: [],
   })
@@ -36,8 +36,8 @@ export const Device = () => {
       const resp = await fetch('/api/devices/', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       if (resp.status === 200) {
         const data = await resp.json()
@@ -60,7 +60,10 @@ export const Device = () => {
 
   return (
     <div className={styles.device}>
-      <SettingsModal data={selectedDeviceData} setData={setSelectedDeviceData} />
+      <SettingsModal
+        data={selectedDeviceData}
+        setData={setSelectedDeviceData}
+      />
       {devices.map((device) => (
         <DeviceElement
           key={device.id}

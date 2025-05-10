@@ -1,5 +1,5 @@
 export const redirectToPage = (path: string) => {
-  const fullRelativePath = `${window.location.origin}/${path}`;
+  const fullRelativePath = `${window.location.origin}/${path}`
   window.location.href = fullRelativePath
 }
 

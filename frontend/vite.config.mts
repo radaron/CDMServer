@@ -5,7 +5,7 @@ import checker from 'vite-plugin-checker'
 export default defineConfig({
   plugins: [
     react(),
-    checker({ typescript: true }) // Enable TypeScript type checking
+    checker({ typescript: true }), // Enable TypeScript type checking
   ],
   build: {
     outDir: 'build',
@@ -17,4 +17,4 @@ export default defineConfig({
       },
     },
   },
-});
+})

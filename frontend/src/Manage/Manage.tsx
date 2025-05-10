@@ -11,8 +11,8 @@ import { UserInfo, ToastData } from './types'
 import BackgroundImage from '../background.png'
 
 export const manageContext = createContext<{
-  setToastData: (data: { message: string; type: string }) => void;
-} | null>(null);
+  setToastData: (data: { message: string; type: string }) => void
+} | null>(null)
 
 export const Manage = () => {
   const { t } = useTranslation()
@@ -21,11 +21,11 @@ export const Manage = () => {
     isAdmin: false,
     name: '',
     ncoreUser: '',
-    isNcoreCredentialSet: false
+    isNcoreCredentialSet: false,
   })
   const [toastData, setToastData] = useState<ToastData>({
     message: '',
-    type: null
+    type: null,
   })
 
   useEffect(() => {
@@ -34,8 +34,8 @@ export const Manage = () => {
         const resp = await fetch('/api/users/me/', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         })
         if (resp.status === 200) {
           const data = await resp.json()
@@ -48,7 +48,7 @@ export const Manage = () => {
             isAdmin: false,
             name: '',
             ncoreUser: '',
-            isNcoreCredentialSet: false
+            isNcoreCredentialSet: false,
           })
         }
       } catch (error) {
@@ -57,7 +57,7 @@ export const Manage = () => {
           isAdmin: false,
           name: '',
           ncoreUser: '',
-          isNcoreCredentialSet: false
+          isNcoreCredentialSet: false,
         })
       }
     }
@@ -69,8 +69,8 @@ export const Manage = () => {
       const resp = await fetch('/api/auth/logout/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       if (resp.status === 200) {
         await resp.json()
@@ -88,24 +88,24 @@ export const Manage = () => {
       style={{ backgroundImage: `url(${BackgroundImage})` }}
       className={styles.container}
     >
-      <ToastContainer position='top-center' className='p-3'>
+      <ToastContainer position="top-center" className="p-3">
         <Toast
           delay={4000}
           show={toastData.message.length > 0}
           onClose={() => setToastData({ message: '', type: null })}
           bg={toastData?.type?.toLowerCase()}
-          className='text-center'
+          className="text-center"
           autohide
         >
           <Toast.Header>
-            <strong className='me-auto'></strong>
+            <strong className="me-auto"></strong>
           </Toast.Header>
           <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
       </ToastContainer>
-      <manageContext.Provider value={{setToastData}}>
+      <manageContext.Provider value={{ setToastData }}>
         <Header userInfo={userInfo} logOut={logOut} />
-        <Outlet/>
+        <Outlet />
       </manageContext.Provider>
     </div>
   )

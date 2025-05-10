@@ -22,11 +22,11 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
       const resp = await fetch('/api/devices/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: deviceName
-        })
+          name: deviceName,
+        }),
       })
       if (resp.status === 200) {
         setDeviceName('')
@@ -44,18 +44,21 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   }
 
   return (
-    <Form className={`shadow p-4 bg-white rounded ${styles.container}`} onSubmit={handleSubmit}>
-      <div className='h4 mb-2 text-center'>{t('ADD_DEVICE_TITLE')}</div>
-      <Form.Group className='mb-2'>
+    <Form
+      className={`shadow p-4 bg-white rounded ${styles.container}`}
+      onSubmit={handleSubmit}
+    >
+      <div className="h4 mb-2 text-center">{t('ADD_DEVICE_TITLE')}</div>
+      <Form.Group className="mb-2">
         <Form.Control
-          type='text'
+          type="text"
           value={deviceName}
           placeholder={t('DEVICE_NAME_PLACEHOLDER')}
           onChange={(e) => setDeviceName(e.target.value)}
           required
         />
       </Form.Group>
-      <Button className='w-100' variant='primary' type='submit'>
+      <Button className="w-100" variant="primary" type="submit">
         {t('ADD_DEVICE_BUTTON')}
       </Button>
     </Form>

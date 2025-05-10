@@ -18,8 +18,8 @@ export const Admin = () => {
       const resp = await fetch('/api/users/', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       const data = await resp.json()
       if (resp.status === 200) {

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Form, Button, Alert } from 'react-bootstrap'
 import styles from './Login.module.css'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from "react-router"
+import { useSearchParams } from 'react-router'
 import BackgroundImage from '../background.png'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { MANAGE_PAGE, REDIRECT_URL } from '../constant'
@@ -16,7 +16,7 @@ export const Login = () => {
 
   const [alertMessage, setAlertMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [searchParams, ] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -25,12 +25,12 @@ export const Login = () => {
       const resp = await fetch('/api/auth/login/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: inputEmail,
-          password: inputPassword
-        })
+          password: inputPassword,
+        }),
       })
       if (resp.status === 200) {
         await resp.json()
@@ -53,47 +53,48 @@ export const Login = () => {
       style={{ backgroundImage: `url(${BackgroundImage})` }}
     >
       <div className={styles.signInBackdrop} />
-      <Form className={`shadow p-4 bg-white rounded ${styles.logInWrapperForm}`} onSubmit={handleSubmit}>
-        <CloudArrowDownFill size={50} className='mx-auto d-block mb-2' />
+      <Form
+        className={`shadow p-4 bg-white rounded ${styles.logInWrapperForm}`}
+        onSubmit={handleSubmit}
+      >
+        <CloudArrowDownFill size={50} className="mx-auto d-block mb-2" />
         {alertMessage && (
           <Alert
-            className='mb-2'
-            variant='danger'
+            className="mb-2"
+            variant="danger"
             onClose={() => setAlertMessage('')}
             dismissible
           >
             {alertMessage}
           </Alert>
         )}
-        <Form.Group className='mb-2' controlId='email'>
+        <Form.Group className="mb-2" controlId="email">
           <Form.Control
-            type='text'
+            type="text"
             value={inputEmail}
             placeholder={t('EMAIL_PLACEHOLDER')}
             onChange={(e) => setInputEmail(e.target.value)}
             required
           />
         </Form.Group>
-        <Form.Group className='mb-2' controlId='password'>
+        <Form.Group className="mb-2" controlId="password">
           <Form.Control
-            type='password'
+            type="password"
             value={inputPassword}
             placeholder={t('PASSWORD_PLACEHOLDER')}
             onChange={(e) => setInputPassword(e.target.value)}
             required
           />
         </Form.Group>
-        {!loading
-          ? (
-            <Button className='w-100' variant='primary' type='submit'>
-              {t('LOGIN')}
-            </Button>
-            )
-          : (
-            <Button className='w-100' variant='primary' type='submit' disabled>
-              {t('LOGGING_IN')}...
-            </Button>
-            )}
+        {!loading ? (
+          <Button className="w-100" variant="primary" type="submit">
+            {t('LOGIN')}
+          </Button>
+        ) : (
+          <Button className="w-100" variant="primary" type="submit" disabled>
+            {t('LOGGING_IN')}...
+          </Button>
+        )}
       </Form>
     </div>
   )

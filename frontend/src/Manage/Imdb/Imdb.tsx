@@ -2,7 +2,7 @@ import { Form, Button, Spinner, Container, Row, Col } from 'react-bootstrap'
 import { CameraReelsFill, Download, StarFill } from 'react-bootstrap-icons'
 import { useState, useContext, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from "react-router"
+import { useSearchParams } from 'react-router'
 import { manageContext } from '../Manage'
 import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
@@ -34,12 +34,15 @@ export const Imdb = () => {
       setPattern(searchParams.get(PATTERN) || '')
       setLoading(true)
       try {
-        const resp = await fetch(`/api/omdb/search/?pattern=${searchParams.get(PATTERN)}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
+        const resp = await fetch(
+          `/api/omdb/search/?pattern=${searchParams.get(PATTERN)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }
-        })
+        )
         if (resp.status === 200) {
           const data = await resp.json()
           setSearchResults(data.data)
@@ -59,21 +62,29 @@ export const Imdb = () => {
     }
   }, [searchParams, setToastData, t])
 
-  const submitSearch = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+  const submitSearch = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
-      setSearchParams({pattern})
-  }, [pattern, setSearchParams])
+      setSearchParams({ pattern })
+    },
+    [pattern, setSearchParams]
+  )
 
-  useEffect(() => {search()}, [search, searchParams])
+  useEffect(() => {
+    search()
+  }, [search, searchParams])
 
   return (
     <>
-      <Form className={`shadow p-4 bg-white rounded ${styles.searchBox}`} onSubmit={submitSearch}>
-        <Container fluid='md'>
+      <Form
+        className={`shadow p-4 bg-white rounded ${styles.searchBox}`}
+        onSubmit={submitSearch}
+      >
+        <Container fluid="md">
           <Row>
             <Col xs={10}>
               <Form.Control
-                type='text'
+                type="text"
                 value={pattern}
                 placeholder={t('SEARCH_PLACEHOLDER')}
                 onChange={(e) => setPattern(e.target.value)}
@@ -82,48 +93,66 @@ export const Imdb = () => {
             </Col>
             <Col xs>
               <Button
-                variant='warning'
-                type='submit'
+                variant="warning"
+                type="submit"
                 disabled={isLoading}
-                className='w-100'
+                className="w-100"
               >
-                {isLoading
-                  ? (
-                    <Spinner animation='border' role='status' size='sm'>
-                      <span className='visually-hidden'>{t('LOADING')}...</span>
-                    </Spinner>)
-                  : t('SEARCH')}
+                {isLoading ? (
+                  <Spinner animation="border" role="status" size="sm">
+                    <span className="visually-hidden">{t('LOADING')}...</span>
+                  </Spinner>
+                ) : (
+                  t('SEARCH')
+                )}
               </Button>
             </Col>
           </Row>
         </Container>
       </Form>
-      {
-      searchResults.length > 0 &&
-        <Container className={`shadow p-2 pt-0 bg-white rounded ${styles.results}`} fluid='true'>
+      {searchResults.length > 0 && (
+        <Container
+          className={`shadow p-2 pt-0 bg-white rounded ${styles.results}`}
+          fluid="true"
+        >
           {searchResults.map((result) => (
             <div key={result.imdbId}>
-              <Row className='p-2'>
-                <Col className='d-flex justify-content-center'>
+              <Row className="p-2">
+                <Col className="d-flex justify-content-center">
                   <img src={result.poster} alt={result.title} />
                 </Col>
                 <Col>
                   <Row>
-                    <a href={`https://www.imdb.com/title/${result.imdbId}/`} target='_blank' rel='noreferrer'>
-                      <h1>{result.title} ({result.year})</h1>
+                    <a
+                      href={`https://www.imdb.com/title/${result.imdbId}/`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <h1>
+                        {result.title} ({result.year})
+                      </h1>
                     </a>
-                    <p className='w-75'>{result.plot}</p>
+                    <p className="w-75">{result.plot}</p>
                   </Row>
                   <Row>
-                    <h3><CameraReelsFill size={20} color='#ffc107'/> {t('DIRECTOR')}: {result.director}</h3>
-                    <h3><StarFill size={20} color='#ffc107'/> {t('RATE')}: {result.rating}</h3>
-                    <Col className='mt-2'>
-                      <Button variant='warning' onClick={() => {
-                        redirectToPage(
-                          `${MANAGE_PAGE}/${DOWNLOAD_PAGE}`
-                          + `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
-                        )
-                      }}>
+                    <h3>
+                      <CameraReelsFill size={20} color="#ffc107" />{' '}
+                      {t('DIRECTOR')}: {result.director}
+                    </h3>
+                    <h3>
+                      <StarFill size={20} color="#ffc107" /> {t('RATE')}:{' '}
+                      {result.rating}
+                    </h3>
+                    <Col className="mt-2">
+                      <Button
+                        variant="warning"
+                        onClick={() => {
+                          redirectToPage(
+                            `${MANAGE_PAGE}/${DOWNLOAD_PAGE}` +
+                              `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
+                          )
+                        }}
+                      >
                         <Download />
                       </Button>
                     </Col>
@@ -133,7 +162,7 @@ export const Imdb = () => {
             </div>
           ))}
         </Container>
-    }
+      )}
     </>
   )
 }
