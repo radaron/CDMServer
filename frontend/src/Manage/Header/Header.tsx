@@ -1,15 +1,13 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import { DEVICE_PAGE, ADMIN_PAGE, DOWNLOAD_PAGE, STATUS_PAGE, SETTINGS_PAGE, IMDB_PAGE } from './../constant'
 import { getLanguage, toggleLanguage } from '../../util'
+import { UserInfo } from '../types'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 
 interface HeaderProps {
-  userInfo: {
-    name: string;
-    isAdmin: boolean;
-  };
-  logOut: () => void;
+  userInfo: UserInfo
+  logOut: () => void
 }
 
 export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {

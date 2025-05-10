@@ -10,7 +10,7 @@ import { redirectToPage } from '../../util'
 import { PATTERN } from './constant'
 import styles from './Imdb.module.css'
 
-interface SearchResult {
+interface ImdbSearchResult {
   imdbId: string
   title: string
   year: string
@@ -24,7 +24,7 @@ export const Imdb = () => {
   const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
   const [pattern, setPattern] = useState('')
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [searchResults, setSearchResults] = useState<ImdbSearchResult[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const [searchParams, setSearchParams] = useSearchParams()

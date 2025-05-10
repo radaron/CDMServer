@@ -6,21 +6,9 @@ import styles from './Manage.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
 import { redirectToPage } from '../util'
+import { UserInfo, ToastData } from './types'
 
 import BackgroundImage from '../background.png'
-
-interface ToastData {
-  message: string
-  type: string | null
-}
-
-interface UserInfo {
-  email: string
-  isAdmin: boolean
-  name: string
-  ncoreUser: string
-  isNcoreCredentialSet: boolean
-}
 
 export const manageContext = createContext<{
   setToastData: (data: { message: string; type: string }) => void;

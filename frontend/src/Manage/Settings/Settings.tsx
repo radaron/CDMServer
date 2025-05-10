@@ -2,16 +2,11 @@ import { useState, useContext, useEffect } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { EraserFill } from 'react-bootstrap-icons'
 import { manageContext } from '../Manage'
+import { UserInfo } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 import { NCORE_PASSWORD_PLACEHOLDER } from '../constant'
-
-interface UserInfo {
-  email: string
-  isNcoreCredentialSet: boolean
-  ncoreUser: string
-}
 
 export const Settings = () => {
   const { t } = useTranslation()
@@ -19,8 +14,10 @@ export const Settings = () => {
   const setToastData = context?.setToastData || (() => {})
   const [userInfo, setUserInfo] = useState<UserInfo>({
     email: '',
-    isNcoreCredentialSet: false,
-    ncoreUser: ''
+    isAdmin: false,
+    name: '',
+    ncoreUser: '',
+    isNcoreCredentialSet: false
   })
   const [ncoreUserName, setNcoreUserName] = useState('')
   const [ncorePassword, setNcorePassword] = useState('')
@@ -44,15 +41,19 @@ export const Settings = () => {
         } else {
           setUserInfo({
             email: '',
-            isNcoreCredentialSet: false,
-            ncoreUser: ''
+            isAdmin: false,
+            name: '',
+            ncoreUser: '',
+            isNcoreCredentialSet: false
           })
         }
       } catch (error) {
         setUserInfo({
           email: '',
-          isNcoreCredentialSet: false,
-          ncoreUser: ''
+          isAdmin: false,
+          name: '',
+          ncoreUser: '',
+          isNcoreCredentialSet: false
         })
       }
     }

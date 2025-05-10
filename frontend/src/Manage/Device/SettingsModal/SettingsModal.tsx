@@ -2,44 +2,15 @@ import { Button, Modal, Form, Container, Row, Col } from 'react-bootstrap'
 import { PersonFillDash, PersonFillAdd } from 'react-bootstrap-icons'
 import { useContext } from 'react'
 import { manageContext } from '../../Manage'
+import { DeviceModel } from '../../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 import { DownloadFolders } from '../../constant'
 
 interface SettingsModalProps {
-  data: {
-    id: number
-    name: string
-    token: string
-    active: boolean
-    settings: {
-      movies_path: string
-      series_path: string
-      musics_path: string
-      books_path: string
-      programs_path: string
-      games_path: string
-      default_path: string
-    }
-    userEmails: string[]
-  }
-  setData: (data: {
-    id: number;
-    token: string;
-    active: boolean;
-    name: string;
-    settings: {
-      movies_path: string
-      series_path: string
-      musics_path: string
-      books_path: string
-      programs_path: string
-      games_path: string
-      default_path: string
-    };
-    userEmails: string[]
-  }) => void
+  data: DeviceModel
+  setData: (data: DeviceModel) => void
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ data, setData }) => {

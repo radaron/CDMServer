@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useCallback } from 'react'
 import { Form, Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap'
 import { useSearchParams } from "react-router"
 import { manageContext } from '../Manage'
+import { DeviceModel } from '../types'
 import { searchWhere, searchCategory } from '../constant'
 import styles from './Download.module.css'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +10,7 @@ import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
 
-interface SearchResult {
+interface TorrentSearchResult {
   id: number
   title: string
   category: string
@@ -19,20 +20,14 @@ interface SearchResult {
   url: string
 }
 
-interface Device {
-  id: number
-  name: string
-}
-
-
 export const Download = () => {
   const { t } = useTranslation()
   const [pattern, setPattern] = useState('')
   const [selectedSearchType, setSelectedSearchType] = useState(searchCategory[0])
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
-  const [devices, setDevices] = useState<Device[]>([])
+  const [devices, setDevices] = useState<DeviceModel[]>([])
   const [isLoading, setLoading] = useState(false)
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [searchResults, setSearchResults] = useState<TorrentSearchResult[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const [searchParams, setSearchParams] = useSearchParams()

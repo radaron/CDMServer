@@ -2,45 +2,16 @@ import { Button, Row, Col, Badge } from 'react-bootstrap'
 import { GearFill } from 'react-bootstrap-icons'
 import { useContext } from 'react'
 import { manageContext } from '../../Manage'
+import { DeviceModel } from '../../types'
 import styles from './DeviceElement.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 
 interface DeviceElementProps {
-  deviceData: {
-    id: number
-    name: string
-    token: string
-    active: boolean
-    settings: {
-      movies_path: string
-      series_path: string
-      musics_path: string
-      books_path: string
-      programs_path: string
-      games_path: string
-      default_path: string
-    },
-    userEmails: string[]
-  }
+  deviceData: DeviceModel
   refetch: () => void
-  setSelectedDeviceData: (data: {
-    id: number
-    name: string
-    token: string
-    active: boolean
-    settings: {
-      movies_path: string
-      series_path: string
-      musics_path: string
-      books_path: string
-      programs_path: string
-      games_path: string
-      default_path: string
-    },
-    userEmails: string[]
-  }) => void
+  setSelectedDeviceData: (data: DeviceModel) => void,
 }
 
 export const DeviceElement: React.FC<DeviceElementProps> = ({ deviceData, refetch, setSelectedDeviceData }) => {

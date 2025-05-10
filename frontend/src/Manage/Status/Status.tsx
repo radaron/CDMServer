@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
 import { Form, Container, Row, Col, ProgressBar } from 'react-bootstrap'
 import { manageContext } from '../Manage'
+import { DeviceModel } from '../types'
 import styles from './Status.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
@@ -23,14 +24,9 @@ interface Torrent {
   status: keyof typeof colourMap;
 }
 
-interface Device {
-  id: number
-  name: string
-}
-
 export const Status = () => {
   const { t } = useTranslation()
-  const [devices, setDevices] = useState<Device[]>([])
+  const [devices, setDevices] = useState<DeviceModel[]>([])
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [statusData, setStatusData] = useState<Torrent[]>([]);
   const context = useContext(manageContext)

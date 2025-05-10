@@ -10,6 +10,7 @@ interface DeleteUserProps {
   users: {
     email: string
     id: number
+    name: string
   }[]
 }
 
