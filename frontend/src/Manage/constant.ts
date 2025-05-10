@@ -13,10 +13,7 @@ const PROGRAMS_PATH_NAME = 'programs_path'
 const GAMES_PATH_NAME = 'games_path'
 const DEFAULT_PATH_NAME = 'default_path'
 
-export const searchWhere = [
-  'name',
-  'imdb'
-]
+export const searchWhere = ['name', 'imdb']
 
 export const searchCategory = [
   'all_own',
@@ -46,7 +43,7 @@ export const searchCategory = [
   'ebook',
   'iso',
   'misc',
-  'mobil'
+  'mobil',
 ]
 
 export const DownloadFolders = {
@@ -56,7 +53,7 @@ export const DownloadFolders = {
   [BOOKS_PATH_NAME]: 'BOOKS_PATH_TITLE',
   [PROGRAMS_PATH_NAME]: 'PROGRAMS_PATH_TITLE',
   [GAMES_PATH_NAME]: 'GAMES_PATH_TITLE',
-  [DEFAULT_PATH_NAME]: 'DEFAULT_PATH_TITLE'
+  [DEFAULT_PATH_NAME]: 'DEFAULT_PATH_TITLE',
 }
 
 export const NCORE_PASSWORD_PLACEHOLDER = '********'

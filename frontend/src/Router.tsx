@@ -16,10 +16,9 @@ import {
   DOWNLOAD_PAGE,
   STATUS_PAGE,
   SETTINGS_PAGE,
-  IMDB_PAGE
+  IMDB_PAGE,
 } from './Manage/constant'
 import { LOGIN_PAGE, MANAGE_PAGE } from './constant'
-
 
 initI18next(getLanguage())
 
@@ -27,16 +26,16 @@ export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' />
-          <Route path={LOGIN_PAGE} element={<Login/>} />
-          <Route path={MANAGE_PAGE} element={<Manage/>} >
-            <Route path={ADMIN_PAGE} element={<Admin/>} />
-            <Route path={DEVICE_PAGE} element={<Device/>} />
-            <Route path={DOWNLOAD_PAGE} element={<Download/>} />
-            <Route path={IMDB_PAGE} element={<Imdb/>} />
-            <Route path={SETTINGS_PAGE} element={<Settings/>} />
-            <Route path={STATUS_PAGE} element={<Status/>} />
-          </Route>
+        <Route path="/" />
+        <Route path={LOGIN_PAGE} element={<Login />} />
+        <Route path={MANAGE_PAGE} element={<Manage />}>
+          <Route path={ADMIN_PAGE} element={<Admin />} />
+          <Route path={DEVICE_PAGE} element={<Device />} />
+          <Route path={DOWNLOAD_PAGE} element={<Download />} />
+          <Route path={IMDB_PAGE} element={<Imdb />} />
+          <Route path={SETTINGS_PAGE} element={<Settings />} />
+          <Route path={STATUS_PAGE} element={<Status />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )

@@ -6,15 +6,27 @@ import styles from './Manage.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
 import { redirectToPage } from '../util'
+import { UserInfo, ToastData } from './types'
 
 import BackgroundImage from '../background.png'
 
-export const manageContext = createContext(null)
+export const manageContext = createContext<{
+  setToastData: (data: { message: string; type: string }) => void
+} | null>(null)
 
 export const Manage = () => {
   const { t } = useTranslation()
-  const [userInfo, setUserInfo] = useState({})
-  const [toastData, setToastData] = useState({})
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    email: '',
+    isAdmin: false,
+    name: '',
+    ncoreUser: '',
+    isNcoreCredentialSet: false,
+  })
+  const [toastData, setToastData] = useState<ToastData>({
+    message: '',
+    type: null,
+  })
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -22,8 +34,8 @@ export const Manage = () => {
         const resp = await fetch('/api/users/me/', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         })
         if (resp.status === 200) {
           const data = await resp.json()
@@ -31,10 +43,22 @@ export const Manage = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setUserInfo({})
+          setUserInfo({
+            email: '',
+            isAdmin: false,
+            name: '',
+            ncoreUser: '',
+            isNcoreCredentialSet: false,
+          })
         }
       } catch (error) {
-        setUserInfo({})
+        setUserInfo({
+          email: '',
+          isAdmin: false,
+          name: '',
+          ncoreUser: '',
+          isNcoreCredentialSet: false,
+        })
       }
     }
     getUserInfo()
@@ -45,8 +69,8 @@ export const Manage = () => {
       const resp = await fetch('/api/auth/logout/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       if (resp.status === 200) {
         await resp.json()
@@ -64,24 +88,24 @@ export const Manage = () => {
       style={{ backgroundImage: `url(${BackgroundImage})` }}
       className={styles.container}
     >
-      <ToastContainer position='top-center' className='p-3'>
+      <ToastContainer position="top-center" className="p-3">
         <Toast
           delay={4000}
-          show={Object.keys(toastData).length > 0}
-          onClose={() => setToastData({})}
+          show={toastData.message.length > 0}
+          onClose={() => setToastData({ message: '', type: null })}
           bg={toastData?.type?.toLowerCase()}
-          className='text-center'
+          className="text-center"
           autohide
         >
           <Toast.Header>
-            <strong className='me-auto'></strong>
+            <strong className="me-auto"></strong>
           </Toast.Header>
           <Toast.Body>{toastData.message}</Toast.Body>
         </Toast>
       </ToastContainer>
-      <manageContext.Provider value={{setToastData}}>
+      <manageContext.Provider value={{ setToastData }}>
         <Header userInfo={userInfo} logOut={logOut} />
-        <Outlet/>
+        <Outlet />
       </manageContext.Provider>
     </div>
   )

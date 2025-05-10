@@ -1,6 +1,6 @@
-export const redirectToPage = (path) => {
-  const fullRelativePath = `${window.location.origin}/${path}`;
-  window.location = fullRelativePath
+export const redirectToPage = (path: string) => {
+  const fullRelativePath = `${window.location.origin}/${path}`
+  window.location.href = fullRelativePath
 }
 
 export const getLanguage = () => {
@@ -12,7 +12,7 @@ export const getLanguage = () => {
   return language
 }
 
-const setLanguage = (language) => {
+const setLanguage = (language: string) => {
   localStorage.setItem('language', language)
 }
 

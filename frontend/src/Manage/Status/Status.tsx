@@ -1,35 +1,43 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
 import { Form, Container, Row, Col, ProgressBar } from 'react-bootstrap'
 import { manageContext } from '../Manage'
+import { DeviceModel } from '../types'
 import styles from './Status.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 
+const colourMap = {
+  stopped: 'info',
+  'check pending': 'info',
+  checking: 'info',
+  'download pending': 'info',
+  downloading: 'info',
+  'seed pending': 'success',
+  seeding: 'success',
+}
+
+interface Torrent {
+  name: string
+  progress: number
+  status: keyof typeof colourMap
+}
+
 export const Status = () => {
   const { t } = useTranslation()
-  const [devices, setDevices] = useState([])
-  const [selectedDeviceId, setSelectedDeviceId] = useState(null)
-  const [statusData, setStatusData] = useState([])
-  const { setToastData } = useContext(manageContext)
-
-  const colourMap = {
-    stopped: 'info',
-    'check pending': 'info',
-    checking: 'info',
-    'download pending': 'info',
-    downloading: 'info',
-    'seed pending': 'success',
-    seeding: 'success'
-  }
+  const [devices, setDevices] = useState<DeviceModel[]>([])
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null)
+  const [statusData, setStatusData] = useState<Torrent[]>([])
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
   const getDevices = useCallback(async () => {
     try {
       const resp = await fetch('/api/devices/', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       if (resp.status === 200) {
         const data = await resp.json()
@@ -58,8 +66,8 @@ export const Status = () => {
           const resp = await fetch(`/api/status/${selectedDeviceId}/`, {
             method: 'GET',
             headers: {
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           })
           if (resp.status === 200) {
             const data = await resp.json()
@@ -67,7 +75,10 @@ export const Status = () => {
           } else if (resp.status === 401) {
             redirectToPage(LOGIN_PAGE)
           } else {
-            setToastData({ message: t('FETCHING_STATUS_ERROR'), type: 'danger' })
+            setToastData({
+              message: t('FETCHING_STATUS_ERROR'),
+              type: 'danger',
+            })
           }
         } catch (error) {
           setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
@@ -83,22 +94,27 @@ export const Status = () => {
   return (
     <>
       <Container className={`m-4 ${styles.selectBox}`}>
-        <Form.Select className=' bg-white rounded' onChange={(e) => setSelectedDeviceId(e.target.value)}>
+        <Form.Select
+          className=" bg-white rounded"
+          onChange={(e) => setSelectedDeviceId(e.target.value)}
+        >
           {devices.map((device) => (
-            <option key={device.id} value={device.id}>{device.name}</option>
+            <option key={device.id} value={device.id}>
+              {device.name}
+            </option>
           ))}
         </Form.Select>
       </Container>
       <Container className={`shadow m-4 m-1 bg-white rounded ${styles.status}`}>
         {statusData.map((torrent) => (
-          <Row key={torrent.name} className='p-4'>
+          <Row key={torrent.name} className="p-4">
             <Col>{torrent.name}</Col>
             <Row>
               <ProgressBar
                 now={torrent.progress}
                 label={`${torrent.progress}%`}
                 variant={colourMap[torrent.status]}
-                className='p-0'
+                className="p-0"
               />
             </Row>
           </Row>
