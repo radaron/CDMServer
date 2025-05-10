@@ -34,10 +34,9 @@ start-frontent:
 	cd frontend && pnpm start
 
 build-frontend:
-	rm -rf static/* templates/*
+	rm -rf assets/* templates/*
 	cd frontend && pnpm build
-	cp -r frontend/build/static/* static/
-	cp frontend/build/favicon.png static/favicon.png
+	cp -r frontend/build/assets/ assets/
 	cp frontend/build/index.html templates/index.html
 
 docker-compose: build-frontend
