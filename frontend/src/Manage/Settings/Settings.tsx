@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { EraserFill } from 'react-bootstrap-icons'
 import { manageContext } from '../Manage'
+import { UserInfo } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
@@ -9,8 +10,15 @@ import { NCORE_PASSWORD_PLACEHOLDER } from '../constant'
 
 export const Settings = () => {
   const { t } = useTranslation()
-  const { setToastData } = useContext(manageContext)
-  const [userInfo, setUserInfo] = useState({})
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    email: '',
+    isAdmin: false,
+    name: '',
+    ncoreUser: '',
+    isNcoreCredentialSet: false,
+  })
   const [ncoreUserName, setNcoreUserName] = useState('')
   const [ncorePassword, setNcorePassword] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
@@ -22,8 +30,8 @@ export const Settings = () => {
         const resp = await fetch('/api/users/me/', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         })
         if (resp.status === 200) {
           const data = await resp.json()
@@ -31,10 +39,22 @@ export const Settings = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setUserInfo({})
+          setUserInfo({
+            email: '',
+            isAdmin: false,
+            name: '',
+            ncoreUser: '',
+            isNcoreCredentialSet: false,
+          })
         }
       } catch (error) {
-        setUserInfo({})
+        setUserInfo({
+          email: '',
+          isAdmin: false,
+          name: '',
+          ncoreUser: '',
+          isNcoreCredentialSet: false,
+        })
       }
     }
     getUserInfo()
@@ -47,20 +67,21 @@ export const Settings = () => {
     }
   }, [userInfo])
 
-  const updateNcoreCredential = async (event) => {
+  const updateNcoreCredential = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/users/me/', {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(
-          {
-            ncoreUser: ncoreUserName,
-            ncorePass: ncorePassword === NCORE_PASSWORD_PLACEHOLDER ? null : ncorePassword
-          }
-        )
+        body: JSON.stringify({
+          ncoreUser: ncoreUserName,
+          ncorePass:
+            ncorePassword === NCORE_PASSWORD_PLACEHOLDER ? null : ncorePassword,
+        }),
       })
       if (resp.status === 200) {
         setToastData({ message: t('CREDENTIALS_UPDATED'), type: 'success' })
@@ -79,11 +100,10 @@ export const Settings = () => {
         const resp = await fetch('/api/users/me/', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(
-            {
-              ncoreUser: '',
-              ncorePass: ''
-            })
+          body: JSON.stringify({
+            ncoreUser: '',
+            ncorePass: '',
+          }),
         })
         if (resp.status === 200) {
           setToastData({ message: t('CREDENTIALS_DELETED'), type: 'success' })
@@ -98,13 +118,15 @@ export const Settings = () => {
     }
   }
 
-  const updateLoginCredential = async (event) => {
+  const updateLoginCredential = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/users/me/', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: loginPassword })
+        body: JSON.stringify({ password: loginPassword }),
       })
       if (resp.status === 200) {
         setToastData({ message: t('CREDENTIALS_UPDATED'), type: 'success' })
@@ -121,14 +143,19 @@ export const Settings = () => {
   return (
     <Container>
       <Row>
-        <Col className='p-4 m-3 bg-white shadow rounded'>
+        <Col className="p-4 m-3 bg-white shadow rounded">
           <Row>
             <Col />
-            <Col xs={8} className='mb-2'>
-              <div className='h4 mb-2 text-center'>{t('SET_NCORE_CREDENTIALS')}</div>
+            <Col xs={8} className="mb-2">
+              <div className="h4 mb-2 text-center">
+                {t('SET_NCORE_CREDENTIALS')}
+              </div>
             </Col>
             <Col>
-              <Button variant='outline-danger' onClick={() => deleteNcoreCredential()}>
+              <Button
+                variant="outline-danger"
+                onClick={() => deleteNcoreCredential()}
+              >
                 <EraserFill />
               </Button>
             </Col>
@@ -136,26 +163,30 @@ export const Settings = () => {
           <Row>
             <Col>
               <Form onSubmit={updateNcoreCredential}>
-                <Form.Group className='mb-2'>
+                <Form.Group className="mb-2">
                   <Form.Control
-                    type='text'
+                    type="text"
                     value={ncoreUserName}
                     onChange={(e) => setNcoreUserName(e.target.value)}
                   />
                 </Form.Group>
-                <Form.Group className='mb-2'>
+                <Form.Group className="mb-2">
                   <Form.Control
-                    type='password'
+                    type="password"
                     value={ncorePassword}
                     onChange={(e) => setNcorePassword(e.target.value)}
                     required
                   />
                 </Form.Group>
                 <Button
-                  className='w-100'
-                  variant='primary'
-                  disabled={ncoreUserName === '' || ncorePassword === '' || ncorePassword === NCORE_PASSWORD_PLACEHOLDER}
-                  type='submit'
+                  className="w-100"
+                  variant="primary"
+                  disabled={
+                    ncoreUserName === '' ||
+                    ncorePassword === '' ||
+                    ncorePassword === NCORE_PASSWORD_PLACEHOLDER
+                  }
+                  type="submit"
                 >
                   {t('SET_NCORE_CREDENTIALS_BUTTON')}
                 </Button>
@@ -163,34 +194,36 @@ export const Settings = () => {
             </Col>
           </Row>
         </Col>
-        <Col className='p-4 m-3 bg-white shadow rounded'>
+        <Col className="p-4 m-3 bg-white shadow rounded">
           <Row>
             <Col>
-              <div className='h4 mb-2 text-center'>{t('CHANGE_LOGIN_PASSWORD')}</div>
+              <div className="h4 mb-2 text-center">
+                {t('CHANGE_LOGIN_PASSWORD')}
+              </div>
             </Col>
           </Row>
           <Row>
             <Col>
               <Form onSubmit={(event) => updateLoginCredential(event)}>
-                <Form.Group className='mb-2'>
+                <Form.Group className="mb-2">
                   <Form.Control
-                    type='text'
+                    type="text"
                     value={userInfo.email}
                     disabled={true}
                   />
                 </Form.Group>
-                <Form.Group className='mb-2'>
+                <Form.Group className="mb-2">
                   <Form.Control
-                    type='password'
+                    type="password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     placeholder={t('NEW_PASSWORD_PLACEHOLDER')}
                     required
                   />
                 </Form.Group>
-                <Form.Group className='mb-2'>
+                <Form.Group className="mb-2">
                   <Form.Control
-                    type='password'
+                    type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder={t('CONFIRM_PASSWORD_PLACEHOLDER')}
@@ -198,10 +231,10 @@ export const Settings = () => {
                   />
                 </Form.Group>
                 <Button
-                  className='w-100'
-                  variant='primary'
+                  className="w-100"
+                  variant="primary"
                   disabled={loginPassword !== confirmPassword}
-                  type='submit'
+                  type="submit"
                 >
                   {t('SET_NCORE_CREDENTIALS_BUTTON')}
                 </Button>

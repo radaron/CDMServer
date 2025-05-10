@@ -8,21 +8,20 @@ let i18nInitialized = false
 
 export const translations = {
   en: { translation: enUSTranslations },
-  hu: { translation: huHUTranslations }
+  hu: { translation: huHUTranslations },
 }
 
-export const initI18next = (language) => {
+export const initI18next = (language: string) => {
   if (!i18nInitialized) {
     i18nInitialized = true
-    i18n.use(initReactI18next)
-      .init({
-        resources: translations,
-        lng: language,
-        fallbackLng: 'en',
+    i18n.use(initReactI18next).init({
+      resources: translations,
+      lng: language,
+      fallbackLng: 'en',
 
-        interpolation: {
-          escapeValue: false
-        }
-      })
+      interpolation: {
+        escapeValue: false,
+      },
+    })
   }
 }

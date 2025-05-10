@@ -10,15 +10,16 @@ import { redirectToPage } from '../../util'
 export const Admin = () => {
   const { t } = useTranslation()
   const [users, setUsers] = useState([])
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
   const getUsers = useCallback(async () => {
     try {
       const resp = await fetch('/api/users/', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       const data = await resp.json()
       if (resp.status === 200) {

@@ -6,22 +6,27 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 
-export const AddDevice = ({ refetch }) => {
+interface AddDeviceProps {
+  refetch: () => void
+}
+
+export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   const { t } = useTranslation()
   const [deviceName, setDeviceName] = useState('')
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/devices/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: deviceName
-        })
+          name: deviceName,
+        }),
       })
       if (resp.status === 200) {
         setDeviceName('')
@@ -39,18 +44,21 @@ export const AddDevice = ({ refetch }) => {
   }
 
   return (
-    <Form className={`shadow p-4 bg-white rounded ${styles.container}`} onSubmit={handleSubmit}>
-      <div className='h4 mb-2 text-center'>{t('ADD_DEVICE_TITLE')}</div>
-      <Form.Group className='mb-2'>
+    <Form
+      className={`shadow p-4 bg-white rounded ${styles.container}`}
+      onSubmit={handleSubmit}
+    >
+      <div className="h4 mb-2 text-center">{t('ADD_DEVICE_TITLE')}</div>
+      <Form.Group className="mb-2">
         <Form.Control
-          type='text'
+          type="text"
           value={deviceName}
           placeholder={t('DEVICE_NAME_PLACEHOLDER')}
           onChange={(e) => setDeviceName(e.target.value)}
           required
         />
       </Form.Group>
-      <Button className='w-100' variant='primary' type='submit'>
+      <Button className="w-100" variant="primary" type="submit">
         {t('ADD_DEVICE_BUTTON')}
       </Button>
     </Form>

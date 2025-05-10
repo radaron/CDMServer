@@ -3,6 +3,7 @@ import { DeviceElement } from './DeviceElement'
 import { AddDevice } from './AddDevice'
 import { SettingsModal } from './SettingsModal'
 import { manageContext } from '../Manage'
+import { DeviceModel } from '../types'
 import styles from './Device.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
@@ -10,17 +11,33 @@ import { redirectToPage } from '../../util'
 
 export const Device = () => {
   const { t } = useTranslation()
-  const { setToastData } = useContext(manageContext)
-  const [devices, setDevices] = useState([])
-  const [selectedDeviceData, setSelectedDeviceData] = useState({})
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
+  const [devices, setDevices] = useState<DeviceModel[]>([])
+  const [selectedDeviceData, setSelectedDeviceData] = useState<DeviceModel>({
+    id: 0,
+    name: '',
+    token: '',
+    active: false,
+    settings: {
+      movies_path: '',
+      series_path: '',
+      musics_path: '',
+      books_path: '',
+      programs_path: '',
+      games_path: '',
+      default_path: '',
+    },
+    userEmails: [],
+  })
 
   const getDevices = useCallback(async () => {
     try {
       const resp = await fetch('/api/devices/', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       if (resp.status === 200) {
         const data = await resp.json()
@@ -43,7 +60,10 @@ export const Device = () => {
 
   return (
     <div className={styles.device}>
-      <SettingsModal data={selectedDeviceData} setData={setSelectedDeviceData} />
+      <SettingsModal
+        data={selectedDeviceData}
+        setData={setSelectedDeviceData}
+      />
       {devices.map((device) => (
         <DeviceElement
           key={device.id}
