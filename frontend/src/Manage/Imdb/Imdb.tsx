@@ -10,18 +10,28 @@ import { redirectToPage } from '../../util'
 import { PATTERN } from './constant'
 import styles from './Imdb.module.css'
 
+interface SearchResult {
+  imdbId: string
+  title: string
+  year: string
+  plot: string
+  poster: string
+  director: string
+  rating: string
+}
 
 export const Imdb = () => {
   const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
   const [pattern, setPattern] = useState('')
-  const [searchResults, setSearchResults] = useState([])
-  const { setToastData } = useContext(manageContext)
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = useCallback(async () => {
     if (searchParams.has(PATTERN)) {
-      setPattern(searchParams.get(PATTERN))
+      setPattern(searchParams.get(PATTERN) || '')
       setLoading(true)
       try {
         const resp = await fetch(`/api/omdb/search/?pattern=${searchParams.get(PATTERN)}`, {
@@ -49,7 +59,7 @@ export const Imdb = () => {
     }
   }, [searchParams, setToastData, t])
 
-  const submitSearch = useCallback((event) => {
+  const submitSearch = useCallback((event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       setSearchParams({pattern})
   }, [pattern, setSearchParams])

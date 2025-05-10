@@ -9,12 +9,36 @@ import { redirectToPage } from '../util'
 
 import BackgroundImage from '../background.png'
 
-export const manageContext = createContext(null)
+interface ToastData {
+  message: string
+  type: string | null
+}
+
+interface UserInfo {
+  email: string
+  isAdmin: boolean
+  name: string
+  ncoreUser: string
+  isNcoreCredentialSet: boolean
+}
+
+export const manageContext = createContext<{
+  setToastData: (data: { message: string; type: string }) => void;
+} | null>(null);
 
 export const Manage = () => {
   const { t } = useTranslation()
-  const [userInfo, setUserInfo] = useState({})
-  const [toastData, setToastData] = useState({})
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    email: '',
+    isAdmin: false,
+    name: '',
+    ncoreUser: '',
+    isNcoreCredentialSet: false
+  })
+  const [toastData, setToastData] = useState<ToastData>({
+    message: '',
+    type: null
+  })
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -31,10 +55,22 @@ export const Manage = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setUserInfo({})
+          setUserInfo({
+            email: '',
+            isAdmin: false,
+            name: '',
+            ncoreUser: '',
+            isNcoreCredentialSet: false
+          })
         }
       } catch (error) {
-        setUserInfo({})
+        setUserInfo({
+          email: '',
+          isAdmin: false,
+          name: '',
+          ncoreUser: '',
+          isNcoreCredentialSet: false
+        })
       }
     }
     getUserInfo()
@@ -67,8 +103,8 @@ export const Manage = () => {
       <ToastContainer position='top-center' className='p-3'>
         <Toast
           delay={4000}
-          show={Object.keys(toastData).length > 0}
-          onClose={() => setToastData({})}
+          show={toastData.message.length > 0}
+          onClose={() => setToastData({ message: '', type: null })}
           bg={toastData?.type?.toLowerCase()}
           className='text-center'
           autohide

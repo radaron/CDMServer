@@ -11,7 +11,7 @@ export const translations = {
   hu: { translation: huHUTranslations }
 }
 
-export const initI18next = (language) => {
+export const initI18next = (language: string) => {
   if (!i18nInitialized) {
     i18nInitialized = true
     i18n.use(initReactI18next)

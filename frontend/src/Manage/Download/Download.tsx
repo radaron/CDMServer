@@ -9,22 +9,39 @@ import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
 
+interface SearchResult {
+  id: number
+  title: string
+  category: string
+  size: string
+  seeders: number
+  leechers: number
+  url: string
+}
+
+interface Device {
+  id: number
+  name: string
+}
+
+
 export const Download = () => {
   const { t } = useTranslation()
   const [pattern, setPattern] = useState('')
   const [selectedSearchType, setSelectedSearchType] = useState(searchCategory[0])
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
-  const [devices, setDevices] = useState([])
+  const [devices, setDevices] = useState<Device[]>([])
   const [isLoading, setLoading] = useState(false)
-  const [searchResults, setSearchResults] = useState([])
-  const { setToastData } = useContext(manageContext)
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = useCallback(async () => {
     if (searchParams.has(PATTERN) && searchParams.has(SEARCH_CATEGORY) && searchParams.has(SEARCH_WHERE)) {
-      setPattern(searchParams.get(PATTERN))
-      setSelectedSearchWhere(searchParams.get(SEARCH_WHERE))
-      setSelectedSearchType(searchParams.get(SEARCH_CATEGORY))
+      setPattern(searchParams.get(PATTERN) || '')
+      setSelectedSearchWhere(searchParams.get(SEARCH_WHERE) || '')
+      setSelectedSearchType(searchParams.get(SEARCH_CATEGORY) || '')
       setLoading(true)
       try {
         const resp = await fetch(
@@ -62,7 +79,7 @@ export const Download = () => {
     t,
   ])
 
-  const submitSearch = useCallback((event) => {
+  const submitSearch = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setSearchParams({
       pattern,
@@ -94,7 +111,7 @@ export const Download = () => {
     }
   }, [setToastData, t])
 
-  const addToDownloadQueue = async (torrentId, deviceId) => {
+  const addToDownloadQueue = async (torrentId: number, deviceId: number) => {
     try {
       const resp = await fetch('/api/download/',
         {

@@ -6,12 +6,17 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 
-export const AddDevice = ({ refetch }) => {
+interface AddDeviceProps {
+  refetch: () => void
+}
+
+export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   const { t } = useTranslation()
   const [deviceName, setDeviceName] = useState('')
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/devices/', {

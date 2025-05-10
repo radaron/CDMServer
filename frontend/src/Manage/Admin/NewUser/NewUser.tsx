@@ -5,15 +5,20 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 
-export const NewUser = ({ fetchUsers }) => {
+interface NewUserProps {
+  fetchUsers: () => void
+}
+
+export const NewUser: React.FC<NewUserProps> = ({ fetchUsers }) => {
   const { t } = useTranslation()
   const [inputEmail, setInputEmail] = useState('')
   const [inputPassword, setInputPassword] = useState('')
   const [inputName, setInputName] = useState('')
   const [inputIsAdmin, setInputIsAdmin] = useState(false)
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/users/', {

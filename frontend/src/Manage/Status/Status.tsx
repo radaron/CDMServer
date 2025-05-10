@@ -6,14 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 
-export const Status = () => {
-  const { t } = useTranslation()
-  const [devices, setDevices] = useState([])
-  const [selectedDeviceId, setSelectedDeviceId] = useState(null)
-  const [statusData, setStatusData] = useState([])
-  const { setToastData } = useContext(manageContext)
 
-  const colourMap = {
+const colourMap = {
     stopped: 'info',
     'check pending': 'info',
     checking: 'info',
@@ -22,6 +16,25 @@ export const Status = () => {
     'seed pending': 'success',
     seeding: 'success'
   }
+
+interface Torrent {
+  name: string;
+  progress: number;
+  status: keyof typeof colourMap;
+}
+
+interface Device {
+  id: number
+  name: string
+}
+
+export const Status = () => {
+  const { t } = useTranslation()
+  const [devices, setDevices] = useState<Device[]>([])
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
+  const [statusData, setStatusData] = useState<Torrent[]>([]);
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
   const getDevices = useCallback(async () => {
     try {

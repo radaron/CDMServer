@@ -7,10 +7,21 @@ import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 import { NCORE_PASSWORD_PLACEHOLDER } from '../constant'
 
+interface UserInfo {
+  email: string
+  isNcoreCredentialSet: boolean
+  ncoreUser: string
+}
+
 export const Settings = () => {
   const { t } = useTranslation()
-  const { setToastData } = useContext(manageContext)
-  const [userInfo, setUserInfo] = useState({})
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    email: '',
+    isNcoreCredentialSet: false,
+    ncoreUser: ''
+  })
   const [ncoreUserName, setNcoreUserName] = useState('')
   const [ncorePassword, setNcorePassword] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
@@ -31,10 +42,18 @@ export const Settings = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setUserInfo({})
+          setUserInfo({
+            email: '',
+            isNcoreCredentialSet: false,
+            ncoreUser: ''
+          })
         }
       } catch (error) {
-        setUserInfo({})
+        setUserInfo({
+          email: '',
+          isNcoreCredentialSet: false,
+          ncoreUser: ''
+        })
       }
     }
     getUserInfo()
@@ -47,7 +66,7 @@ export const Settings = () => {
     }
   }, [userInfo])
 
-  const updateNcoreCredential = async (event) => {
+  const updateNcoreCredential = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/users/me/', {
@@ -98,7 +117,7 @@ export const Settings = () => {
     }
   }
 
-  const updateLoginCredential = async (event) => {
+  const updateLoginCredential = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const resp = await fetch('/api/users/me/', {

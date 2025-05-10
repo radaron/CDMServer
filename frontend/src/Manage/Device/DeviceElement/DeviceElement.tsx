@@ -7,9 +7,46 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 
-export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) => {
+interface DeviceElementProps {
+  deviceData: {
+    id: number
+    name: string
+    token: string
+    active: boolean
+    settings: {
+      movies_path: string
+      series_path: string
+      musics_path: string
+      books_path: string
+      programs_path: string
+      games_path: string
+      default_path: string
+    },
+    userEmails: string[]
+  }
+  refetch: () => void
+  setSelectedDeviceData: (data: {
+    id: number
+    name: string
+    token: string
+    active: boolean
+    settings: {
+      movies_path: string
+      series_path: string
+      musics_path: string
+      books_path: string
+      programs_path: string
+      games_path: string
+      default_path: string
+    },
+    userEmails: string[]
+  }) => void
+}
+
+export const DeviceElement: React.FC<DeviceElementProps> = ({ deviceData, refetch, setSelectedDeviceData }) => {
   const { t } = useTranslation()
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
   const copyTokenToClipboard = () => {
     navigator.clipboard.writeText(deviceData.token)

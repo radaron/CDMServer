@@ -8,11 +8,46 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 
+interface Settings {
+  movies_path: string;
+  series_path: string;
+  musics_path: string;
+  books_path: string;
+  programs_path: string;
+  games_path: string;
+  default_path: string;
+}
+
+interface Device {
+  id: number;
+  token: string;
+  active: boolean;
+  name: string;
+  settings: Settings;
+  userEmails: string[];
+}
+
 export const Device = () => {
   const { t } = useTranslation()
-  const { setToastData } = useContext(manageContext)
-  const [devices, setDevices] = useState([])
-  const [selectedDeviceData, setSelectedDeviceData] = useState({})
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
+  const [devices, setDevices] = useState<Device[]>([])
+  const [selectedDeviceData, setSelectedDeviceData] = useState<Device>({
+    id: 0,
+    name: '',
+    token: '',
+    active: false,
+    settings: {
+      movies_path: '',
+      series_path: '',
+      musics_path: '',
+      books_path: '',
+      programs_path: '',
+      games_path: '',
+      default_path: ''
+    },
+    userEmails: [],
+  })
 
   const getDevices = useCallback(async () => {
     try {

@@ -5,16 +5,25 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 
-export const DeleteUser = ({ fetchUsers, users }) => {
+interface DeleteUserProps {
+  fetchUsers: () => void
+  users: {
+    email: string
+    id: number
+  }[]
+}
+
+export const DeleteUser: React.FC<DeleteUserProps> = ({ fetchUsers, users }) => {
   const { t } = useTranslation()
   const [selectedUser, setSelectedUser] = useState('')
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
   useEffect(() => {
     setSelectedUser(users[0]?.email)
   }, [users])
 
-  const handleDelete = async (event) => {
+  const handleDelete = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (window.confirm(t('DELETE_USER_CONFIRM'))) {
       const id = users.filter(user => user.email === selectedUser)[0].id

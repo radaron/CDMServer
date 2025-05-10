@@ -18,7 +18,7 @@ export const Login = () => {
   const [loading, setLoading] = useState(false)
   const [searchParams, ] = useSearchParams()
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
     try {
@@ -35,7 +35,7 @@ export const Login = () => {
       if (resp.status === 200) {
         await resp.json()
         const redirectUrl = searchParams.has(REDIRECT_URL)
-          ? searchParams.get(REDIRECT_URL)
+          ? searchParams.get(REDIRECT_URL) || ''
           : `${MANAGE_PAGE}/${STATUS_PAGE}`
         redirectToPage(redirectUrl)
       } else {

@@ -10,7 +10,8 @@ import { redirectToPage } from '../../util'
 export const Admin = () => {
   const { t } = useTranslation()
   const [users, setUsers] = useState([])
-  const { setToastData } = useContext(manageContext)
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
 
   const getUsers = useCallback(async () => {
     try {

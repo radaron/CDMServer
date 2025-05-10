@@ -4,7 +4,15 @@ import { getLanguage, toggleLanguage } from '../../util'
 import { CloudArrowDownFill } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 
-export const Header = ({ userInfo, logOut }) => {
+interface HeaderProps {
+  userInfo: {
+    name: string;
+    isAdmin: boolean;
+  };
+  logOut: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
   const { t, i18n } = useTranslation()
   return (
     <Navbar bg='dark' data-bs-theme='dark' className='mb-4' expand='lg'>

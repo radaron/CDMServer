@@ -7,12 +7,63 @@ import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 import { DownloadFolders } from '../../constant'
 
-export const SettingsModal = ({ data, setData }) => {
-  const { t } = useTranslation()
-  const handleClose = () => setData({})
-  const { setToastData } = useContext(manageContext)
+interface SettingsModalProps {
+  data: {
+    id: number
+    name: string
+    token: string
+    active: boolean
+    settings: {
+      movies_path: string
+      series_path: string
+      musics_path: string
+      books_path: string
+      programs_path: string
+      games_path: string
+      default_path: string
+    }
+    userEmails: string[]
+  }
+  setData: (data: {
+    id: number;
+    token: string;
+    active: boolean;
+    name: string;
+    settings: {
+      movies_path: string
+      series_path: string
+      musics_path: string
+      books_path: string
+      programs_path: string
+      games_path: string
+      default_path: string
+    };
+    userEmails: string[]
+  }) => void
+}
 
-  const handleSave = async (event) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ data, setData }) => {
+  const { t } = useTranslation()
+  const handleClose = () => setData({
+    id: 0,
+    name: '',
+    token: '',
+    active: false,
+    settings: {
+      movies_path: '',
+      series_path: '',
+      musics_path: '',
+      books_path: '',
+      programs_path: '',
+      games_path: '',
+      default_path: ''
+    },
+    userEmails: []
+  })
+  const context = useContext(manageContext)
+  const setToastData = context?.setToastData || (() => {})
+
+  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const resp = await fetch(`/api/devices/${data.id}/`, {
@@ -26,7 +77,22 @@ export const SettingsModal = ({ data, setData }) => {
         })
       })
       if (resp.status === 200) {
-        setData({})
+        setData({
+          id: 0,
+          name: '',
+          token: '',
+          active: false,
+          settings: {
+            movies_path: '',
+            series_path: '',
+            musics_path: '',
+            books_path: '',
+            programs_path: '',
+            games_path: '',
+            default_path: ''
+          },
+          userEmails: []
+        })
         setToastData({ message: t('DEVICE_SETTINGS_UPDATE_SUCCESS'), type: 'success' })
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
@@ -41,7 +107,7 @@ export const SettingsModal = ({ data, setData }) => {
   }
 
   return (
-    <Modal show={data.name} onHide={handleClose} size='xl'>
+    <Modal show={!!data.name} onHide={handleClose} size='xl'>
       <Modal.Header closeButton>
         <Modal.Title>{t('DEVICE_SETTINGS_TITLE')}</Modal.Title>
       </Modal.Header>
@@ -52,12 +118,12 @@ export const SettingsModal = ({ data, setData }) => {
               <Col>
                 {data?.settings && Object.entries(data.settings).map(([key, value]) => (
                   <Form.Group key={key} className='mb-3' controlId={key}>
-                    <Form.Label>{t(DownloadFolders[key])}</Form.Label>
+                    <Form.Label>{t(DownloadFolders[key as keyof typeof data.settings])}</Form.Label>
                     <Form.Control
                       value={value}
                       onChange={(event) => {
                         const newData = { ...data }
-                        newData.settings[key] = event.target.value
+                        newData.settings[key as keyof typeof data.settings] = event.target.value;
                         setData(newData)
                       }}
                     />
@@ -82,7 +148,7 @@ export const SettingsModal = ({ data, setData }) => {
                     </Button>
                   </Col>
                 </Row>
-                {data?.userEmails && data.userEmails.map((mail, index) => (
+                {data?.userEmails && data.userEmails.map((mail: string, index: number) => (
                   <Row key={index} className='mt-3'>
                     <Col xs={10}>
                       <Form.Group controlId={mail}>
