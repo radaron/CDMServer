@@ -1,4 +1,4 @@
-FROM python:3.12 AS builder
+FROM python:3.13 AS builder
 WORKDIR /app
 COPY service/ /app/service/
 COPY templates/ /app/templates/
@@ -6,7 +6,7 @@ COPY static/ /app/static/
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --no-deps -r requirements.txt -t /app
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 WORKDIR /app
 COPY --from=builder /app/ /app/
 EXPOSE 8000

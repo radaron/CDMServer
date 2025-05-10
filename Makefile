@@ -2,7 +2,7 @@ VIRTUALENV = .venv
 ACTIVATE = . $(VIRTUALENV)/bin/activate
 
 .venv:
-	python3 -m venv $(VIRTUALENV)
+	python3.13 -m venv $(VIRTUALENV)
 	$(ACTIVATE) && pip install --upgrade pip pip-tools
 
 clean:

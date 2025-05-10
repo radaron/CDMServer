@@ -64,6 +64,11 @@ services:
       MYSQL_PASSWORD: mypassword
     ports:
       - "3306:3306"
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
   cdm-server:
     image: ghcr.io/radaron/cdmserver:latest
     container_name: cdm
@@ -71,6 +76,7 @@ services:
       - "8000:8000"
     depends_on:
       - mysql
+      - redis
     environment:
       ADMIN_EMAIL: admin@admin.hu
       ADMIN_PASSWORD: admin
@@ -79,6 +85,8 @@ services:
       DB_PASSWORD: mypassword
       DB_PORT: 3306
       DB_USER: myuser
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       NCORE_USERNAME: user
       NCORE_PASSWORD: password
       OMDB_API_KEY: r1veWt

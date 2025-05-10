@@ -10,6 +10,9 @@ DB_NAME = environ["DB_NAME"]
 DB_USER = environ["DB_USER"]
 DB_PASSWORD = environ["DB_PASSWORD"]
 
+REDIS_HOST = environ["REDIS_HOST"]
+REDIS_PORT = environ["REDIS_PORT"]
+
 ADMIN_EMAIL = environ["ADMIN_EMAIL"]
 ADMIN_PASSWORD = environ["ADMIN_PASSWORD"]
 

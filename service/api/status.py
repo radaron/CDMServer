@@ -9,9 +9,9 @@ from service.models.database import (
     desc,
     Device,
     User,
-    Torrent,
     user_device_association,
 )
+from service.torrents_adapter import TorrentsAdapter, TorrentStatus, SortOrder
 
 
 router = APIRouter()
@@ -30,17 +30,15 @@ async def get_devices(
     if device is None:
         return JSONResponse({"message": "Device not found"}, status_code=404)
 
-    torrents = await session.execute(
-        select(Torrent).where(Torrent.device_id == device.id).order_by(desc(Torrent.added_date))
-    )
-    torrents = torrents.scalars().all()
+    torrents_adapter = TorrentsAdapter()
+    torrents = await torrents_adapter.get_torrents(device.id, order=SortOrder.DESC)
 
     return JSONResponse({"data": {"torrents": [dump_torrent(t) for t in torrents]}})
 
 
-def dump_torrent(torrent: Torrent):
+def dump_torrent(torrent: TorrentStatus) -> dict:
     return TorrentStatusData(
-        id=torrent.torrent_id,
+        id=torrent.id,
         name=torrent.name,
         status=torrent.status,
         progress=torrent.progress,
