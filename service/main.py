@@ -41,13 +41,8 @@ app.include_router(omdb_router, prefix="/api/omdb")
 app.add_middleware(
     CORSMiddleware, allow_origins=allowed_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
-
-
-@app.get("/favicon.png", response_class=HTMLResponse)
-async def favicon(request: Request):  # pylint: disable=unused-argument
-    return RedirectResponse(url="/static/favicon.png", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/", response_class=HTMLResponse)

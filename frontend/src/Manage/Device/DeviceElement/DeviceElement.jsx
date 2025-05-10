@@ -1,4 +1,4 @@
-import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
+import { Button, Row, Col, Badge } from 'react-bootstrap'
 import { GearFill } from 'react-bootstrap-icons'
 import { useContext } from 'react'
 import { manageContext } from '../../Manage'
@@ -39,7 +39,7 @@ export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) =>
   }
 
   return (
-    <Container className={`shadow p-3 bg-white rounded ${styles.container}`}>
+    <div className={`shadow p-3 bg-white rounded ${styles.container}`}>
       <Row>
         <Col />
         <Col>
@@ -72,6 +72,6 @@ export const DeviceElement = ({ deviceData, refetch, setSelectedDeviceData }) =>
       <Button className='w-100' variant='danger' onClick={deleteDevice}>
         {t('DELETE_DEVICE_BUTTON')}
       </Button>
-    </Container>
+    </div>
   )
 }

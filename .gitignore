@@ -163,5 +163,5 @@ cython_debug/
 node_modules
 
 
-static/*
+assets/*
 templates/*
