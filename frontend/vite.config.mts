@@ -11,9 +11,11 @@ export default defineConfig({
     outDir: 'build',
   },
   server: {
+    host: '0.0.0.0', // or host: true
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://cdm.radaron.hu',
+        secure: false,
       },
     },
   },
