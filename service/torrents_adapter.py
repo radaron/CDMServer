@@ -32,13 +32,12 @@ class TorrentsAdapter:
         Stores torrent data in a hash and its ID in a sorted set for ordering.
         """
         async with redis.from_url(self.redis_url) as redis_client:
-            hash_key = f"client:{device_id}:torrents"
+            hash_key = f"client:{device_id}:torrents:{torrent.id}"
             sorted_set_key = f"client:{device_id}:torrent_order"
 
-            await redis_client.hset(hash_key, torrent.id, torrent.model_dump_json())
+            await redis_client.set(hash_key, torrent.model_dump_json(), ex=EXPIRATION_TIME)
             await redis_client.zadd(sorted_set_key, {torrent.id: torrent.added_date})
 
-            await redis_client.expire(hash_key, EXPIRATION_TIME)
             await redis_client.expire(sorted_set_key, EXPIRATION_TIME)
 
     async def get_torrents(self, device_id: int, order: SortOrder = SortOrder.ASC) -> list[TorrentStatus]:
@@ -46,7 +45,6 @@ class TorrentsAdapter:
         Retrieves torrents in the specified order using a sorted set and hash.
         """
         async with redis.from_url(self.redis_url) as redis_client:
-            hash_key = f"client:{device_id}:torrents"
             sorted_set_key = f"client:{device_id}:torrent_order"
 
             order_map = {
@@ -57,7 +55,8 @@ class TorrentsAdapter:
 
             torrents = []
             for torrent_id in torrent_ids:
-                torrent_data = await redis_client.hget(hash_key, torrent_id)
+                hash_key = f"client:{device_id}:torrents:{torrent_id.decode()}"
+                torrent_data = await redis_client.get(hash_key)
                 if torrent_data:
                     torrents.append(TorrentStatus.model_validate_json(torrent_data))
 
