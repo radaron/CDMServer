@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { Form, Alert } from 'react-bootstrap'
-import styles from './Login.module.css'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import BackgroundImage from '../background.png'
@@ -31,7 +29,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
     maxWidth: '450px',
   },
   boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+      'hsla(225, 30.80%, 5.10%, 0.53) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
 }));
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
@@ -47,12 +45,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     position: 'absolute',
     zIndex: -1,
     inset: 0,
-      backgroundImage:
-        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
-    backgroundRepeat: 'no-repeat',
+    backgroundImage: `url(${BackgroundImage})`,
   },
 }));
-
 
 export const Login = () => {
   const { t } = useTranslation()
@@ -65,6 +60,7 @@ export const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    console.log(event)
     setLoading(true)
     try {
       const resp = await fetch('/api/auth/login/', {
@@ -102,7 +98,7 @@ export const Login = () => {
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign in
+            {t('LOGIN')}
           </Typography>
           <Box
             component="form"
@@ -116,29 +112,27 @@ export const Login = () => {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">{t('EMAIL_PLACEHOLDER')}</FormLabel>
               <TextField
-                // error={}
-                // helperText={emailErrorMessage}
+                error={!!alertMessage}
+                helperText={alertMessage}
                 id="email"
                 type="email"
                 name="email"
-                placeholder="your@email.com"
+                placeholder={t('EMAIL_PLACEHOLDER')}
                 autoComplete="email"
                 autoFocus
                 required
                 fullWidth
                 variant="outlined"
-                // color={emailError ? 'error' : 'primary'}
+                onChange={(e) => setInputEmail(e.target.value)}
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">{t('PASSWORD_PLACEHOLDER')}</FormLabel>
               <TextField
-                // error={passwordError}
-                // helperText={passwordErrorMessage}
                 name="password"
-                placeholder="••••••"
+                placeholder={t('PASSWORD_PLACEHOLDER')}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -146,17 +140,18 @@ export const Login = () => {
                 required
                 fullWidth
                 variant="outlined"
-                // color={passwordError ? 'error' : 'primary'}
+                onChange={(e) => setInputPassword(e.target.value)}
               />
             </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              // onClick={validateInputs}
-            >
-              Sign in
-            </Button>
+            {!loading ? (
+              <Button variant='contained' fullWidth type="submit">
+                {t('LOGIN')}
+              </Button>
+            ) : (
+              <Button color='primary' fullWidth type="submit" disabled>
+                {t('LOGGING_IN')}...
+              </Button>
+            )}
           </Box>
         </Card>
       </SignInContainer>

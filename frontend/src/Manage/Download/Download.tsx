@@ -73,10 +73,10 @@ export const Download = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setToastData({ message: t('SEARCH_ERROR'), type: 'danger' })
+          setToastData({ message: t('SEARCH_ERROR'), type: 'error' })
         }
       } catch (error) {
-        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
         console.log(error)
       }
       setLoading(false)
@@ -109,10 +109,10 @@ export const Download = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('GET_DEVICES_ERROR'), type: 'danger' })
+        setToastData({ message: t('GET_DEVICES_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }, [setToastData, t])
 
@@ -134,10 +134,10 @@ export const Download = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('DOWNLOAD_FAILED'), type: 'danger' })
+        setToastData({ message: t('DOWNLOAD_FAILED'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 

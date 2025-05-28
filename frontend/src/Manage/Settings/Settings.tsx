@@ -90,7 +90,7 @@ export const Settings = () => {
         redirectToPage(LOGIN_PAGE)
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 
@@ -106,14 +106,14 @@ export const Settings = () => {
           }),
         })
         if (resp.status === 200) {
-          setToastData({ message: t('CREDENTIALS_DELETED'), type: 'success' })
+          setToastData({ message: t('CREDENTIALS_DELETED'), type: 'error' })
           setNcoreUserName('')
           setNcorePassword('')
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         }
       } catch (error) {
-        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
       }
     }
   }
@@ -136,7 +136,7 @@ export const Settings = () => {
         redirectToPage(LOGIN_PAGE)
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 

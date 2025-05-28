@@ -77,16 +77,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       } else if (resp.status === 400) {
         setToastData({
           message: t('DEVICE_MISSING_SHARING_EMAILS'),
-          type: 'danger',
+          type: 'error',
         })
       } else {
         setToastData({
           message: t('DEVICE_SETTINGS_UPDATE_ERROR'),
-          type: 'danger',
+          type: 'error',
         })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 

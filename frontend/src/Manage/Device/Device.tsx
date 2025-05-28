@@ -45,10 +45,10 @@ export const Device = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('FETCHING_DEVICE_ERROR'), type: 'danger' })
+        setToastData({ message: t('FETCHING_DEVICE_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }, [setToastData, t])
 

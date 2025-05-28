@@ -27,10 +27,10 @@ export const Admin = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('USER_FETCH_ERROR'), type: 'danger' })
+        setToastData({ message: t('USER_FETCH_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }, [setToastData, t])
 

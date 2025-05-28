@@ -1,17 +1,38 @@
 import React, { useEffect, useState, createContext } from 'react'
-import { Toast, ToastContainer } from 'react-bootstrap'
 import { Outlet } from 'react-router'
 import { Header } from './Header'
-import styles from './Manage.module.css'
+import Stack from '@mui/material/Stack'
+import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
 import { redirectToPage } from '../util'
 import { UserInfo, ToastData } from './types'
-
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 import BackgroundImage from '../background.png'
+import { OverridableStringUnion } from '@mui/types';
+import { AlertColor } from '@mui/material/Alert';
+import { AlertPropsColorOverrides } from '@mui/material/Alert';
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
+
+
+const ManageContainer = styled(Stack)(() => ({
+  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+  minHeight: '100%',
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage: `url(${BackgroundImage})`,
+  },
+}))
+
 
 export const manageContext = createContext<{
-  setToastData: (data: { message: string; type: string }) => void
+  setToastData: (data: { message: string; type: OverridableStringUnion<AlertColor, AlertPropsColorOverrides> }) => void
 } | null>(null)
 
 export const Manage = () => {
@@ -25,8 +46,10 @@ export const Manage = () => {
   })
   const [toastData, setToastData] = useState<ToastData>({
     message: '',
-    type: null,
+    type: 'info',
   })
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -76,37 +99,32 @@ export const Manage = () => {
         await resp.json()
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('LOGOUT_FAILED'), type: 'danger' })
+        setToastData({ message: t('LOGOUT_FAILED'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('LOGOUT_FAILED'), type: 'danger' })
+      setToastData({ message: t('LOGOUT_FAILED'), type: 'error' })
     }
   }
 
   return (
-    <div
-      style={{ backgroundImage: `url(${BackgroundImage})` }}
-      className={styles.container}
-    >
-      <ToastContainer position="top-center" className="p-3">
-        <Toast
-          delay={4000}
-          show={toastData.message.length > 0}
-          onClose={() => setToastData({ message: '', type: null })}
-          bg={toastData?.type?.toLowerCase()}
-          className="text-center"
-          autohide
-        >
-          <Toast.Header>
-            <strong className="me-auto"></strong>
-          </Toast.Header>
-          <Toast.Body>{toastData.message}</Toast.Body>
-        </Toast>
-      </ToastContainer>
+    <ManageContainer>
+      <Snackbar
+        open={toastData.message.length > 0}
+        autoHideDuration={4000}
+        anchorOrigin={
+          isMobile
+            ? { vertical: 'bottom', horizontal: 'center' }
+            : { vertical: 'bottom', horizontal: 'left' }
+        }
+      >
+        <Alert severity={toastData.type} onClose={() => setToastData({ message: '', type: 'info' })}>
+          {toastData.message}
+        </Alert>
+      </Snackbar>
       <manageContext.Provider value={{ setToastData }}>
         <Header userInfo={userInfo} logOut={logOut} />
         <Outlet />
       </manageContext.Provider>
-    </div>
+    </ManageContainer>
   )
 }

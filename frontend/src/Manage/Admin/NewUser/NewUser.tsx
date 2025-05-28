@@ -39,10 +39,10 @@ export const NewUser: React.FC<NewUserProps> = ({ fetchUsers }) => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('USER_ADD_ERROR'), type: 'danger' })
+        setToastData({ message: t('USER_ADD_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 
