@@ -1,35 +1,52 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
-import { Form, Container, Row, Col, ProgressBar } from 'react-bootstrap'
+import { Row, Col, ProgressBar } from 'react-bootstrap'
 import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
-import styles from './Status.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
+import Box from '@mui/material/Box'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress'
+import Typography from '@mui/material/Typography'
+import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled';
 
-const colourMap = {
-  stopped: 'info',
-  'check pending': 'info',
-  checking: 'info',
-  'download pending': 'info',
-  downloading: 'info',
-  'seed pending': 'success',
-  seeding: 'success',
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography
+          variant="body2"
+          sx={{ color: 'text.secondary' }}
+        >{`${Math.round(props.value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
 }
 
 interface Torrent {
   name: string
   progress: number
-  status: keyof typeof colourMap
+  status: string
 }
 
 export const Status = () => {
   const { t } = useTranslation()
   const [devices, setDevices] = useState<DeviceModel[]>([])
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null)
+  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null)
   const [statusData, setStatusData] = useState<Torrent[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
+  const [value, setValue] = useState(0)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  }
+
 
   const getDevices = useCallback(async () => {
     try {
@@ -93,33 +110,56 @@ export const Status = () => {
 
   return (
     <>
-      <Container className={`m-4 ${styles.selectBox}`}>
-        <Form.Select
-          className=" bg-white rounded"
-          onChange={(e) => setSelectedDeviceId(e.target.value)}
-        >
+      <Box sx={{
+        borderBottom: 1,
+        borderColor: 'divider',
+        backgroundColor: 'background.paper',
+        borderRadius: 1,
+      }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            minWidth: 0,
+            width: '100%',
+          }}>
           {devices.map((device) => (
-            <option key={device.id} value={device.id}>
-              {device.name}
-            </option>
+            <Tab
+              key={device.id}
+              label={device.name}
+              onClick={() => setSelectedDeviceId(device.id)}
+            />
           ))}
-        </Form.Select>
-      </Container>
-      <Container className={`shadow m-4 m-1 bg-white rounded ${styles.status}`}>
-        {statusData.map((torrent) => (
-          <Row key={torrent.name} className="p-4">
-            <Col>{torrent.name}</Col>
-            <Row>
-              <ProgressBar
-                now={torrent.progress}
-                label={`${torrent.progress}%`}
-                variant={colourMap[torrent.status]}
-                className="p-0"
-              />
-            </Row>
-          </Row>
-        ))}
-      </Container>
+        </Tabs>
+      </Box>
+      <Box sx={{
+        maxWidth: '100%',
+        mt: 2,
+        backgroundColor: 'background.paper',
+        borderRadius: 1,
+        padding: 2,
+        maxHeight: 'calc(100vh - 20vh)',
+        overflowY: 'auto',
+        textAlign: statusData.length === 0 ? 'center' : 'left',
+      }}>
+      {statusData.length === 0 ? (
+        <>
+          <HourglassDisabledIcon sx={{ fontSize: 80 }} />
+          <Typography variant="h6">
+            {t('MISSING_TORRENTS')}
+          </Typography>
+        </>
+        ) : (
+        statusData.map((torrent) => (
+          <div key={torrent.name}>
+            <LinearProgressWithLabel value={torrent.progress} />
+            <p>{torrent.name.replace(/\./g, '-')}</p>
+          </div>
+        )))
+      }
+      </Box>
     </>
   )
 }

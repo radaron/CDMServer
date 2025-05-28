@@ -54,6 +54,7 @@
   "LOGIN_FAILED": "Helytelen email vagy jelszó.",
   "LOGGING_IN": "Bejelentkezés folyamatban",
   "LOGOUT_FAILED": "A kijelentkezés nem sikerült.",
+  "MISSING_TORRENTS": "Nincsenek torrentek.",
   "MOVIES_PATH_TITLE": "Filmek letöltési útvonal",
   "MUSICS_PATH_TITLE": "Zenék letöltési útvonal",
   "NAME_PLACEHOLDER": "Név",

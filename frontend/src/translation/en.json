@@ -54,6 +54,7 @@
   "LOGIN_FAILED": "Incorrect email or password.",
   "LOGGING_IN": "Logging in",
   "LOGOUT_FAILED": "Failed to log out.",
+  "MISSING_TORRENTS": "No torrents found.",
   "MOVIES_PATH_TITLE": "Movies download path",
   "MUSICS_PATH_TITLE": "Musics download path",
   "NAME_PLACEHOLDER": "Name",

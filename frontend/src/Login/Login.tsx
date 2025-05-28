@@ -46,6 +46,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     zIndex: -1,
     inset: 0,
     backgroundImage: `url(${BackgroundImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
   },
 }));
 

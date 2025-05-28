@@ -1,5 +1,4 @@
-import React, { useEffect, useState, createContext } from 'react'
-import { Outlet } from 'react-router'
+import { useEffect, useState, createContext } from 'react'
 import { Header } from './Header'
 import Stack from '@mui/material/Stack'
 import { styled } from '@mui/material/styles'
@@ -15,7 +14,7 @@ import { AlertColor } from '@mui/material/Alert';
 import { AlertPropsColorOverrides } from '@mui/material/Alert';
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
-
+import AppTheme from '../AppTheme';
 
 const ManageContainer = styled(Stack)(() => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -27,6 +26,8 @@ const ManageContainer = styled(Stack)(() => ({
     zIndex: -1,
     inset: 0,
     backgroundImage: `url(${BackgroundImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
   },
 }))
 
@@ -45,7 +46,7 @@ export const Manage = () => {
     isNcoreCredentialSet: false,
   })
   const [toastData, setToastData] = useState<ToastData>({
-    message: '',
+    message: 'test',
     type: 'info',
   })
   const theme = useTheme()
@@ -107,24 +108,29 @@ export const Manage = () => {
   }
 
   return (
-    <ManageContainer>
-      <Snackbar
-        open={toastData.message.length > 0}
-        autoHideDuration={4000}
-        anchorOrigin={
-          isMobile
-            ? { vertical: 'bottom', horizontal: 'center' }
-            : { vertical: 'bottom', horizontal: 'left' }
-        }
-      >
-        <Alert severity={toastData.type} onClose={() => setToastData({ message: '', type: 'info' })}>
-          {toastData.message}
-        </Alert>
-      </Snackbar>
-      <manageContext.Provider value={{ setToastData }}>
-        <Header userInfo={userInfo} logOut={logOut} />
-        <Outlet />
-      </manageContext.Provider>
-    </ManageContainer>
+    <AppTheme>
+      <ManageContainer>
+        <Snackbar
+          open={toastData.message.length > 0}
+          autoHideDuration={4000}
+          onClose={() => setToastData({ message: '', type: 'info' })}
+          anchorOrigin={
+            isMobile
+              ? { vertical: 'bottom', horizontal: 'center' }
+              : { vertical: 'top', horizontal: 'center' }
+          }
+        >
+          <Alert
+            severity={toastData.type}
+            onClose={() => setToastData({ message: '', type: 'info' })}
+          >
+            {toastData.message}
+          </Alert>
+        </Snackbar>
+        <manageContext.Provider value={{ setToastData }}>
+          <Header userInfo={userInfo} logOut={logOut} />
+        </manageContext.Provider>
+      </ManageContainer>
+    </AppTheme>
   )
 }
