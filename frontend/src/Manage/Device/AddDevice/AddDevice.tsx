@@ -1,10 +1,12 @@
 import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
-import { Form, Button } from 'react-bootstrap'
-import styles from './AddDevice.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
 interface AddDeviceProps {
   refetch: () => void
@@ -44,23 +46,29 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   }
 
   return (
-    <Form
-      className={`shadow p-4 bg-white rounded ${styles.container}`}
+    <Box
+      component="form"
+      sx={{ width: '100%', maxWidth: 400, margin: '0 auto' }}
       onSubmit={handleSubmit}
     >
       <div className="h4 mb-2 text-center">{t('ADD_DEVICE_TITLE')}</div>
-      <Form.Group className="mb-2">
-        <Form.Control
+      <FormControl fullWidth className="mb-2">
+        <TextField
           type="text"
           value={deviceName}
           placeholder={t('DEVICE_NAME_PLACEHOLDER')}
           onChange={(e) => setDeviceName(e.target.value)}
           required
         />
-      </Form.Group>
-      <Button className="w-100" variant="primary" type="submit">
+      </FormControl>
+      <Button
+        color="primary"
+        variant="contained"
+        type="submit"
+        sx={{ width: '100%' }}
+      >
         {t('ADD_DEVICE_BUTTON')}
       </Button>
-    </Form>
+    </Box>
   )
 }

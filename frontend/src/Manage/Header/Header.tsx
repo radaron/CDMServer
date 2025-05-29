@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Outlet } from 'react-router'
+import { useState, Children } from 'react'
 import {
   DEVICE_PAGE,
   ADMIN_PAGE,
@@ -41,28 +40,30 @@ const drawerWidth = 240;
 interface HeaderProps {
   userInfo: UserInfo
   logOut: () => void
+  headerTitle: string
+  children?: React.ReactNode
 }
 
-export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
+export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, headerTitle }) => {
   const { t, i18n } = useTranslation()
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
+    setIsClosing(true)
+    setMobileOpen(false)
+  }
 
   const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
+    setIsClosing(false)
+  }
 
   const handleDrawerToggle = () => {
     if (!isClosing) {
       setMobileOpen(!mobileOpen);
     }
-  };
+  }
 
   const drawer = (
     <>
@@ -74,37 +75,37 @@ export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
       </Box>
       <Divider />
       <List>
-        <ListItem key={t('HEADER_DOWNLOADS')} disablePadding>
+        <ListItem key={t('HEADER_DOWNLOADS')}>
           <ListItemButton href={DOWNLOAD_PAGE}>
             <ListItemIcon><DownloadIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_DOWNLOADS')} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={t('HEADER_IMDB')} disablePadding>
+        <ListItem key={t('HEADER_IMDB')}>
           <ListItemButton href={IMDB_PAGE}>
             <ListItemIcon><TheaterComedyIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_IMDB')} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={t('HEADER_STATUS')} disablePadding>
+        <ListItem key={t('HEADER_STATUS')}>
           <ListItemButton href={STATUS_PAGE}>
             <ListItemIcon><TimelineIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_STATUS')} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={t('HEADER_DEVICES')} disablePadding>
+        <ListItem key={t('HEADER_DEVICES')}>
           <ListItemButton href={DEVICE_PAGE}>
             <ListItemIcon><DevicesIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_DEVICES')} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={t('HEADER_SETTINGS')} disablePadding>
+        <ListItem key={t('HEADER_SETTINGS')}>
           <ListItemButton href={SETTINGS_PAGE}>
             <ListItemIcon><SettingsIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_SETTINGS')} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={t('HEADER_LANGUAGE')} disablePadding>
+        <ListItem key={t('HEADER_LANGUAGE')}>
           <ListItemButton onClick={() => {
             toggleLanguage()
             i18n.changeLanguage(getLanguage())
@@ -119,8 +120,7 @@ export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
             <ListItemText primary={t('HEADER_LANGUAGE')} />
           </ListItemButton>
         </ListItem>
-        <Divider />
-        <ListItem key={t('HEADER_ADMIN')} disablePadding hidden={!userInfo.isAdmin}>
+        <ListItem key={t('HEADER_ADMIN')} hidden={!userInfo.isAdmin}>
           <ListItemButton href={ADMIN_PAGE}>
             <ListItemIcon><SupervisorAccountIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_ADMIN')} />
@@ -129,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <List>
-        <ListItem key={t('HEADER_LOGOUT')} disablePadding>
+        <ListItem key={t('HEADER_LOGOUT')}>
           <ListItemButton onClick={logOut}>
             <ListItemIcon><LogoutIcon /></ListItemIcon>
             <ListItemText primary={t('HEADER_LOGOUT')} />
@@ -159,6 +159,9 @@ export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
           >
             <MenuIcon />
           </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            {headerTitle}
+          </Typography>
         </Toolbar>
       </AppBar>
       <Box
@@ -193,18 +196,7 @@ export const Header: React.FC<HeaderProps> = ({ userInfo, logOut }) => {
           {drawer}
         </Drawer>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          pt: { xs: 8, sm: 9 },
-          maxWidth: '100vw',
-        }}
-      >
-        <Outlet />
-      </Box>
+      {Children.map(children, child => <>{child}</>)}
     </Box>
   )
 }

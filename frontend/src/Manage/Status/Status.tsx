@@ -4,7 +4,7 @@ import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
-import { redirectToPage } from '../../util'
+import { redirectToPage, separateWords } from '../../util'
 import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -41,6 +41,8 @@ export const Status = () => {
   const [statusData, setStatusData] = useState<Torrent[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
+  const setHeaderTitle = context?.setHeaderTitle || (() => {})
+  setHeaderTitle(t('HEADER_STATUS'))
   const [value, setValue] = useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -140,8 +142,6 @@ export const Status = () => {
         backgroundColor: 'background.paper',
         borderRadius: 1,
         padding: 2,
-        maxHeight: 'calc(100vh - 20vh)',
-        overflowY: 'auto',
         textAlign: statusData.length === 0 ? 'center' : 'left',
       }}>
       {statusData.length === 0 ? (
@@ -155,7 +155,7 @@ export const Status = () => {
         statusData.map((torrent) => (
           <div key={torrent.name}>
             <LinearProgressWithLabel value={torrent.progress} />
-            <p>{torrent.name.replace(/\./g, '-')}</p>
+            <p>{separateWords(torrent.name)}</p>
           </div>
         )))
       }

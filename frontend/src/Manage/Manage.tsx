@@ -1,22 +1,25 @@
 import { useEffect, useState, createContext } from 'react'
+import { Outlet } from 'react-router'
 import { Header } from './Header'
 import Stack from '@mui/material/Stack'
 import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
+import { DRAWER_WIDTH } from './constant'
 import { redirectToPage } from '../util'
 import { UserInfo, ToastData } from './types'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import BackgroundImage from '../background.png'
-import { OverridableStringUnion } from '@mui/types';
-import { AlertColor } from '@mui/material/Alert';
-import { AlertPropsColorOverrides } from '@mui/material/Alert';
+import { OverridableStringUnion } from '@mui/types'
+import { AlertColor } from '@mui/material/Alert'
+import { AlertPropsColorOverrides } from '@mui/material/Alert'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
-import AppTheme from '../AppTheme';
+import AppTheme from '../AppTheme'
+import Box from '@mui/material/Box'
 
-const ManageContainer = styled(Stack)(() => ({
+const ManageContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
   minHeight: '100%',
   '&::before': {
@@ -25,15 +28,13 @@ const ManageContainer = styled(Stack)(() => ({
     position: 'absolute',
     zIndex: -1,
     inset: 0,
-    backgroundImage: `url(${BackgroundImage})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
   },
 }))
 
 
 export const manageContext = createContext<{
   setToastData: (data: { message: string; type: OverridableStringUnion<AlertColor, AlertPropsColorOverrides> }) => void
+  setHeaderTitle: (title: string) => void;
 } | null>(null)
 
 export const Manage = () => {
@@ -46,9 +47,10 @@ export const Manage = () => {
     isNcoreCredentialSet: false,
   })
   const [toastData, setToastData] = useState<ToastData>({
-    message: 'test',
+    message: '',
     type: 'info',
   })
+  const [headerTitle, setHeaderTitle] = useState<string>('')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -127,8 +129,21 @@ export const Manage = () => {
             {toastData.message}
           </Alert>
         </Snackbar>
-        <manageContext.Provider value={{ setToastData }}>
-          <Header userInfo={userInfo} logOut={logOut} />
+        <manageContext.Provider value={{ setToastData, setHeaderTitle }}>
+          <Header userInfo={userInfo} logOut={logOut} headerTitle={headerTitle}>
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                p: 1,
+                width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+                pt: { xs: 8, sm: 9 },
+                maxWidth: '100vw',
+              }}
+            >
+              <Outlet />
+            </Box>
+          </Header>
         </manageContext.Provider>
       </ManageContainer>
     </AppTheme>
