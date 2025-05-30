@@ -12,12 +12,12 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import DownloadIcon from '@mui/icons-material/Download';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import StarIcon from '@mui/icons-material/Star';
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import DownloadIcon from '@mui/icons-material/Download'
+import VideocamIcon from '@mui/icons-material/Videocam'
+import StarIcon from '@mui/icons-material/Star'
 
 interface ImdbSearchResult {
   imdbId: string
@@ -39,10 +39,7 @@ const IMDBCard = ({ result }: IMDBCardProps) => {
   return (
     <Card sx={{ minWidth: 275, textAlign: 'center' }} key={result.imdbId}>
       <CardContent>
-        <Typography
-          variant="h6"
-          sx={{ mb: 1.5, color: 'text.primary' }}
-        >
+        <Typography variant="h6" sx={{ mb: 1.5, color: 'text.primary' }}>
           <a
             href={`https://www.imdb.com/title/${result.imdbId}/`}
             target="_blank"
@@ -52,13 +49,21 @@ const IMDBCard = ({ result }: IMDBCardProps) => {
           </a>
         </Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
-          <img src={result.poster} alt={result.title} style={{ width: '100%' }} />
+          <img
+            src={result.poster}
+            alt={result.title}
+            style={{ width: '100%' }}
+          />
           <Box sx={{ display: 'grid', gap: 1 }}>
-            <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+            <Typography
+              sx={{ color: 'text.secondary', alignContent: 'center' }}
+            >
               <VideocamIcon color="warning" />
               {t('DIRECTOR')}: {result.director}
             </Typography>
-            <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+            <Typography
+              sx={{ color: 'text.secondary', alignContent: 'center' }}
+            >
               <StarIcon color="warning" />
               {t('RATE')}: {result.rating}
             </Typography>
@@ -73,11 +78,11 @@ const IMDBCard = ({ result }: IMDBCardProps) => {
           onClick={() => {
             redirectToPage(
               `${MANAGE_PAGE}/${DOWNLOAD_PAGE}` +
-              `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
+                `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
             )
           }}
         >
-          <DownloadIcon color='warning' />
+          <DownloadIcon color="warning" />
         </Button>
       </CardActions>
     </Card>
@@ -90,8 +95,8 @@ export const Imdb = () => {
   const [pattern, setPattern] = useState('')
   const [searchResults, setSearchResults] = useState<ImdbSearchResult[]>([])
   const context = useContext(manageContext)
-  const setToastData = context?.setToastData || (() => { })
-  const setHeaderTitle = context?.setHeaderTitle || (() => { })
+  const setToastData = context?.setToastData || (() => {})
+  const setHeaderTitle = context?.setHeaderTitle || (() => {})
   setHeaderTitle(t('HEADER_IMDB'))
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -178,16 +183,12 @@ export const Imdb = () => {
           />
         </FormControl>
         <Button
-          color='primary'
-          variant='contained'
+          color="primary"
+          variant="contained"
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            t('SEARCH')
-          )}
+          {isLoading ? <CircularProgress /> : t('SEARCH')}
         </Button>
       </Box>
       {searchResults.length > 0 && (
@@ -201,10 +202,7 @@ export const Imdb = () => {
           }}
         >
           {searchResults.map((result) => (
-            <IMDBCard
-              key={result.imdbId}
-              result={result}
-            />
+            <IMDBCard key={result.imdbId} result={result} />
           ))}
         </Box>
       )}

@@ -24,18 +24,18 @@ import ListItemText from '@mui/material/ListItemText'
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
 import TheaterComedyIcon from '@mui/icons-material/TheaterComedy'
 import DevicesIcon from '@mui/icons-material/Devices'
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from '@mui/icons-material/Settings'
 import TimelineIcon from '@mui/icons-material/Timeline'
 import DownloadIcon from '@mui/icons-material/Download'
 import MenuIcon from '@mui/icons-material/Menu'
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from '@mui/icons-material/Logout'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { Avatar } from '@mui/material'
 import HuFlag from '../../../hu_flag.png'
 import EnFlag from '../../../en_flag.png'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
 interface HeaderProps {
   userInfo: UserInfo
@@ -44,7 +44,12 @@ interface HeaderProps {
   children?: React.ReactNode
 }
 
-export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, headerTitle }) => {
+export const Header: React.FC<HeaderProps> = ({
+  children,
+  userInfo,
+  logOut,
+  headerTitle,
+}) => {
   const { t, i18n } = useTranslation()
 
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -61,14 +66,21 @@ export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, head
 
   const handleDrawerToggle = () => {
     if (!isClosing) {
-      setMobileOpen(!mobileOpen);
+      setMobileOpen(!mobileOpen)
     }
   }
 
   const drawer = (
     <>
       <Toolbar />
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          py: 2,
+        }}
+      >
         <Avatar sx={{ width: 64, height: 64 }}>
           {userInfo.name ? userInfo.name[0].toUpperCase() : ''}
         </Avatar>
@@ -77,39 +89,51 @@ export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, head
       <List>
         <ListItem key={t('HEADER_DOWNLOADS')}>
           <ListItemButton href={DOWNLOAD_PAGE}>
-            <ListItemIcon><DownloadIcon /></ListItemIcon>
+            <ListItemIcon>
+              <DownloadIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_DOWNLOADS')} />
           </ListItemButton>
         </ListItem>
         <ListItem key={t('HEADER_IMDB')}>
           <ListItemButton href={IMDB_PAGE}>
-            <ListItemIcon><TheaterComedyIcon /></ListItemIcon>
+            <ListItemIcon>
+              <TheaterComedyIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_IMDB')} />
           </ListItemButton>
         </ListItem>
         <ListItem key={t('HEADER_STATUS')}>
           <ListItemButton href={STATUS_PAGE}>
-            <ListItemIcon><TimelineIcon /></ListItemIcon>
+            <ListItemIcon>
+              <TimelineIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_STATUS')} />
           </ListItemButton>
         </ListItem>
         <ListItem key={t('HEADER_DEVICES')}>
           <ListItemButton href={DEVICE_PAGE}>
-            <ListItemIcon><DevicesIcon /></ListItemIcon>
+            <ListItemIcon>
+              <DevicesIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_DEVICES')} />
           </ListItemButton>
         </ListItem>
         <ListItem key={t('HEADER_SETTINGS')}>
           <ListItemButton href={SETTINGS_PAGE}>
-            <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_SETTINGS')} />
           </ListItemButton>
         </ListItem>
         <ListItem key={t('HEADER_LANGUAGE')}>
-          <ListItemButton onClick={() => {
-            toggleLanguage()
-            i18n.changeLanguage(getLanguage())
-          }}>
+          <ListItemButton
+            onClick={() => {
+              toggleLanguage()
+              i18n.changeLanguage(getLanguage())
+            }}
+          >
             <ListItemIcon>
               <img
                 src={getLanguage() === 'hu' ? HuFlag : EnFlag}
@@ -122,7 +146,9 @@ export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, head
         </ListItem>
         <ListItem key={t('HEADER_ADMIN')} hidden={!userInfo.isAdmin}>
           <ListItemButton href={ADMIN_PAGE}>
-            <ListItemIcon><SupervisorAccountIcon /></ListItemIcon>
+            <ListItemIcon>
+              <SupervisorAccountIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_ADMIN')} />
           </ListItemButton>
         </ListItem>
@@ -131,7 +157,9 @@ export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, head
       <List>
         <ListItem key={t('HEADER_LOGOUT')}>
           <ListItemButton onClick={logOut}>
-            <ListItemIcon><LogoutIcon /></ListItemIcon>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
             <ListItemText primary={t('HEADER_LOGOUT')} />
           </ListItemButton>
         </ListItem>
@@ -175,7 +203,10 @@ export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, head
           onClose={handleDrawerClose}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+            },
           }}
           slotProps={{
             root: {
@@ -189,14 +220,19 @@ export const Header: React.FC<HeaderProps> = ({ children, userInfo, logOut, head
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+            },
           }}
           open
         >
           {drawer}
         </Drawer>
       </Box>
-      {Children.map(children, child => <>{child}</>)}
+      {Children.map(children, (child) => (
+        <>{child}</>
+      ))}
     </Box>
   )
 }

@@ -31,10 +31,12 @@ const ManageContainer = styled(Stack)(({ theme }) => ({
   },
 }))
 
-
 export const manageContext = createContext<{
-  setToastData: (data: { message: string; type: OverridableStringUnion<AlertColor, AlertPropsColorOverrides> }) => void
-  setHeaderTitle: (title: string) => void;
+  setToastData: (data: {
+    message: string
+    type: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>
+  }) => void
+  setHeaderTitle: (title: string) => void
 } | null>(null)
 
 export const Manage = () => {

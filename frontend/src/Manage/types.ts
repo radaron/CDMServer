@@ -1,6 +1,6 @@
-import { OverridableStringUnion } from '@mui/types';
-import { AlertColor } from '@mui/material/Alert';
-import { AlertPropsColorOverrides } from '@mui/material/Alert';
+import { OverridableStringUnion } from '@mui/types'
+import { AlertColor } from '@mui/material/Alert'
+import { AlertPropsColorOverrides } from '@mui/material/Alert'
 
 export interface UserInfo {
   email: string

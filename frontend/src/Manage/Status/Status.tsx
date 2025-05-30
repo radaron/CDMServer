@@ -8,11 +8,15 @@ import { redirectToPage, separateWords } from '../../util'
 import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress'
+import LinearProgress, {
+  LinearProgressProps,
+} from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
-import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled';
+import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number }
+) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box sx={{ width: '100%', mr: 1 }}>
@@ -25,7 +29,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
         >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
-  );
+  )
 }
 
 interface Torrent {
@@ -46,9 +50,8 @@ export const Status = () => {
   const [value, setValue] = useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setValue(newValue)
   }
-
 
   const getDevices = useCallback(async () => {
     try {
@@ -112,12 +115,14 @@ export const Status = () => {
 
   return (
     <>
-      <Box sx={{
-        borderBottom: 1,
-        borderColor: 'divider',
-        backgroundColor: 'background.paper',
-        borderRadius: 1,
-      }}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          backgroundColor: 'background.paper',
+          borderRadius: 1,
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -126,7 +131,8 @@ export const Status = () => {
           sx={{
             minWidth: 0,
             width: '100%',
-          }}>
+          }}
+        >
           {devices.map((device) => (
             <Tab
               key={device.id}
@@ -136,29 +142,29 @@ export const Status = () => {
           ))}
         </Tabs>
       </Box>
-      <Box sx={{
-        maxWidth: '100%',
-        mt: 2,
-        backgroundColor: 'background.paper',
-        borderRadius: 1,
-        padding: 2,
-        textAlign: statusData.length === 0 ? 'center' : 'left',
-      }}>
-      {statusData.length === 0 ? (
-        <>
-          <HourglassDisabledIcon sx={{ fontSize: 80 }} />
-          <Typography variant="h6">
-            {t('MISSING_TORRENTS')}
-          </Typography>
-        </>
+      <Box
+        sx={{
+          maxWidth: '100%',
+          mt: 2,
+          backgroundColor: 'background.paper',
+          borderRadius: 1,
+          padding: 2,
+          textAlign: statusData.length === 0 ? 'center' : 'left',
+        }}
+      >
+        {statusData.length === 0 ? (
+          <>
+            <HourglassDisabledIcon sx={{ fontSize: 80 }} />
+            <Typography variant="h6">{t('MISSING_TORRENTS')}</Typography>
+          </>
         ) : (
-        statusData.map((torrent) => (
-          <div key={torrent.name}>
-            <LinearProgressWithLabel value={torrent.progress} />
-            <p>{separateWords(torrent.name)}</p>
-          </div>
-        )))
-      }
+          statusData.map((torrent) => (
+            <div key={torrent.name}>
+              <LinearProgressWithLabel value={torrent.progress} />
+              <p>{separateWords(torrent.name)}</p>
+            </div>
+          ))
+        )}
       </Box>
     </>
   )

@@ -5,15 +5,15 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import SettingsIcon from '@mui/icons-material/Settings';
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import SettingsIcon from '@mui/icons-material/Settings'
 import DeleteIcon from '@mui/icons-material/Delete'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import Chip from '@mui/material/Chip';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import Chip from '@mui/material/Chip'
 
 interface DeviceElementProps {
   deviceData: DeviceModel
@@ -67,8 +67,15 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
         >
           {deviceData.name}
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 5, mb: 2 }}>
-          <Typography variant='subtitle1' sx={{ color: 'text.secondary' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            mx: 5,
+            mb: 2,
+          }}
+        >
+          <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
             {t('STATUS_TITLE')}:{' '}
             {deviceData.active ? (
               <Chip label={t('ACTIVE_BADGE')} color="success" />
@@ -76,7 +83,7 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
               <Chip label={t('INACTIVE_BADGE')} color="error" />
             )}
           </Typography>
-          <Typography variant='subtitle1' sx={{ color: 'text.secondary' }}>
+          <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
             {t('TOKEN_TITLE')}:{' '}
             <ContentCopyIcon onClick={copyTokenToClipboard} />
           </Typography>
@@ -90,11 +97,7 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
         >
           <SettingsIcon />
         </Button>
-        <Button
-          color="error"
-          variant="contained"
-          onClick={deleteDevice}
-        >
+        <Button color="error" variant="contained" onClick={deleteDevice}>
           <DeleteIcon />
         </Button>
       </CardActions>

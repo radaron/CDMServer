@@ -10,15 +10,15 @@ import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
-import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
 
 interface TorrentSearchResult {
   id: number
@@ -42,29 +42,33 @@ interface TorrentCardProps {
   addToDownloadQueue: (torrentId: number, deviceId: number) => void
 }
 
-const DownloadDropDownButton = ({ result, devices, addToDownloadQueue }: DownloadDropDownButtonProps) => {
+const DownloadDropDownButton = ({
+  result,
+  devices,
+  addToDownloadQueue,
+}: DownloadDropDownButtonProps) => {
   const { t } = useTranslation()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSelect = (deviceId: number) => {
-    addToDownloadQueue(result.id, deviceId);
-    handleClose();
+    setAnchorEl(event.currentTarget)
   }
 
-  return(
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleSelect = (deviceId: number) => {
+    addToDownloadQueue(result.id, deviceId)
+    handleClose()
+  }
+
+  return (
     <div>
       <Button
-        color='primary'
-        variant='contained'
+        color="primary"
+        variant="contained"
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -80,10 +84,7 @@ const DownloadDropDownButton = ({ result, devices, addToDownloadQueue }: Downloa
         onClose={handleClose}
       >
         {devices.map((device) => (
-          <MenuItem
-            key={device.id}
-            onClick={() => handleSelect(device.id)}
-          >
+          <MenuItem key={device.id} onClick={() => handleSelect(device.id)}>
             {device.name}
           </MenuItem>
         ))}
@@ -92,16 +93,17 @@ const DownloadDropDownButton = ({ result, devices, addToDownloadQueue }: Downloa
   )
 }
 
-const TorrentCard = ({ result, devices, addToDownloadQueue }: TorrentCardProps) => {
+const TorrentCard = ({
+  result,
+  devices,
+  addToDownloadQueue,
+}: TorrentCardProps) => {
   const { t } = useTranslation()
 
   return (
     <Card sx={{ minWidth: 275 }} key={result.id}>
       <CardContent>
-        <Typography
-          variant="h6"
-          component="div"
-        >
+        <Typography variant="h6" component="div">
           <a href={result.url} target="_blank" rel="noreferrer">
             {separateWords(result.title)}
           </a>
@@ -130,8 +132,8 @@ const TorrentCard = ({ result, devices, addToDownloadQueue }: TorrentCardProps) 
           />
         ) : (
           <Button
-            color='primary'
-            variant='contained'
+            color="primary"
+            variant="contained"
             disabled={devices.length === 0}
             onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}
           >
@@ -327,16 +329,12 @@ export const Download = () => {
           </Select>
         </FormControl>
         <Button
-          color='primary'
-          variant='contained'
+          color="primary"
+          variant="contained"
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            t('SEARCH')
-          )}
+          {isLoading ? <CircularProgress /> : t('SEARCH')}
         </Button>
       </Box>
       {searchResults.length > 0 && (

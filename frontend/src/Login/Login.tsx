@@ -5,17 +5,17 @@ import BackgroundImage from '../background.png'
 import { MANAGE_PAGE, REDIRECT_URL } from '../constant'
 import { redirectToPage } from '../util'
 import { STATUS_PAGE } from '../Manage/constant'
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import MuiCard from '@mui/material/Card';
-import { styled } from '@mui/material/styles';
-import AppTheme from '../AppTheme';
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import FormLabel from '@mui/material/FormLabel'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import Stack from '@mui/material/Stack'
+import MuiCard from '@mui/material/Card'
+import { styled } from '@mui/material/styles'
+import AppTheme from '../AppTheme'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -29,8 +29,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
     maxWidth: '450px',
   },
   boxShadow:
-      'hsla(225, 30.80%, 5.10%, 0.53) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-}));
+    'hsla(225, 30.80%, 5.10%, 0.53) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+}))
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -46,7 +46,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     zIndex: -1,
     inset: 0,
   },
-}));
+}))
 
 export const Login = () => {
   const { t } = useTranslation()
@@ -128,7 +128,9 @@ export const Login = () => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">{t('PASSWORD_PLACEHOLDER')}</FormLabel>
+              <FormLabel htmlFor="password">
+                {t('PASSWORD_PLACEHOLDER')}
+              </FormLabel>
               <TextField
                 name="password"
                 placeholder={t('PASSWORD_PLACEHOLDER')}
@@ -143,17 +145,17 @@ export const Login = () => {
               />
             </FormControl>
             {!loading ? (
-              <Button variant='contained' fullWidth type="submit">
+              <Button variant="contained" fullWidth type="submit">
                 {t('LOGIN')}
               </Button>
             ) : (
-              <Button color='primary' fullWidth type="submit" disabled>
+              <Button color="primary" fullWidth type="submit" disabled>
                 {t('LOGGING_IN')}...
               </Button>
             )}
           </Box>
         </Card>
       </SignInContainer>
-      </AppTheme>
+    </AppTheme>
   )
 }

@@ -1,5 +1,5 @@
-import { Theme, alpha, Components } from '@mui/material/styles';
-import { gray, orange } from './themePrimitives';
+import { Theme, alpha, Components } from '@mui/material/styles'
+import { gray, orange } from './themePrimitives'
 
 export const feedbackCustomizations: Components<Theme> = {
   MuiDialog: {
@@ -25,4 +25,4 @@ export const feedbackCustomizations: Components<Theme> = {
       }),
     },
   },
-};
+}

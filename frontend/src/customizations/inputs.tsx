@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { alpha, Theme, Components } from '@mui/material/styles';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-import { svgIconClasses } from '@mui/material/SvgIcon';
-import { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import { toggleButtonClasses } from '@mui/material/ToggleButton';
-import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
-import { gray, brand } from './themePrimitives';
+import * as React from 'react'
+import { alpha, Theme, Components } from '@mui/material/styles'
+import { outlinedInputClasses } from '@mui/material/OutlinedInput'
+import { svgIconClasses } from '@mui/material/SvgIcon'
+import { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup'
+import { toggleButtonClasses } from '@mui/material/ToggleButton'
+import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded'
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
+import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
+import { gray, brand } from './themePrimitives'
 
 export const inputsCustomizations: Components<Theme> = {
   MuiButtonBase: {
@@ -311,7 +311,9 @@ export const inputsCustomizations: Components<Theme> = {
     defaultProps: {
       disableRipple: true,
       icon: (
-        <CheckBoxOutlineBlankRoundedIcon sx={{ color: 'hsla(210, 0%, 0%, 0.0)' }} />
+        <CheckBoxOutlineBlankRoundedIcon
+          sx={{ color: 'hsla(210, 0%, 0%, 0.0)' }}
+        />
       ),
       checkedIcon: <CheckRoundedIcon sx={{ height: 14, width: 14 }} />,
       indeterminateIcon: <RemoveRoundedIcon sx={{ height: 14, width: 14 }} />,
@@ -439,4 +441,4 @@ export const inputsCustomizations: Components<Theme> = {
       }),
     },
   },
-};
+}
