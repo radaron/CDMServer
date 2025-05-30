@@ -166,7 +166,7 @@ export const Imdb = () => {
       >
         <FormControl
           sx={{
-            width: { xs: 'auto', sm: 'auto', md: '80%' },
+            width: { xs: 'auto', sm: 'auto', md: '100%' },
           }}
         >
           <TextField

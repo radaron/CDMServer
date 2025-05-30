@@ -77,6 +77,10 @@ export const Device = () => {
           mx: 'auto',
         }}
       >
+        <SettingsModal
+          data={selectedDeviceData}
+          setData={setSelectedDeviceData}
+        />
         <AddDevice refetch={getDevices} />
       </Box>
       <Box
@@ -88,10 +92,6 @@ export const Device = () => {
           gap: 2,
         }}
       >
-        <SettingsModal
-          data={selectedDeviceData}
-          setData={setSelectedDeviceData}
-        />
         {devices.map((device) => (
           <DeviceElement
             key={device.id}

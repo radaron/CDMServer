@@ -121,7 +121,7 @@ export const Manage = () => {
           anchorOrigin={
             isMobile
               ? { vertical: 'bottom', horizontal: 'center' }
-              : { vertical: 'top', horizontal: 'center' }
+              : { vertical: 'bottom', horizontal: 'right' }
           }
         >
           <Alert
