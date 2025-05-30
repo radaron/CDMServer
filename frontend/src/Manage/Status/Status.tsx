@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
-import { Row, Col, ProgressBar } from 'react-bootstrap'
+import {
+  Box,
+  Tabs,
+  Tab,
+  LinearProgressProps,
+  LinearProgress,
+  Typography
+} from '@mui/material'
+import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords } from '../../util'
-import Box from '@mui/material/Box'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import LinearProgress, {
-  LinearProgressProps,
-} from '@mui/material/LinearProgress'
-import Typography from '@mui/material/Typography'
-import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 
 function LinearProgressWithLabel(
   props: LinearProgressProps & { value: number }

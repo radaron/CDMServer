@@ -1,4 +1,18 @@
 import { useState, useContext, useCallback, useEffect } from 'react'
+import {
+  Box,
+  FormControl,
+  TextField,
+  Button,
+  CircularProgress,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from '@mui/material'
+import DownloadIcon from '@mui/icons-material/Download'
+import VideocamIcon from '@mui/icons-material/Videocam'
+import StarIcon from '@mui/icons-material/Star'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { manageContext } from '../Manage'
@@ -6,18 +20,6 @@ import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
 import { redirectToPage, separateWords } from '../../util'
 import { PATTERN } from './constant'
-import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import DownloadIcon from '@mui/icons-material/Download'
-import VideocamIcon from '@mui/icons-material/Videocam'
-import StarIcon from '@mui/icons-material/Star'
 
 interface ImdbSearchResult {
   imdbId: string

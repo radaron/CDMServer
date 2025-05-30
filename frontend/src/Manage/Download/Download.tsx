@@ -1,5 +1,19 @@
 import { useState, useContext, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router'
+import {
+  Box,
+  FormControl,
+  TextField,
+  Button,
+  CircularProgress,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  Menu,
+  MenuItem,
+  Select,
+} from '@mui/material'
 import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
 import { searchWhere, searchCategory } from '../constant'
@@ -7,18 +21,6 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords } from '../../util'
 import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
-import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
-import TextField from '@mui/material/TextField'
-import Select from '@mui/material/Select'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
 
 interface TorrentSearchResult {
   id: number

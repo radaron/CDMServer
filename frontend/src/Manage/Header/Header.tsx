@@ -1,5 +1,21 @@
 import { useState, Children } from 'react'
 import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  ListItemText,
+  ListItemIcon,
+  ListItemButton,
+  ListItem,
+  List,
+  Toolbar,
+  Avatar,
+  Drawer,
+} from '@mui/material'
+import {
   DEVICE_PAGE,
   ADMIN_PAGE,
   DOWNLOAD_PAGE,
@@ -7,20 +23,6 @@ import {
   SETTINGS_PAGE,
   IMDB_PAGE,
 } from './../constant'
-import { getLanguage, toggleLanguage } from '../../util'
-import { UserInfo } from '../types'
-import { useTranslation } from 'react-i18next'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import CssBaseline from '@mui/material/CssBaseline'
-import Divider from '@mui/material/Divider'
-import Drawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
 import TheaterComedyIcon from '@mui/icons-material/TheaterComedy'
 import DevicesIcon from '@mui/icons-material/Devices'
@@ -29,9 +31,9 @@ import TimelineIcon from '@mui/icons-material/Timeline'
 import DownloadIcon from '@mui/icons-material/Download'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import { Avatar } from '@mui/material'
+import { getLanguage, toggleLanguage } from '../../util'
+import { UserInfo } from '../types'
+import { useTranslation } from 'react-i18next'
 import HuFlag from '../../../hu_flag.png'
 import EnFlag from '../../../en_flag.png'
 

@@ -1,12 +1,9 @@
 import { useState, useContext } from 'react'
+import { Box, FormControl, TextField, Button } from '@mui/material'
 import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
-import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
 
 interface AddDeviceProps {
   refetch: () => void

@@ -1,4 +1,16 @@
 import { useContext } from 'react'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography
+} from '@mui/material'
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
 import { manageContext } from '../../Manage'
 import { DeviceModel } from '../../types'
 import { useTranslation } from 'react-i18next'
@@ -6,15 +18,6 @@ import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
 import { DownloadFolders } from '../../constant'
 import FormControl from '@mui/material/FormControl'
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Typography } from '@mui/material'
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 interface SettingsModalProps {
   data: DeviceModel
@@ -100,10 +103,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <Dialog
-        open={!!data.name}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+      open={!!data.name}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      maxWidth="md"
+      fullWidth
     >
       <Box component="form" onSubmit={handleSave}>
         <DialogTitle id="alert-dialog-title">
@@ -115,18 +120,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             gridTemplateColumns: { md: '1fr 1fr', xs: '1fr' },
             gap: 2,
             maxHeight: '60vh',
-           }}
+          }}
         >
           <Box>
             {data?.settings &&
               Object.entries(data.settings).map(([key, value]) => (
-                <Box key={key} sx={{ marginBottom: 2 }}>
+                <Box key={key} sx={{ mb: 2 }}>
                   <Typography>
                     {t(DownloadFolders[key as keyof typeof data.settings])}
                   </Typography>
-                  <FormControl
-                    fullWidth
-                  >
+                  <FormControl fullWidth>
                     <TextField
                       key={key}
                       value={value}
@@ -143,63 +146,64 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </FormControl>
                 </Box>
               ))}
-            </Box>
-            <Box>
-              <Typography>{t('DEVICE_OWNERS_TITLE')}</Typography>
-              {data?.userEmails &&
-                data.userEmails.map((mail: string, index: number) => (
-                  <Box key={index} sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    mb: 1,
-                  }}>
-                    <FormControl>
-                      <TextField
-                        type='email'
-                        value={mail}
-                        onChange={(event) => {
-                          const newData = { ...data }
-                          newData.userEmails[index] = event.target.value
-                          setData(newData)
-                        }}
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                      />
-                    </FormControl>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => {
+          </Box>
+          <Box>
+            <Typography>{t('DEVICE_OWNERS_TITLE')}</Typography>
+            {data?.userEmails &&
+              data.userEmails.map((mail: string, index: number) => (
+                <Box
+                  key={index}
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2, mb: 2 }}
+                >
+                  <FormControl fullWidth>
+                    <TextField
+                      type="email"
+                      value={mail}
+                      onChange={(event) => {
                         const newData = { ...data }
-                        newData.userEmails.splice(index, 1)
+                        newData.userEmails[index] = event.target.value
                         setData(newData)
                       }}
-                    >
-                      <PersonRemoveIcon />
-                    </Button>
-                  </Box>
+                      fullWidth
+                      margin="normal"
+                      variant="outlined"
+                      sx={{ mt: 'auto', mb: 'auto' }}
+                    />
+                  </FormControl>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      const newData = { ...data }
+                      newData.userEmails.splice(index, 1)
+                      setData(newData)
+                    }}
+                  >
+                    <PersonRemoveIcon />
+                  </Button>
+                </Box>
               ))}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    const newData = { ...data }
-                    newData.userEmails.push('')
-                    setData(newData)
-                  }}
-                  sx = {{
-                    width: '100%',
-                  }}
-                >
-                  <PersonAddAlt1Icon />
-                </Button>
-              </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                const newData = { ...data }
+                newData.userEmails.push('')
+                setData(newData)
+              }}
+              sx={{ width: '100%' }}
+            >
+              <PersonAddAlt1Icon />
+            </Button>
+          </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="contained">{t('DEVICE_SETTINGS_CLOSE')}</Button>
-          <Button type="submit" color="primary" variant="contained" autoFocus>{t('DEVICE_SETTINGS_SAVE')}</Button>
+          <Button onClick={handleClose} color="secondary" variant="contained">
+            {t('DEVICE_SETTINGS_CLOSE')}
+          </Button>
+          <Button type="submit" color="primary" variant="contained" autoFocus>
+            {t('DEVICE_SETTINGS_SAVE')}
+          </Button>
         </DialogActions>
       </Box>
     </Dialog>

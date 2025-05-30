@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext, useCallback } from 'react'
+import { Box } from '@mui/material'
 import { DeviceElement } from './DeviceElement'
 import { AddDevice } from './AddDevice'
 import { SettingsModal } from './SettingsModal'
@@ -7,7 +8,6 @@ import { DeviceModel } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
-import Box from '@mui/material/Box'
 
 export const Device = () => {
   const { t } = useTranslation()

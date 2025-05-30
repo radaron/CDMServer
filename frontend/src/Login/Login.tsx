@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
+import {
+  Box,
+  Button,
+  CssBaseline,
+  FormControl,
+  FormLabel,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
+import MuiCard from '@mui/material/Card'
+import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
-import BackgroundImage from '../background.png'
 import { MANAGE_PAGE, REDIRECT_URL } from '../constant'
 import { redirectToPage } from '../util'
 import { STATUS_PAGE } from '../Manage/constant'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import Stack from '@mui/material/Stack'
-import MuiCard from '@mui/material/Card'
-import { styled } from '@mui/material/styles'
 import AppTheme from '../AppTheme'
 
 const Card = styled(MuiCard)(({ theme }) => ({
