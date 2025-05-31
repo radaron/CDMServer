@@ -25,11 +25,6 @@ export default function AppTheme(props: AppThemeProps) {
     return disableCustomTheme
       ? {}
       : createTheme({
-          cssVariables: {
-            colorSchemeSelector: 'data-mui-color-scheme',
-            cssVarPrefix: 'template',
-          },
-          colorSchemes,
           typography,
           shadows,
           shape,
@@ -40,6 +35,10 @@ export default function AppTheme(props: AppThemeProps) {
             ...navigationCustomizations,
             ...surfacesCustomizations,
             ...themeComponents,
+          },
+          palette: {
+            mode: 'dark',
+            ...(colorSchemes.dark?.palette || {}),
           },
         })
   }, [disableCustomTheme, themeComponents])

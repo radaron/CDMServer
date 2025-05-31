@@ -69,7 +69,6 @@ const DownloadDropDownButton = ({
   return (
     <div>
       <Button
-        color="primary"
         variant="contained"
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
@@ -134,7 +133,6 @@ const TorrentCard = ({
           />
         ) : (
           <Button
-            color="primary"
             variant="contained"
             disabled={devices.length === 0}
             onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}
@@ -331,7 +329,6 @@ export const Download = () => {
           </Select>
         </FormControl>
         <Button
-          color="primary"
           variant="contained"
           type="submit"
           disabled={isLoading}

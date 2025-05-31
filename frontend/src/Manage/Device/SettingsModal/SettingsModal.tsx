@@ -171,8 +171,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     />
                   </FormControl>
                   <Button
-                    variant="contained"
                     color="error"
+                    variant="contained"
                     onClick={() => {
                       const newData = { ...data }
                       newData.userEmails.splice(index, 1)
@@ -185,7 +185,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               ))}
             <Button
               variant="contained"
-              color="primary"
               onClick={() => {
                 const newData = { ...data }
                 newData.userEmails.push('')
@@ -201,7 +200,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <Button onClick={handleClose} color="secondary" variant="contained">
             {t('DEVICE_SETTINGS_CLOSE')}
           </Button>
-          <Button type="submit" color="primary" variant="contained" autoFocus>
+          <Button type="submit" variant="contained" autoFocus>
             {t('DEVICE_SETTINGS_SAVE')}
           </Button>
         </DialogActions>

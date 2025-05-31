@@ -83,7 +83,7 @@ export const NewUser: React.FC<NewUserProps> = ({ fetchUsers }) => {
             control={<Switch checked={inputIsAdmin} onChange={(e) => setInputIsAdmin(e.target.checked)} />}
             label={t('IS_ADMIN_CHECKBOX')}
           />
-        <Button color="primary" variant='contained' type="submit">
+        <Button variant='contained' type="submit">
           {t('CREATE_USER_BUTTON')}
         </Button>
       </Box>

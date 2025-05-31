@@ -115,41 +115,45 @@ export const Status = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          borderBottom: 1,
-          borderColor: 'divider',
-          backgroundColor: 'background.paper',
-          borderRadius: 1,
-        }}
-      >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="auto"
+      {devices.length > 0 && (
+        <Box
           sx={{
-            minWidth: 0,
-            width: '100%',
+            borderBottom: 1,
+            backgroundColor: 'background.paper',
+            borderRadius: 1,
+            maxWidth: { sm: '1000px' },
+            mx: 'auto',
           }}
         >
-          {devices.map((device) => (
-            <Tab
-              key={device.id}
-              label={device.name}
-              onClick={() => setSelectedDeviceId(device.id)}
-            />
-          ))}
-        </Tabs>
-      </Box>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              sx={{
+                minWidth: 0,
+                width: '100%',
+              }}
+            >
+              {devices.map((device) => (
+                <Tab
+                  key={device.id}
+                  label={device.name}
+                  onClick={() => setSelectedDeviceId(device.id)}
+                />
+              ))}
+            </Tabs>
+        </Box>
+      )}
       <Box
         sx={{
-          maxWidth: '100%',
           mt: 2,
           backgroundColor: 'background.paper',
           borderRadius: 1,
           padding: 2,
           textAlign: statusData.length === 0 ? 'center' : 'left',
+          maxWidth: { sm: '1000px' },
+          mx: 'auto',
         }}
       >
         {statusData.length === 0 ? (

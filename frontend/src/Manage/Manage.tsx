@@ -1,6 +1,13 @@
 import { useEffect, useState, createContext } from 'react'
 import { Outlet } from 'react-router'
-import { Box, Stack, Snackbar, Alert, useMediaQuery, AlertPropsColorOverrides } from '@mui/material'
+import {
+  Box,
+  Stack,
+  Snackbar,
+  Alert,
+  useMediaQuery,
+  AlertPropsColorOverrides,
+} from '@mui/material'
 import { styled, useTheme } from '@mui/material/styles'
 import { OverridableStringUnion } from '@mui/types'
 import { AlertColor } from '@mui/material/Alert'
@@ -10,10 +17,10 @@ import { LOGIN_PAGE } from '../constant'
 import { DRAWER_WIDTH } from './constant'
 import { redirectToPage } from '../util'
 import { UserInfo, ToastData } from './types'
-import AppTheme from '../AppTheme'
+import { neonGradient } from '../customizations/themePrimitives'
 
 const ManageContainer = styled(Stack)(({ theme }) => ({
-  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+  position: 'relative',
   minHeight: '100%',
   '&::before': {
     content: '""',
@@ -21,6 +28,7 @@ const ManageContainer = styled(Stack)(({ theme }) => ({
     position: 'absolute',
     zIndex: -1,
     inset: 0,
+    backgroundImage: neonGradient,
   },
 }))
 
@@ -105,42 +113,40 @@ export const Manage = () => {
   }
 
   return (
-    <AppTheme>
-      <ManageContainer>
-        <Snackbar
-          open={toastData.message.length > 0}
-          autoHideDuration={4000}
+    <ManageContainer>
+      <Snackbar
+        open={toastData.message.length > 0}
+        autoHideDuration={4000}
+        onClose={() => setToastData({ message: '', type: 'info' })}
+        anchorOrigin={
+          isMobile
+            ? { vertical: 'bottom', horizontal: 'center' }
+            : { vertical: 'bottom', horizontal: 'right' }
+        }
+      >
+        <Alert
+          severity={toastData.type}
           onClose={() => setToastData({ message: '', type: 'info' })}
-          anchorOrigin={
-            isMobile
-              ? { vertical: 'bottom', horizontal: 'center' }
-              : { vertical: 'bottom', horizontal: 'right' }
-          }
         >
-          <Alert
-            severity={toastData.type}
-            onClose={() => setToastData({ message: '', type: 'info' })}
+          {toastData.message}
+        </Alert>
+      </Snackbar>
+      <manageContext.Provider value={{ setToastData, setHeaderTitle }}>
+        <Header userInfo={userInfo} logOut={logOut} headerTitle={headerTitle}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 1,
+              width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+              pt: { xs: 8, sm: 9 },
+              maxWidth: '100vw',
+            }}
           >
-            {toastData.message}
-          </Alert>
-        </Snackbar>
-        <manageContext.Provider value={{ setToastData, setHeaderTitle }}>
-          <Header userInfo={userInfo} logOut={logOut} headerTitle={headerTitle}>
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                p: 1,
-                width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-                pt: { xs: 8, sm: 9 },
-                maxWidth: '100vw',
-              }}
-            >
-              <Outlet />
-            </Box>
-          </Header>
-        </manageContext.Provider>
-      </ManageContainer>
-    </AppTheme>
+            <Outlet />
+          </Box>
+        </Header>
+      </manageContext.Provider>
+    </ManageContainer>
   )
 }

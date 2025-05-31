@@ -72,6 +72,20 @@ export const Header: React.FC<HeaderProps> = ({
     }
   }
 
+  const menuElements = [
+    { label: t('HEADER_STATUS'), icon: <TimelineIcon />, href: STATUS_PAGE },
+    { label: t('HEADER_DOWNLOADS'), icon: <DownloadIcon />, href: DOWNLOAD_PAGE },
+    { label: t('HEADER_IMDB'), icon: <TheaterComedyIcon />, href: IMDB_PAGE },
+    { label: t('HEADER_DEVICES'), icon: <DevicesIcon />, href: DEVICE_PAGE },
+    { label: t('HEADER_SETTINGS'), icon: <SettingsIcon />, href: SETTINGS_PAGE },
+    {
+      label: t('HEADER_ADMIN'),
+      icon: <SupervisorAccountIcon />,
+      href: ADMIN_PAGE,
+      hidden: !userInfo.isAdmin,
+    },
+  ]
+
   const drawer = (
     <>
       <Toolbar />
@@ -89,46 +103,19 @@ export const Header: React.FC<HeaderProps> = ({
       </Box>
       <Divider />
       <List>
-        <ListItem key={t('HEADER_DOWNLOADS')}>
-          <ListItemButton href={DOWNLOAD_PAGE}>
-            <ListItemIcon>
-              <DownloadIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('HEADER_DOWNLOADS')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={t('HEADER_IMDB')}>
-          <ListItemButton href={IMDB_PAGE}>
-            <ListItemIcon>
-              <TheaterComedyIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('HEADER_IMDB')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={t('HEADER_STATUS')}>
-          <ListItemButton href={STATUS_PAGE}>
-            <ListItemIcon>
-              <TimelineIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('HEADER_STATUS')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={t('HEADER_DEVICES')}>
-          <ListItemButton href={DEVICE_PAGE}>
-            <ListItemIcon>
-              <DevicesIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('HEADER_DEVICES')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={t('HEADER_SETTINGS')}>
-          <ListItemButton href={SETTINGS_PAGE}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('HEADER_SETTINGS')} />
-          </ListItemButton>
-        </ListItem>
+        {menuElements.map(
+          ({ label, icon, href, hidden }) => (
+            <ListItem key={label} hidden={hidden}>
+              <ListItemButton href={href}>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={label} />
+              </ListItemButton>
+            </ListItem>
+          )
+        )}
+      </List>
+      <Box sx={{ flexGrow: 1 }} />
+      <List>
         <ListItem key={t('HEADER_LANGUAGE')}>
           <ListItemButton
             onClick={() => {
@@ -146,17 +133,6 @@ export const Header: React.FC<HeaderProps> = ({
             <ListItemText primary={t('HEADER_LANGUAGE')} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={t('HEADER_ADMIN')} hidden={!userInfo.isAdmin}>
-          <ListItemButton href={ADMIN_PAGE}>
-            <ListItemIcon>
-              <SupervisorAccountIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('HEADER_ADMIN')} />
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <Box sx={{ flexGrow: 1 }} />
-      <List>
         <ListItem key={t('HEADER_LOGOUT')}>
           <ListItemButton onClick={logOut}>
             <ListItemIcon>

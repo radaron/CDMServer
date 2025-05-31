@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react'
-import { Box, FormControl, TextField, Button } from '@mui/material'
+import { Box, FormControl, TextField, Button, Typography } from '@mui/material'
 import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
@@ -45,11 +45,17 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   return (
     <Box
       component="form"
-      sx={{ width: '100%', maxWidth: 400, margin: '0 auto' }}
+      sx={{ width: '100%', maxWidth: 400, margin: '0 auto', display: 'grid', gap: 1 }}
       onSubmit={handleSubmit}
     >
-      <div className="h4 mb-2 text-center">{t('ADD_DEVICE_TITLE')}</div>
-      <FormControl fullWidth className="mb-2">
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{ textAlign: 'center', mb: 1, fontWeight: 'bold' }}
+      >
+        {t('ADD_DEVICE_TITLE')}
+      </Typography>
+      <FormControl fullWidth>
         <TextField
           type="text"
           value={deviceName}
@@ -59,7 +65,6 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
         />
       </FormControl>
       <Button
-        color="primary"
         variant="contained"
         type="submit"
         sx={{ width: '100%' }}

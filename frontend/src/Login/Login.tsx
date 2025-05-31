@@ -17,6 +17,7 @@ import { MANAGE_PAGE, REDIRECT_URL } from '../constant'
 import { redirectToPage } from '../util'
 import { STATUS_PAGE } from '../Manage/constant'
 import AppTheme from '../AppTheme'
+import { neonGradient } from '../customizations/themePrimitives'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -47,6 +48,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     zIndex: -1,
     inset: 0,
   },
+  backgroundImage: neonGradient,
 }))
 
 export const Login = () => {
@@ -89,74 +91,71 @@ export const Login = () => {
   }
 
   return (
-    <AppTheme>
-      <CssBaseline enableColorScheme />
-      <SignInContainer direction="column" justifyContent="space-between">
-        <Card variant="outlined">
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-          >
-            {t('LOGIN')}
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              gap: 2,
-            }}
-          >
-            <FormControl>
-              <FormLabel htmlFor="email">{t('EMAIL_PLACEHOLDER')}</FormLabel>
-              <TextField
-                error={!!alertMessage}
-                helperText={alertMessage}
-                id="email"
-                type="email"
-                name="email"
-                placeholder={t('EMAIL_PLACEHOLDER')}
-                autoComplete="email"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                onChange={(e) => setInputEmail(e.target.value)}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password">
-                {t('PASSWORD_PLACEHOLDER')}
-              </FormLabel>
-              <TextField
-                name="password"
-                placeholder={t('PASSWORD_PLACEHOLDER')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                onChange={(e) => setInputPassword(e.target.value)}
-              />
-            </FormControl>
-            {!loading ? (
-              <Button variant="contained" fullWidth type="submit">
-                {t('LOGIN')}
-              </Button>
-            ) : (
-              <Button color="primary" fullWidth type="submit" disabled>
-                {t('LOGGING_IN')}...
-              </Button>
-            )}
-          </Box>
-        </Card>
-      </SignInContainer>
-    </AppTheme>
+    <SignInContainer direction="column" justifyContent="space-between">
+      <Card>
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+        >
+          {t('LOGIN')}
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            gap: 2,
+          }}
+        >
+          <FormControl>
+            <FormLabel htmlFor="email">{t('EMAIL_PLACEHOLDER')}</FormLabel>
+            <TextField
+              error={!!alertMessage}
+              helperText={alertMessage}
+              id="email"
+              type="email"
+              name="email"
+              placeholder={t('EMAIL_PLACEHOLDER')}
+              autoComplete="email"
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              onChange={(e) => setInputEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="password">
+              {t('PASSWORD_PLACEHOLDER')}
+            </FormLabel>
+            <TextField
+              name="password"
+              placeholder={t('PASSWORD_PLACEHOLDER')}
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              onChange={(e) => setInputPassword(e.target.value)}
+            />
+          </FormControl>
+          {!loading ? (
+            <Button variant="contained" fullWidth type="submit">
+              {t('LOGIN')}
+            </Button>
+          ) : (
+            <Button variant="contained" fullWidth type="submit" disabled>
+              {t('LOGGING_IN')}...
+            </Button>
+          )}
+        </Box>
+      </Card>
+    </SignInContainer>
   )
 }

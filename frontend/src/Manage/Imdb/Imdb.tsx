@@ -185,7 +185,6 @@ export const Imdb = () => {
           />
         </FormControl>
         <Button
-          color="primary"
           variant="contained"
           type="submit"
           disabled={isLoading}

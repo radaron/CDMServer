@@ -1,5 +1,6 @@
-import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router'
+import { CssBaseline } from '@mui/material'
+import AppTheme from './AppTheme'
 import { Login } from './Login'
 import { Manage } from './Manage'
 import { initI18next } from './translation'
@@ -24,19 +25,22 @@ initI18next(getLanguage())
 
 export const Router = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" />
-        <Route path={LOGIN_PAGE} element={<Login />} />
-        <Route path={MANAGE_PAGE} element={<Manage />}>
-          <Route path={ADMIN_PAGE} element={<Admin />} />
-          <Route path={DEVICE_PAGE} element={<Device />} />
-          <Route path={DOWNLOAD_PAGE} element={<Download />} />
-          <Route path={IMDB_PAGE} element={<Imdb />} />
-          <Route path={SETTINGS_PAGE} element={<Settings />} />
-          <Route path={STATUS_PAGE} element={<Status />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AppTheme>
+      <CssBaseline enableColorScheme />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" />
+          <Route path={LOGIN_PAGE} element={<Login />} />
+          <Route path={MANAGE_PAGE} element={<Manage />}>
+            <Route path={ADMIN_PAGE} element={<Admin />} />
+            <Route path={DEVICE_PAGE} element={<Device />} />
+            <Route path={DOWNLOAD_PAGE} element={<Download />} />
+            <Route path={IMDB_PAGE} element={<Imdb />} />
+            <Route path={SETTINGS_PAGE} element={<Settings />} />
+            <Route path={STATUS_PAGE} element={<Status />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AppTheme>
   )
 }

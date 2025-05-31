@@ -185,7 +185,6 @@ export const Settings = () => {
           />
         </FormControl>
         <Button
-          color="primary"
           variant="contained"
           type="submit"
           disabled={
@@ -232,7 +231,6 @@ export const Settings = () => {
           />
         </FormControl>
         <Button
-          color="primary"
           variant="contained"
           disabled={loginPassword !== confirmPassword}
           type="submit"
