@@ -34,3 +34,10 @@ export const separateWords = (text: string): string => {
     })
     .join(' ')
 }
+
+export const hideKeyBoard = () => {
+  const activeElement = document.activeElement as HTMLElement
+  if (activeElement && activeElement.blur) {
+    activeElement.blur()
+  }
+}

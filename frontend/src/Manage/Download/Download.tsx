@@ -19,7 +19,7 @@ import { DeviceModel } from '../types'
 import { searchWhere, searchCategory } from '../constant'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
-import { redirectToPage, separateWords } from '../../util'
+import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
 import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
 
 interface TorrentSearchResult {
@@ -205,6 +205,7 @@ export const Download = () => {
   const submitSearch = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
+      hideKeyBoard()
       setSearchParams({
         pattern,
         searchWhere: selectedSearchWhere,

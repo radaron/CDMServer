@@ -5,7 +5,7 @@ import { manageContext } from '../Manage'
 import { UserInfo } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
-import { redirectToPage } from '../../util'
+import { hideKeyBoard, redirectToPage } from '../../util'
 import { NCORE_PASSWORD_PLACEHOLDER } from '../constant'
 
 export const Settings = () => {
@@ -73,6 +73,7 @@ export const Settings = () => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
+    hideKeyBoard()
     try {
       const resp = await fetch('/api/users/me/', {
         method: 'PATCH',
@@ -124,6 +125,7 @@ export const Settings = () => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
+    hideKeyBoard()
     try {
       const resp = await fetch('/api/users/me/', {
         method: 'PATCH',

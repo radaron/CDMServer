@@ -18,7 +18,7 @@ import { useSearchParams } from 'react-router'
 import { manageContext } from '../Manage'
 import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
-import { redirectToPage, separateWords } from '../../util'
+import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
 import { PATTERN } from './constant'
 
 interface ImdbSearchResult {
@@ -138,6 +138,7 @@ export const Imdb = () => {
   const submitSearch = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
+      hideKeyBoard()
       setSearchParams({ pattern })
     },
     [pattern, setSearchParams]

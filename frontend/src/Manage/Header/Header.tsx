@@ -73,8 +73,8 @@ export const Header: React.FC<HeaderProps> = ({
   }
 
   const menuElements = [
-    { label: t('HEADER_STATUS'), icon: <TimelineIcon />, href: STATUS_PAGE },
     { label: t('HEADER_DOWNLOADS'), icon: <DownloadIcon />, href: DOWNLOAD_PAGE },
+    { label: t('HEADER_STATUS'), icon: <TimelineIcon />, href: STATUS_PAGE },
     { label: t('HEADER_IMDB'), icon: <TheaterComedyIcon />, href: IMDB_PAGE },
     { label: t('HEADER_DEVICES'), icon: <DevicesIcon />, href: DEVICE_PAGE },
     { label: t('HEADER_SETTINGS'), icon: <SettingsIcon />, href: SETTINGS_PAGE },
@@ -104,14 +104,16 @@ export const Header: React.FC<HeaderProps> = ({
       <Divider />
       <List>
         {menuElements.map(
-          ({ label, icon, href, hidden }) => (
-            <ListItem key={label} hidden={hidden}>
-              <ListItemButton href={href}>
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={label} />
-              </ListItemButton>
-            </ListItem>
-          )
+          ({ label, icon, href, hidden }) => {
+            return hidden ? null: (
+              <ListItem key={label}>
+                <ListItemButton href={href}>
+                  <ListItemIcon>{icon}</ListItemIcon>
+                  <ListItemText primary={label} />
+                </ListItemButton>
+              </ListItem>
+            )
+          }
         )}
       </List>
       <Box sx={{ flexGrow: 1 }} />
