@@ -1,14 +1,25 @@
-import { Form, Button, Spinner, Container, Row, Col } from 'react-bootstrap'
-import { CameraReelsFill, Download, StarFill } from 'react-bootstrap-icons'
 import { useState, useContext, useCallback, useEffect } from 'react'
+import {
+  Box,
+  FormControl,
+  TextField,
+  Button,
+  CircularProgress,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from '@mui/material'
+import DownloadIcon from '@mui/icons-material/Download'
+import VideocamIcon from '@mui/icons-material/Videocam'
+import StarIcon from '@mui/icons-material/Star'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { manageContext } from '../Manage'
 import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
-import { redirectToPage } from '../../util'
+import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
 import { PATTERN } from './constant'
-import styles from './Imdb.module.css'
 
 interface ImdbSearchResult {
   imdbId: string
@@ -20,6 +31,66 @@ interface ImdbSearchResult {
   rating: string
 }
 
+interface IMDBCardProps {
+  result: ImdbSearchResult
+}
+
+const IMDBCard = ({ result }: IMDBCardProps) => {
+  const { t } = useTranslation()
+
+  return (
+    <Card sx={{ minWidth: 275, textAlign: 'center' }} key={result.imdbId}>
+      <CardContent>
+        <Typography variant="h6" sx={{ mb: 1.5, color: 'text.primary' }}>
+          <a
+            href={`https://www.imdb.com/title/${result.imdbId}/`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {separateWords(result.title)} ({result.year})
+          </a>
+        </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+          <img
+            src={result.poster}
+            alt={result.title}
+            style={{ width: '100%' }}
+          />
+          <Box sx={{ display: 'grid', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <VideocamIcon color="warning" />
+              <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+                {t('DIRECTOR')}: {result.director}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <StarIcon color="warning" sx={{ mr: 0.5 }} />
+              <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+                {t('RATE')}: {result.rating}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Typography sx={{ mb: 1.5, color: 'text.secondary', mt: 1 }}>
+          {result.plot}
+        </Typography>
+      </CardContent>
+      <CardActions sx={{ justifyContent: 'center' }}>
+        <Button
+          onClick={() => {
+            redirectToPage(
+              `${MANAGE_PAGE}/${DOWNLOAD_PAGE}` +
+                `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
+            )
+          }}
+        >
+          <DownloadIcon color="warning" />
+        </Button>
+      </CardActions>
+    </Card>
+  )
+}
+
 export const Imdb = () => {
   const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
@@ -27,6 +98,8 @@ export const Imdb = () => {
   const [searchResults, setSearchResults] = useState<ImdbSearchResult[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
+  const setHeaderTitle = context?.setHeaderTitle || (() => {})
+  setHeaderTitle(t('HEADER_IMDB'))
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = useCallback(async () => {
@@ -52,10 +125,10 @@ export const Imdb = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setToastData({ message: t('SEARCH_ERROR'), type: 'danger' })
+          setToastData({ message: t('SEARCH_ERROR'), type: 'error' })
         }
       } catch (error) {
-        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
         console.log(error)
       }
       setLoading(false)
@@ -65,6 +138,7 @@ export const Imdb = () => {
   const submitSearch = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
+      hideKeyBoard()
       setSearchParams({ pattern })
     },
     [pattern, setSearchParams]
@@ -75,94 +149,65 @@ export const Imdb = () => {
   }, [search, searchParams])
 
   return (
-    <>
-      <Form
-        className={`shadow p-4 bg-white rounded ${styles.searchBox}`}
+    <Box>
+      <Box
+        component="form"
         onSubmit={submitSearch}
+        sx={{
+          marginBottom: 2,
+          padding: 2,
+          backgroundColor: 'background.paper',
+          borderRadius: 1,
+          boxShadow: 1,
+          justifyContent: 'space-between',
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: 2,
+          maxWidth: { sm: '1000px' },
+          mx: 'auto',
+        }}
       >
-        <Container fluid="md">
-          <Row>
-            <Col xs={10}>
-              <Form.Control
-                type="text"
-                value={pattern}
-                placeholder={t('SEARCH_PLACEHOLDER')}
-                onChange={(e) => setPattern(e.target.value)}
-                required={true}
-              />
-            </Col>
-            <Col xs>
-              <Button
-                variant="warning"
-                type="submit"
-                disabled={isLoading}
-                className="w-100"
-              >
-                {isLoading ? (
-                  <Spinner animation="border" role="status" size="sm">
-                    <span className="visually-hidden">{t('LOADING')}...</span>
-                  </Spinner>
-                ) : (
-                  t('SEARCH')
-                )}
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </Form>
+        <FormControl
+          sx={{
+            width: { xs: 'auto', sm: 'auto', md: '100%' },
+          }}
+        >
+          <TextField
+            placeholder={t('SEARCH_PLACEHOLDER')}
+            value={pattern}
+            onChange={(e) => setPattern(e.target.value)}
+            required
+            fullWidth
+            focused
+            sx={{
+              width: { xs: '100%', sm: 'auto' },
+              minWidth: { xs: 0, sm: 200 },
+            }}
+          />
+        </FormControl>
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? <CircularProgress /> : t('SEARCH')}
+        </Button>
+      </Box>
       {searchResults.length > 0 && (
-        <Container
-          className={`shadow p-2 pt-0 bg-white rounded ${styles.results}`}
-          fluid="true"
+        <Box
+          sx={{
+            maxWidth: { sm: '1000px' },
+            mx: 'auto',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+            gap: 2,
+          }}
         >
           {searchResults.map((result) => (
-            <div key={result.imdbId}>
-              <Row className="p-2">
-                <Col className="d-flex justify-content-center">
-                  <img src={result.poster} alt={result.title} />
-                </Col>
-                <Col>
-                  <Row>
-                    <a
-                      href={`https://www.imdb.com/title/${result.imdbId}/`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <h1>
-                        {result.title} ({result.year})
-                      </h1>
-                    </a>
-                    <p className="w-75">{result.plot}</p>
-                  </Row>
-                  <Row>
-                    <h3>
-                      <CameraReelsFill size={20} color="#ffc107" />{' '}
-                      {t('DIRECTOR')}: {result.director}
-                    </h3>
-                    <h3>
-                      <StarFill size={20} color="#ffc107" /> {t('RATE')}:{' '}
-                      {result.rating}
-                    </h3>
-                    <Col className="mt-2">
-                      <Button
-                        variant="warning"
-                        onClick={() => {
-                          redirectToPage(
-                            `${MANAGE_PAGE}/${DOWNLOAD_PAGE}` +
-                              `?pattern=${result.imdbId}&searchWhere=${searchWhere[1]}&searchCategory=all_own`
-                          )
-                        }}
-                      >
-                        <Download />
-                      </Button>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </div>
+            <IMDBCard key={result.imdbId} result={result} />
           ))}
-        </Container>
+        </Box>
       )}
-    </>
+    </Box>
   )
 }

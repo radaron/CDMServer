@@ -1,17 +1,43 @@
-import React, { useEffect, useState, createContext } from 'react'
-import { Toast, ToastContainer } from 'react-bootstrap'
+import { useEffect, useState, createContext } from 'react'
 import { Outlet } from 'react-router'
+import {
+  Box,
+  Stack,
+  Snackbar,
+  Alert,
+  useMediaQuery,
+  AlertPropsColorOverrides,
+} from '@mui/material'
+import { styled, useTheme } from '@mui/material/styles'
+import { OverridableStringUnion } from '@mui/types'
+import { AlertColor } from '@mui/material/Alert'
 import { Header } from './Header'
-import styles from './Manage.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
+import { DRAWER_WIDTH } from './constant'
 import { redirectToPage } from '../util'
 import { UserInfo, ToastData } from './types'
+import { neonGradient } from '../customizations/themePrimitives'
 
-import BackgroundImage from '../background.png'
+const ManageContainer = styled(Stack)(({ theme }) => ({
+  position: 'relative',
+  minHeight: '100%',
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage: neonGradient,
+  },
+}))
 
 export const manageContext = createContext<{
-  setToastData: (data: { message: string; type: string }) => void
+  setToastData: (data: {
+    message: string
+    type: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>
+  }) => void
+  setHeaderTitle: (title: string) => void
 } | null>(null)
 
 export const Manage = () => {
@@ -25,8 +51,11 @@ export const Manage = () => {
   })
   const [toastData, setToastData] = useState<ToastData>({
     message: '',
-    type: null,
+    type: 'info',
   })
+  const [headerTitle, setHeaderTitle] = useState<string>('')
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -76,37 +105,48 @@ export const Manage = () => {
         await resp.json()
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('LOGOUT_FAILED'), type: 'danger' })
+        setToastData({ message: t('LOGOUT_FAILED'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('LOGOUT_FAILED'), type: 'danger' })
+      setToastData({ message: t('LOGOUT_FAILED'), type: 'error' })
     }
   }
 
   return (
-    <div
-      style={{ backgroundImage: `url(${BackgroundImage})` }}
-      className={styles.container}
-    >
-      <ToastContainer position="top-center" className="p-3">
-        <Toast
-          delay={4000}
-          show={toastData.message.length > 0}
-          onClose={() => setToastData({ message: '', type: null })}
-          bg={toastData?.type?.toLowerCase()}
-          className="text-center"
-          autohide
+    <ManageContainer>
+      <Snackbar
+        open={toastData.message.length > 0}
+        autoHideDuration={4000}
+        onClose={() => setToastData({ message: '', type: 'info' })}
+        anchorOrigin={
+          isMobile
+            ? { vertical: 'bottom', horizontal: 'center' }
+            : { vertical: 'bottom', horizontal: 'right' }
+        }
+      >
+        <Alert
+          severity={toastData.type}
+          onClose={() => setToastData({ message: '', type: 'info' })}
         >
-          <Toast.Header>
-            <strong className="me-auto"></strong>
-          </Toast.Header>
-          <Toast.Body>{toastData.message}</Toast.Body>
-        </Toast>
-      </ToastContainer>
-      <manageContext.Provider value={{ setToastData }}>
-        <Header userInfo={userInfo} logOut={logOut} />
-        <Outlet />
+          {toastData.message}
+        </Alert>
+      </Snackbar>
+      <manageContext.Provider value={{ setToastData, setHeaderTitle }}>
+        <Header userInfo={userInfo} logOut={logOut} headerTitle={headerTitle}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 1,
+              width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+              pt: { xs: 8, sm: 9 },
+              maxWidth: '100vw',
+            }}
+          >
+            <Outlet />
+          </Box>
+        </Header>
       </manageContext.Provider>
-    </div>
+    </ManageContainer>
   )
 }

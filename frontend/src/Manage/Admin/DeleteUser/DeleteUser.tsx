@@ -1,4 +1,14 @@
-import { Form, Button, Col } from 'react-bootstrap'
+import {
+  Box,
+  Button,
+  Typography,
+  Menu,
+  MenuItem,
+  FormControl,
+  Select,
+  FormControlLabel,
+  Switch
+} from '@mui/material'
 import { useState, useContext, useEffect } from 'react'
 import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
@@ -43,35 +53,36 @@ export const DeleteUser: React.FC<DeleteUserProps> = ({
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setToastData({ message: t('USER_DELETE_ERROR'), type: 'danger' })
+          setToastData({ message: t('USER_DELETE_ERROR'), type: 'error' })
         }
       } catch (error) {
-        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
       }
       fetchUsers()
     }
   }
 
   return (
-    <Col className="shadow p-4 m-3 bg-white rounded flex-column justify-content-space-between">
-      <Form onSubmit={handleDelete}>
-        <div className="h4 mb-2 text-center">{t('DELETE_USER_TITLE')}</div>
-        <Form.Group className="mb-2">
-          <Form.Select
-            aria-label="Default select example"
+    <Box component="form" onSubmit={handleDelete} sx={{ maxWidth: 400, margin: '0 auto', gap : 1, display: 'grid' }}>
+      <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+        {t('DELETE_USER_TITLE')}
+      </Typography>
+        <FormControl>
+          <Select
+            value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
+            displayEmpty
           >
             {users.map((user) => (
-              <option key={user.email} value={user.email}>
+              <MenuItem key={user.id} value={user.email}>
                 {user.email}
-              </option>
+              </MenuItem>
             ))}
-          </Form.Select>
-        </Form.Group>
-        <Button className="w-100" variant="danger" type="submit">
-          {t('DELETE_USER_BUTTON')}
-        </Button>
-      </Form>
-    </Col>
+          </Select>
+        </FormControl>
+      <Button variant='contained' type="submit">
+        {t('DELETE_USER_BUTTON')}
+      </Button>
+    </Box>
   )
 }

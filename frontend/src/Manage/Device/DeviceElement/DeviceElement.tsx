@@ -1,12 +1,19 @@
-import { Button, Row, Col, Badge } from 'react-bootstrap'
-import { GearFill } from 'react-bootstrap-icons'
 import { useContext } from 'react'
 import { manageContext } from '../../Manage'
 import { DeviceModel } from '../../types'
-import styles from './DeviceElement.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import SettingsIcon from '@mui/icons-material/Settings'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import Chip from '@mui/material/Chip'
 
 interface DeviceElementProps {
   deviceData: DeviceModel
@@ -42,54 +49,58 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setToastData({ message: t('DEVICE_DELETE_ERROR'), type: 'danger' })
+          setToastData({ message: t('DEVICE_DELETE_ERROR'), type: 'error' })
         }
       } catch (error) {
-        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
       }
     }
   }
 
   return (
-    <div className={`shadow p-3 bg-white rounded ${styles.container}`}>
-      <Row>
-        <Col />
-        <Col>
-          <div className="h4 mb-2 text-center">{deviceData.name}</div>
-        </Col>
-        <Col>
-          <Button
-            variant="outline-secondary"
-            className="float-end"
-            onClick={() => setSelectedDeviceData(deviceData)}
-          >
-            <GearFill />
-          </Button>
-        </Col>
-      </Row>
-      <Row className="mb-2">
-        <Col sm={3} className="fw-bold">
-          Status
-        </Col>
-        <Col sm>
-          {deviceData.active ? (
-            <Badge bg="success">{t('ACTIVE_BADGE')}</Badge>
-          ) : (
-            <Badge bg="danger">{t('INACTIVE_BADGE')}</Badge>
-          )}
-        </Col>
-      </Row>
-      <Row className="mb-2">
-        <Col sm={3} className="fw-bold">
-          {t('TOKEN_TITLE')}
-        </Col>
-        <Col sm>
-          <div onClick={copyTokenToClipboard}>{'••••••••••'}</div>
-        </Col>
-      </Row>
-      <Button className="w-100" variant="danger" onClick={deleteDevice}>
-        {t('DELETE_DEVICE_BUTTON')}
-      </Button>
-    </div>
+    <Card sx={{ minWidth: 275 }} key={deviceData.name}>
+      <CardContent>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ textAlign: 'center', mb: 2, fontWeight: 'bold' }}
+        >
+          {deviceData.name}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            mx: 5,
+            mb: 2,
+          }}
+        >
+          <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+            {t('STATUS_TITLE')}:{' '}
+            {deviceData.active ? (
+              <Chip label={t('ACTIVE_BADGE')} color="success" />
+            ) : (
+              <Chip label={t('INACTIVE_BADGE')} color="error" />
+            )}
+          </Typography>
+          <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+            {t('TOKEN_TITLE')}:{' '}
+            <ContentCopyIcon onClick={copyTokenToClipboard} />
+          </Typography>
+        </Box>
+      </CardContent>
+      <CardActions sx={{ justifyContent: 'space-between' }}>
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => setSelectedDeviceData(deviceData)}
+        >
+          <SettingsIcon />
+        </Button>
+        <Button color="error" variant="contained" onClick={deleteDevice}>
+          <DeleteIcon />
+        </Button>
+      </CardActions>
+    </Card>
   )
 }
