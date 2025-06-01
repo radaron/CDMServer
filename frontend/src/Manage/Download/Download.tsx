@@ -1,21 +1,25 @@
 import { useState, useContext, useEffect, useCallback } from 'react'
-import {
-  Form,
-  Button,
-  Spinner,
-  Container,
-  Row,
-  Col,
-  Dropdown,
-} from 'react-bootstrap'
 import { useSearchParams } from 'react-router'
+import {
+  Box,
+  FormControl,
+  TextField,
+  Button,
+  CircularProgress,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  Menu,
+  MenuItem,
+  Select,
+} from '@mui/material'
 import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
 import { searchWhere, searchCategory } from '../constant'
-import styles from './Download.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
-import { redirectToPage } from '../../util'
+import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
 import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
 
 interface TorrentSearchResult {
@@ -26,6 +30,119 @@ interface TorrentSearchResult {
   seeders: number
   leechers: number
   url: string
+}
+
+interface DownloadDropDownButtonProps {
+  result: TorrentSearchResult
+  devices: DeviceModel[]
+  addToDownloadQueue: (torrentId: number, deviceId: number) => void
+}
+
+interface TorrentCardProps {
+  result: TorrentSearchResult
+  devices: DeviceModel[]
+  addToDownloadQueue: (torrentId: number, deviceId: number) => void
+}
+
+const DownloadDropDownButton = ({
+  result,
+  devices,
+  addToDownloadQueue,
+}: DownloadDropDownButtonProps) => {
+  const { t } = useTranslation()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleSelect = (deviceId: number) => {
+    addToDownloadQueue(result.id, deviceId)
+    handleClose()
+  }
+
+  return (
+    <div>
+      <Button
+        variant="contained"
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        {t('DOWNLOAD')}
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        {devices.map((device) => (
+          <MenuItem key={device.id} onClick={() => handleSelect(device.id)}>
+            {device.name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  )
+}
+
+const TorrentCard = ({
+  result,
+  devices,
+  addToDownloadQueue,
+}: TorrentCardProps) => {
+  const { t } = useTranslation()
+
+  return (
+    <Card sx={{ minWidth: 275 }} key={result.id}>
+      <CardContent>
+        <Typography variant="h6" component="div">
+          <a href={result.url} target="_blank" rel="noreferrer">
+            {separateWords(result.title)}
+          </a>
+        </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+          <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
+            {t('CATEGORY')}: {result.category}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
+            {t('SIZE')}: {result.size}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
+            {t('SEEDERS')}: {result.seeders}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
+            {t('LEECHERS')}: {result.leechers}
+          </Typography>
+        </Box>
+      </CardContent>
+      <CardActions sx={{ justifyContent: 'center' }}>
+        {devices.length > 1 ? (
+          <DownloadDropDownButton
+            result={result}
+            devices={devices}
+            addToDownloadQueue={addToDownloadQueue}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            disabled={devices.length === 0}
+            onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}
+          >
+            {t('DOWNLOAD_BUTTON')}
+          </Button>
+        )}
+      </CardActions>
+    </Card>
+  )
 }
 
 export const Download = () => {
@@ -40,6 +157,8 @@ export const Download = () => {
   const [searchResults, setSearchResults] = useState<TorrentSearchResult[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
+  const setHeaderTitle = context?.setHeaderTitle || (() => {})
+  setHeaderTitle(t('HEADER_DOWNLOADS'))
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = useCallback(async () => {
@@ -73,10 +192,10 @@ export const Download = () => {
         } else if (resp.status === 401) {
           redirectToPage(LOGIN_PAGE)
         } else {
-          setToastData({ message: t('SEARCH_ERROR'), type: 'danger' })
+          setToastData({ message: t('SEARCH_ERROR'), type: 'error' })
         }
       } catch (error) {
-        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+        setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
         console.log(error)
       }
       setLoading(false)
@@ -86,6 +205,7 @@ export const Download = () => {
   const submitSearch = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
+      hideKeyBoard()
       setSearchParams({
         pattern,
         searchWhere: selectedSearchWhere,
@@ -109,10 +229,10 @@ export const Download = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('GET_DEVICES_ERROR'), type: 'danger' })
+        setToastData({ message: t('GET_DEVICES_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }, [setToastData, t])
 
@@ -134,10 +254,10 @@ export const Download = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('DOWNLOAD_FAILED'), type: 'danger' })
+        setToastData({ message: t('DOWNLOAD_FAILED'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 
@@ -149,127 +269,94 @@ export const Download = () => {
   }, [getDevices])
 
   return (
-    <>
-      <Form
-        className={`shadow p-4 bg-white rounded ${styles.searchBox}`}
+    <Box>
+      <Box
+        component="form"
         onSubmit={submitSearch}
+        noValidate
+        sx={{
+          marginBottom: 2,
+          padding: 2,
+          backgroundColor: 'background.paper',
+          borderRadius: 1,
+          boxShadow: 1,
+          justifyContent: 'space-between',
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: 2,
+          maxWidth: { sm: '1000px' },
+          mx: 'auto',
+        }}
       >
-        <Container>
-          <Row>
-            <Col xs={6}>
-              <Form.Control
-                type="text"
-                value={pattern}
-                placeholder={t('SEARCH_PLACEHOLDER')}
-                onChange={(e) => setPattern(e.target.value)}
-              />
-            </Col>
-            <Col xs>
-              <Form.Select
-                onChange={(e) => setSelectedSearchType(e.target.value)}
-                value={selectedSearchType}
-              >
-                {searchCategory.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </Form.Select>
-            </Col>
-            <Col xs>
-              <Form.Select
-                onChange={(e) => setSelectedSearchWhere(e.target.value)}
-                value={selectedSearchWhere}
-              >
-                {searchWhere.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </Form.Select>
-            </Col>
-            <Col xs>
-              <Button
-                variant="info"
-                type="submit"
-                disabled={isLoading}
-                className="w-100"
-              >
-                {isLoading ? (
-                  <Spinner animation="border" role="status" size="sm">
-                    <span className="visually-hidden">{t('LOADING')}...</span>
-                  </Spinner>
-                ) : (
-                  t('SEARCH')
-                )}
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </Form>
-      {searchResults.length > 0 && (
-        <Container
-          className={`shadow p-2 pt-0 bg-white rounded ${styles.results}`}
-          fluid="true"
+        <FormControl
+          sx={{
+            width: { xs: 'auto', sm: 'auto', md: '80%' },
+          }}
         >
-          <Row className="bg-info p-3">
-            <Col xs={6}>{t('TITLE')}</Col>
-            <Col xs>{t('CATEGORY')}</Col>
-            <Col xs>{t('SIZE')}</Col>
-            <Col xs>{t('SEEDERS')}</Col>
-            <Col xs>{t('LEECHERS')}</Col>
-            <Col xs />
-          </Row>
+          <TextField
+            placeholder={t('SEARCH_PLACEHOLDER')}
+            value={pattern}
+            onChange={(e) => setPattern(e.target.value)}
+            fullWidth
+            focused
+            sx={{
+              width: { xs: '100%', sm: 'auto' },
+              minWidth: { xs: 0, sm: 200 },
+            }}
+          />
+        </FormControl>
+        <FormControl>
+          <Select
+            onChange={(e) => setSelectedSearchType(e.target.value)}
+            value={selectedSearchType}
+          >
+            {searchCategory.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <Select
+            onChange={(e) => setSelectedSearchWhere(e.target.value)}
+            value={selectedSearchWhere}
+          >
+            {searchWhere.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? <CircularProgress /> : t('SEARCH')}
+        </Button>
+      </Box>
+      {searchResults.length > 0 && (
+        <Box
+          sx={{
+            maxWidth: { sm: '1000px' },
+            mx: 'auto',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+            gap: 2,
+          }}
+        >
           {searchResults.map((result) => (
-            <div key={result.id}>
-              <hr className="m-0" />
-              <Row className={`${styles.resultElement} p-2`}>
-                <Col xs={6}>
-                  <a href={result.url} target="_blank" rel="noreferrer">
-                    {result.title}
-                  </a>
-                </Col>
-                <Col xs>{result.category}</Col>
-                <Col xs>{result.size}</Col>
-                <Col xs>{result.seeders}</Col>
-                <Col xs>{result.leechers}</Col>
-                <Col xs>
-                  {Object.keys(devices).length > 1 ? (
-                    <Dropdown>
-                      <Dropdown.Toggle variant="success" size="sm">
-                        {t('DOWNLOAD')}
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        {devices.map((device) => (
-                          <Dropdown.Item
-                            key={device.id}
-                            onClick={() =>
-                              addToDownloadQueue(result.id, device.id)
-                            }
-                          >
-                            {device.name}
-                          </Dropdown.Item>
-                        ))}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  ) : (
-                    <Button
-                      disabled={devices.length === 0}
-                      variant={devices.length === 0 ? 'secondary' : 'success'}
-                      size="sm"
-                      onClick={() =>
-                        addToDownloadQueue(result.id, devices[0]?.id)
-                      }
-                    >
-                      {t('DOWNLOAD_BUTTON')}
-                    </Button>
-                  )}
-                </Col>
-              </Row>
-            </div>
+            <TorrentCard
+              key={result.id}
+              result={result}
+              devices={devices}
+              addToDownloadQueue={addToDownloadQueue}
+            />
           ))}
-        </Container>
+        </Box>
       )}
-    </>
+    </Box>
   )
 }

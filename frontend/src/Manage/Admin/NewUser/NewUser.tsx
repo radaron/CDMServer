@@ -1,4 +1,4 @@
-import { Form, Button, Col } from 'react-bootstrap'
+import { Box, Button, Switch, FormControlLabel, Typography, TextField, FormControl } from '@mui/material'
 import { useState, useContext } from 'react'
 import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
@@ -39,55 +39,52 @@ export const NewUser: React.FC<NewUserProps> = ({ fetchUsers }) => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('USER_ADD_ERROR'), type: 'danger' })
+        setToastData({ message: t('USER_ADD_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 
   return (
-    <Col className="p-4 m-3 bg-white shadow rounded">
-      <Form onSubmit={handleSubmit}>
-        <div className="h4 mb-2 text-center">{t('ADD_NEW_USER_TITLE')}</div>
-        <Form.Group className="mb-2">
-          <Form.Control
-            type="text"
-            value={inputEmail}
-            placeholder={t('EMAIL_PLACEHOLDER')}
-            onChange={(e) => setInputEmail(e.target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-2">
-          <Form.Control
-            type="password"
-            value={inputPassword}
-            placeholder={t('PASSWORD_PLACEHOLDER')}
-            onChange={(e) => setInputPassword(e.target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-2">
-          <Form.Control
-            type="text"
-            value={inputName}
-            placeholder={t('NAME_PLACEHOLDER')}
-            onChange={(e) => setInputName(e.target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Check
-            type="switch"
+      <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 400, margin: '0 auto', gap : 1, display: 'grid' }}>
+        <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+          {t('ADD_NEW_USER_TITLE')}
+        </Typography>
+          <FormControl>
+            <TextField
+              type="email"
+              value={inputEmail}
+              placeholder={t('EMAIL_PLACEHOLDER')}
+              onChange={(e) => setInputEmail(e.target.value)}
+              required
+            />
+          </FormControl>
+          <FormControl>
+            <TextField
+              type="password"
+              value={inputPassword}
+              placeholder={t('PASSWORD_PLACEHOLDER')}
+              onChange={(e) => setInputPassword(e.target.value)}
+              required
+            />
+          </FormControl>
+          <FormControl>
+            <TextField
+              type="text"
+              value={inputName}
+              placeholder={t('NAME_PLACEHOLDER')}
+              onChange={(e) => setInputName(e.target.value)}
+              required
+            />
+          </FormControl>
+          <FormControlLabel
+            control={<Switch checked={inputIsAdmin} onChange={(e) => setInputIsAdmin(e.target.checked)} />}
             label={t('IS_ADMIN_CHECKBOX')}
-            onChange={(e) => setInputIsAdmin(e.target.checked)}
           />
-        </Form.Group>
-        <Button className="w-100" variant="primary" type="submit">
+        <Button variant='contained' type="submit">
           {t('CREATE_USER_BUTTON')}
         </Button>
-      </Form>
-    </Col>
+      </Box>
   )
 }
