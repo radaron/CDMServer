@@ -1,6 +1,6 @@
 import { NewUser } from './NewUser'
 import { useEffect, useState, useContext, useCallback } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Box, Divider } from '@mui/material'
 import { manageContext } from '../Manage'
 import { DeleteUser } from './DeleteUser'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,8 @@ export const Admin = () => {
   const [users, setUsers] = useState([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
+  const setHeaderTitle = context?.setHeaderTitle || (() => {})
+  setHeaderTitle(t('HEADER_ADMIN'))
 
   const getUsers = useCallback(async () => {
     try {
@@ -27,10 +29,10 @@ export const Admin = () => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('USER_FETCH_ERROR'), type: 'danger' })
+        setToastData({ message: t('USER_FETCH_ERROR'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }, [setToastData, t])
 
@@ -39,11 +41,18 @@ export const Admin = () => {
   }, [getUsers])
 
   return (
-    <Container>
-      <Row>
-        <NewUser fetchUsers={getUsers} />
-        <DeleteUser fetchUsers={getUsers} users={users} />
-      </Row>
-    </Container>
+    <Box
+      sx={{
+        width: '100%',
+        mt: 2,
+        backgroundColor: 'background.paper',
+        borderRadius: 1,
+        padding: 2,
+      }}
+    >
+      <NewUser fetchUsers={getUsers} />
+      <Divider sx={{ my: 3 }} />
+      <DeleteUser fetchUsers={getUsers} users={users} />
+    </Box>
   )
 }

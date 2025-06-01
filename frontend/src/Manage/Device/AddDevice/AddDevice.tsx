@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react'
+import { Box, FormControl, TextField, Button, Typography } from '@mui/material'
 import { manageContext } from '../../Manage'
-import { Form, Button } from 'react-bootstrap'
-import styles from './AddDevice.module.css'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
@@ -34,33 +33,44 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else if (resp.status === 409) {
-        setToastData({ message: t('DEVICE_NAME_EXISTS'), type: 'danger' })
+        setToastData({ message: t('DEVICE_NAME_EXISTS'), type: 'error' })
       } else {
-        setToastData({ message: t('ADD_DEVICE_FAILED'), type: 'danger' })
+        setToastData({ message: t('ADD_DEVICE_FAILED'), type: 'error' })
       }
     } catch (error) {
-      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'danger' })
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 
   return (
-    <Form
-      className={`shadow p-4 bg-white rounded ${styles.container}`}
+    <Box
+      component="form"
+      sx={{ width: '100%', maxWidth: 400, margin: '0 auto', display: 'grid', gap: 1 }}
       onSubmit={handleSubmit}
     >
-      <div className="h4 mb-2 text-center">{t('ADD_DEVICE_TITLE')}</div>
-      <Form.Group className="mb-2">
-        <Form.Control
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{ textAlign: 'center', mb: 1, fontWeight: 'bold' }}
+      >
+        {t('ADD_DEVICE_TITLE')}
+      </Typography>
+      <FormControl fullWidth>
+        <TextField
           type="text"
           value={deviceName}
           placeholder={t('DEVICE_NAME_PLACEHOLDER')}
           onChange={(e) => setDeviceName(e.target.value)}
           required
         />
-      </Form.Group>
-      <Button className="w-100" variant="primary" type="submit">
+      </FormControl>
+      <Button
+        variant="contained"
+        type="submit"
+        sx={{ width: '100%' }}
+      >
         {t('ADD_DEVICE_BUTTON')}
       </Button>
-    </Form>
+    </Box>
   )
 }

@@ -1,3 +1,7 @@
+import { OverridableStringUnion } from '@mui/types'
+import { AlertColor } from '@mui/material/Alert'
+import { AlertPropsColorOverrides } from '@mui/material/Alert'
+
 export interface UserInfo {
   email: string
   isAdmin: boolean
@@ -8,7 +12,7 @@ export interface UserInfo {
 
 export interface ToastData {
   message: string
-  type: string | null
+  type: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>
 }
 
 export interface Settings {

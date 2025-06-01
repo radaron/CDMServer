@@ -5,6 +5,8 @@ export const STATUS_PAGE = 'status'
 export const SETTINGS_PAGE = 'settings'
 export const IMDB_PAGE = 'imdb'
 
+export const DRAWER_WIDTH = 240
+
 const MOVIES_PATH_NAME = 'movies_path'
 const SERIES_PATH_NAME = 'series_path'
 const MUSICS_PATH_NAME = 'musics_path'
