@@ -4,7 +4,7 @@ import redis.asyncio as redis
 from service.util.configuration import REDIS_HOST, REDIS_PORT
 
 
-EXPIRATION_TIME = 60 # 60 seconds
+EXPIRATION_TIME = 60  # 60 seconds
 
 
 class TorrentStatus(BaseModel):

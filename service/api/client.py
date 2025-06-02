@@ -62,16 +62,18 @@ async def add_device(data: StatusData, session: AsyncSession = Depends(get_sessi
 
     torrents_adapter = TorrentsAdapter()
     for item in data.data:
-        torrent = TorrentStatus.model_validate({
-            "id": item.id,
-            "name": item.name,
-            "status": item.status,
-            "progress": item.progress,
-            "download_dir": item.download_dir,
-            "added_date": item.added_date,
-            "total_size": item.total_size,
-            "eta": item.eta,
-        })
+        torrent = TorrentStatus.model_validate(
+            {
+                "id": item.id,
+                "name": item.name,
+                "status": item.status,
+                "progress": item.progress,
+                "download_dir": item.download_dir,
+                "added_date": item.added_date,
+                "total_size": item.total_size,
+                "eta": item.eta,
+            }
+        )
         await torrents_adapter.set_torrent(device.id, torrent)
 
     return JSONResponse({"message": "Status updated"}, status_code=200)
