@@ -9,6 +9,7 @@ import {
   CardActions,
   CardContent,
   Typography,
+  Pagination,
 } from '@mui/material'
 import DownloadIcon from '@mui/icons-material/Download'
 import VideocamIcon from '@mui/icons-material/Videocam'
@@ -19,9 +20,16 @@ import { manageContext } from '../Manage'
 import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
 import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
-import { PATTERN } from './constant'
+import { PATTERN, PAGE } from './constant'
 
 interface ImdbSearchResult {
+  data: ImdbSearchResultElement[]
+  meta: {
+    totalPages: number
+  }
+}
+
+interface ImdbSearchResultElement {
   imdbId: string
   title: string
   year: string
@@ -32,7 +40,7 @@ interface ImdbSearchResult {
 }
 
 interface IMDBCardProps {
-  result: ImdbSearchResult
+  result: ImdbSearchResultElement
 }
 
 const IMDBCard = ({ result }: IMDBCardProps) => {
@@ -59,13 +67,17 @@ const IMDBCard = ({ result }: IMDBCardProps) => {
           <Box sx={{ display: 'grid', gap: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <VideocamIcon color="warning" />
-              <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+              <Typography
+                sx={{ color: 'text.secondary', alignContent: 'center' }}
+              >
                 {t('DIRECTOR')}: {result.director}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <StarIcon color="warning" sx={{ mr: 0.5 }} />
-              <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+              <Typography
+                sx={{ color: 'text.secondary', alignContent: 'center' }}
+              >
                 {t('RATE')}: {result.rating}
               </Typography>
             </Box>
@@ -95,7 +107,11 @@ export const Imdb = () => {
   const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
   const [pattern, setPattern] = useState('')
-  const [searchResults, setSearchResults] = useState<ImdbSearchResult[]>([])
+  const [page, setPage] = useState(1)
+  const [searchResults, setSearchResults] = useState<ImdbSearchResult>({
+    data: [],
+    meta: { totalPages: 0 },
+  })
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
@@ -103,12 +119,13 @@ export const Imdb = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = useCallback(async () => {
-    if (searchParams.has(PATTERN)) {
+    if (searchParams.has(PATTERN) && searchParams.get(PATTERN)) {
       setPattern(searchParams.get(PATTERN) || '')
+      setPage(Number(searchParams.get(PAGE)) || 1)
       setLoading(true)
       try {
         const resp = await fetch(
-          `/api/omdb/search/?pattern=${searchParams.get(PATTERN)}`,
+          `/api/omdb/search/?pattern=${searchParams.get(PATTERN)}&page=${searchParams.get(PAGE) || 1}`,
           {
             method: 'GET',
             headers: {
@@ -118,7 +135,7 @@ export const Imdb = () => {
         )
         if (resp.status === 200) {
           const data = await resp.json()
-          setSearchResults(data.data)
+          setSearchResults(data)
           if (data.data.length === 0) {
             setToastData({ message: t('NO_RESULTS'), type: 'warning' })
           }
@@ -139,7 +156,15 @@ export const Imdb = () => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       hideKeyBoard()
-      setSearchParams({ pattern })
+      setSearchParams({ pattern, page: page.toString() })
+    },
+    [pattern, page, setSearchParams]
+  )
+
+  const submitPageChange = useCallback(
+    (event: React.ChangeEvent<unknown>, value: number) => {
+      setPage(value)
+      setSearchParams({ pattern, page: value.toString() })
     },
     [pattern, setSearchParams]
   )
@@ -185,15 +210,32 @@ export const Imdb = () => {
             }}
           />
         </FormControl>
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={isLoading}
-        >
+        <Button variant="contained" type="submit" disabled={isLoading}>
           {isLoading ? <CircularProgress /> : t('SEARCH')}
         </Button>
       </Box>
-      {searchResults.length > 0 && (
+      {searchResults.data.length > 0 && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            borderRadius: 1,
+            boxShadow: 1,
+            padding: 1,
+            marginBottom: 2,
+            backgroundColor: 'background.paper',
+            maxWidth: { sm: '1000px' },
+            mx: 'auto',
+          }}
+        >
+          <Pagination
+            count={searchResults.meta.totalPages}
+            onChange={submitPageChange}
+            disabled={isLoading}
+          />
+        </Box>
+      )}
+      {searchResults.data.length > 0 && (
         <Box
           sx={{
             maxWidth: { sm: '1000px' },
@@ -203,7 +245,7 @@ export const Imdb = () => {
             gap: 2,
           }}
         >
-          {searchResults.map((result) => (
+          {searchResults.data.map((result) => (
             <IMDBCard key={result.imdbId} result={result} />
           ))}
         </Box>

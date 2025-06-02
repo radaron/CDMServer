@@ -6,8 +6,6 @@ import {
   MenuItem,
   FormControl,
   Select,
-  FormControlLabel,
-  Switch
 } from '@mui/material'
 import { useState, useContext, useEffect } from 'react'
 import { manageContext } from '../../Manage'
@@ -63,24 +61,28 @@ export const DeleteUser: React.FC<DeleteUserProps> = ({
   }
 
   return (
-    <Box component="form" onSubmit={handleDelete} sx={{ maxWidth: 400, margin: '0 auto', gap : 1, display: 'grid' }}>
+    <Box
+      component="form"
+      onSubmit={handleDelete}
+      sx={{ maxWidth: 400, margin: '0 auto', gap: 1, display: 'grid' }}
+    >
       <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
         {t('DELETE_USER_TITLE')}
       </Typography>
-        <FormControl>
-          <Select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            displayEmpty
-          >
-            {users.map((user) => (
-              <MenuItem key={user.id} value={user.email}>
-                {user.email}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      <Button variant='contained' type="submit">
+      <FormControl>
+        <Select
+          value={selectedUser}
+          onChange={(e) => setSelectedUser(e.target.value)}
+          displayEmpty
+        >
+          {users.map((user) => (
+            <MenuItem key={user.id} value={user.email}>
+              {user.email}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <Button variant="contained" type="submit">
         {t('DELETE_USER_BUTTON')}
       </Button>
     </Box>

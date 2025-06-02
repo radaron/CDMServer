@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
@@ -153,7 +153,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               data.userEmails.map((mail: string, index: number) => (
                 <Box
                   key={index}
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2, mb: 2 }}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    mt: 2,
+                    mb: 2,
+                  }}
                 >
                   <FormControl fullWidth>
                     <TextField

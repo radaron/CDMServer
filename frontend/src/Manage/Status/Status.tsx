@@ -5,7 +5,7 @@ import {
   Tab,
   LinearProgressProps,
   LinearProgress,
-  Typography
+  Typography,
 } from '@mui/material'
 import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 import { manageContext } from '../Manage'
@@ -125,24 +125,24 @@ export const Status = () => {
             mx: 'auto',
           }}
         >
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              variant="scrollable"
-              scrollButtons="auto"
-              sx={{
-                minWidth: 0,
-                width: '100%',
-              }}
-            >
-              {devices.map((device) => (
-                <Tab
-                  key={device.id}
-                  label={device.name}
-                  onClick={() => setSelectedDeviceId(device.id)}
-                />
-              ))}
-            </Tabs>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{
+              minWidth: 0,
+              width: '100%',
+            }}
+          >
+            {devices.map((device) => (
+              <Tab
+                key={device.id}
+                label={device.name}
+                onClick={() => setSelectedDeviceId(device.id)}
+              />
+            ))}
+          </Tabs>
         </Box>
       )}
       <Box
