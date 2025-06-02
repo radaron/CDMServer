@@ -45,7 +45,13 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   return (
     <Box
       component="form"
-      sx={{ width: '100%', maxWidth: 400, margin: '0 auto', display: 'grid', gap: 1 }}
+      sx={{
+        width: '100%',
+        maxWidth: 400,
+        margin: '0 auto',
+        display: 'grid',
+        gap: 1,
+      }}
       onSubmit={handleSubmit}
     >
       <Typography
@@ -64,11 +70,7 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
           required
         />
       </FormControl>
-      <Button
-        variant="contained"
-        type="submit"
-        sx={{ width: '100%' }}
-      >
+      <Button variant="contained" type="submit" sx={{ width: '100%' }}>
         {t('ADD_DEVICE_BUTTON')}
       </Button>
     </Box>

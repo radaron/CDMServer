@@ -67,13 +67,17 @@ const IMDBCard = ({ result }: IMDBCardProps) => {
           <Box sx={{ display: 'grid', gap: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <VideocamIcon color="warning" />
-              <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+              <Typography
+                sx={{ color: 'text.secondary', alignContent: 'center' }}
+              >
                 {t('DIRECTOR')}: {result.director}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <StarIcon color="warning" sx={{ mr: 0.5 }} />
-              <Typography sx={{ color: 'text.secondary', alignContent: 'center' }}>
+              <Typography
+                sx={{ color: 'text.secondary', alignContent: 'center' }}
+              >
                 {t('RATE')}: {result.rating}
               </Typography>
             </Box>
@@ -104,7 +108,10 @@ export const Imdb = () => {
   const [isLoading, setLoading] = useState(false)
   const [pattern, setPattern] = useState('')
   const [page, setPage] = useState(1)
-  const [searchResults, setSearchResults] = useState<ImdbSearchResult>({ data: [], meta: { totalPages: 0 } })
+  const [searchResults, setSearchResults] = useState<ImdbSearchResult>({
+    data: [],
+    meta: { totalPages: 0 },
+  })
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
@@ -203,11 +210,7 @@ export const Imdb = () => {
             }}
           />
         </FormControl>
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={isLoading}
-        >
+        <Button variant="contained" type="submit" disabled={isLoading}>
           {isLoading ? <CircularProgress /> : t('SEARCH')}
         </Button>
       </Box>
@@ -223,8 +226,13 @@ export const Imdb = () => {
             backgroundColor: 'background.paper',
             maxWidth: { sm: '1000px' },
             mx: 'auto',
-          }}>
-          <Pagination count={searchResults.meta.totalPages} onChange={submitPageChange} disabled={isLoading}/>
+          }}
+        >
+          <Pagination
+            count={searchResults.meta.totalPages}
+            onChange={submitPageChange}
+            disabled={isLoading}
+          />
         </Box>
       )}
       {searchResults.data.length > 0 && (
