@@ -173,7 +173,7 @@ class OmdbSearchEntityData(OmdbBaseData):
 
 class OmdbSearchData(OmdbBaseData):
     search: list[OmdbSearchEntityData] = []
-    total_results: str
+    total_results: int = 0
     response: str
 
 
@@ -186,8 +186,10 @@ class OmdbSearchEntityResponse(BaseData):
     title: str
     year: str
 
+
 class OmdbSearchResponseMeta(BaseData):
     total_pages: int = 0
+
 
 class OmdbSearchResponse(BaseData):
     data: list[OmdbSearchEntityResponse]
