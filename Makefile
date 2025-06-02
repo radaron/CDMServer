@@ -22,10 +22,10 @@ reqs:
 
 format:
 	$(ACTIVATE) && black service/
+	cd frontend && pnpm format
 
 lint:
 	$(ACTIVATE) && python -m pylint service/
-	cd frontend && pnpm lint
 
 start-backend:
 	source .env.sh && $(ACTIVATE) && uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
