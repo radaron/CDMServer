@@ -232,6 +232,8 @@ export const Imdb = () => {
             count={searchResults.meta.totalPages}
             onChange={submitPageChange}
             disabled={isLoading}
+            hideNextButton
+            hidePrevButton
           />
         </Box>
       )}
