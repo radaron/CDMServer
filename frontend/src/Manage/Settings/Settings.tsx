@@ -1,6 +1,13 @@
 import { useState, useContext, useEffect } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Divider, Button, TextField, FormControl, Box, Typography } from '@mui/material'
+import {
+  Divider,
+  Button,
+  TextField,
+  FormControl,
+  Box,
+  Typography,
+} from '@mui/material'
 import { manageContext } from '../Manage'
 import { UserInfo } from '../types'
 import { useTranslation } from 'react-i18next'
@@ -156,10 +163,23 @@ export const Settings = () => {
     >
       <Box
         component="form"
-        sx={{ display: 'grid', width: '100%', maxWidth: 400, margin: '0 auto', gap: 2 }}
+        sx={{
+          display: 'grid',
+          width: '100%',
+          maxWidth: 400,
+          margin: '0 auto',
+          gap: 2,
+        }}
         onSubmit={updateNcoreCredential}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
           <Typography variant="h6" component="div" sx={{ textAlign: 'center' }}>
             {t('SET_NCORE_CREDENTIALS')}
           </Typography>
@@ -208,11 +228,7 @@ export const Settings = () => {
           {t('CHANGE_LOGIN_PASSWORD')}
         </Typography>
         <FormControl>
-          <TextField
-            type="text"
-            value={userInfo.email}
-            disabled={true}
-          />
+          <TextField type="text" value={userInfo.email} disabled={true} />
         </FormControl>
         <FormControl>
           <TextField

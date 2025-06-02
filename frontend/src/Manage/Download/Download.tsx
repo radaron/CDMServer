@@ -329,11 +329,7 @@ export const Download = () => {
             ))}
           </Select>
         </FormControl>
-        <Button
-          variant="contained"
-          type="submit"
-          disabled={isLoading}
-        >
+        <Button variant="contained" type="submit" disabled={isLoading}>
           {isLoading ? <CircularProgress /> : t('SEARCH')}
         </Button>
       </Box>
