@@ -31,6 +31,8 @@ class OmdbBaseData(BaseModel):
                         new_data["imdb_votes"] = value
                     case "DVD":
                         new_data["dvd"] = value
+                    case "totalResults":
+                        new_data["total_results"] = value
                     case _:
                         new_data[key] = value
         return new_data
@@ -171,7 +173,7 @@ class OmdbSearchEntityData(OmdbBaseData):
 
 class OmdbSearchData(OmdbBaseData):
     search: list[OmdbSearchEntityData] = []
-    total_results: str | None = None
+    total_results: str
     response: str
 
 
@@ -184,6 +186,9 @@ class OmdbSearchEntityResponse(BaseData):
     title: str
     year: str
 
+class OmdbSearchResponseMeta(BaseData):
+    total_pages: int = 0
 
 class OmdbSearchResponse(BaseData):
     data: list[OmdbSearchEntityResponse]
+    meta: OmdbSearchResponseMeta
