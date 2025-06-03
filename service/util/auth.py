@@ -1,4 +1,3 @@
-from datetime import timedelta
 from fastapi_login import LoginManager
 from sqlalchemy.future import select
 from passlib.context import CryptContext
@@ -7,9 +6,7 @@ from service.util.configuration import ADMIN_EMAIL, ADMIN_PASSWORD, SECRET_KEY
 
 
 COOKIE_NAME = "access-token"
-manager = LoginManager(
-    SECRET_KEY, token_url="/api/auth/login/", use_cookie=True, cookie_name=COOKIE_NAME, default_expiry=timedelta(days=1)
-)
+manager = LoginManager(SECRET_KEY, token_url="/api/auth/login/", use_cookie=True, cookie_name=COOKIE_NAME)
 
 
 @manager.user_loader()

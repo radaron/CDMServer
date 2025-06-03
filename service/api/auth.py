@@ -16,7 +16,8 @@ async def login(data: LoginData):
     user = await load_user(email)
     if not user or not Hasher.verify_password(password, user.password):
         raise InvalidCredentialsException
-    access_token = manager.create_access_token(data={"sub": email}, expires=timedelta(hours=1))
+    expiration = timedelta(days=7) if data.keep_logged_in else timedelta(minutes=30)
+    access_token = manager.create_access_token(data={"sub": email}, expires=expiration)
     response = JSONResponse({"message": "Successfully logged in"})
     manager.set_cookie(response, access_token)
     return response

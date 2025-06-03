@@ -55,6 +55,7 @@ class ModifyMyData(BaseData):
 class LoginData(BaseData):
     email: EmailStr
     password: str
+    keep_logged_in: bool = False
 
 
 class MeData(BaseData):
