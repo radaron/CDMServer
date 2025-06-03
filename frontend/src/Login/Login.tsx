@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import {
   Box,
   Button,
-  CssBaseline,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   FormLabel,
   Stack,
   TextField,
@@ -55,6 +56,7 @@ export const Login = () => {
   const { t } = useTranslation()
   const [inputEmail, setInputEmail] = useState('')
   const [inputPassword, setInputPassword] = useState('')
+  const [keepSignedIn, setKeepSignedIn] = useState(false)
 
   const [alertMessage, setAlertMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -73,6 +75,7 @@ export const Login = () => {
         body: JSON.stringify({
           email: inputEmail,
           password: inputPassword,
+          keepLoggedIn: keepSignedIn,
         }),
       })
       if (resp.status === 200) {
@@ -145,6 +148,16 @@ export const Login = () => {
               onChange={(e) => setInputPassword(e.target.value)}
             />
           </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={keepSignedIn}
+                onChange={(e) => setKeepSignedIn(e.target.checked)}
+                color="primary"
+              />
+            }
+            label={t('KEEP_ME_SIGNED_IN')}
+          />
           {!loading ? (
             <Button variant="contained" fullWidth type="submit">
               {t('LOGIN')}
