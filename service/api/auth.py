@@ -19,7 +19,13 @@ async def login(data: LoginData):
     expiration = timedelta(days=7) if data.keep_logged_in else timedelta(minutes=30)
     access_token = manager.create_access_token(data={"sub": email}, expires=expiration)
     response = JSONResponse({"message": "Successfully logged in"})
-    manager.set_cookie(response, access_token)
+    response.set_cookie(
+        key=COOKIE_NAME,
+        value=access_token,
+        httponly=True,
+        max_age=int(expiration.total_seconds()),
+        # expires="persistent",
+    )
     return response
 
 
