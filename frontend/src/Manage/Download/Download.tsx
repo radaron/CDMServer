@@ -12,6 +12,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Pagination,
   Select,
 } from '@mui/material'
 import { manageContext } from '../Manage'
@@ -20,9 +21,9 @@ import { searchWhere, searchCategory } from '../constant'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
-import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY } from './constant'
+import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY, PAGE } from './constant'
 
-interface TorrentSearchResult {
+interface TorrentSearchResultElement {
   id: number
   title: string
   category: string
@@ -32,14 +33,23 @@ interface TorrentSearchResult {
   url: string
 }
 
+interface TorrentSearchResult {
+  data: {
+    torrents: TorrentSearchResultElement[]
+  }
+  meta: {
+    totalPages: number
+  }
+}
+
 interface DownloadDropDownButtonProps {
-  result: TorrentSearchResult
+  result: TorrentSearchResultElement
   devices: DeviceModel[]
   addToDownloadQueue: (torrentId: number, deviceId: number) => void
 }
 
 interface TorrentCardProps {
-  result: TorrentSearchResult
+  result: TorrentSearchResultElement
   devices: DeviceModel[]
   addToDownloadQueue: (torrentId: number, deviceId: number) => void
 }
@@ -151,10 +161,14 @@ export const Download = () => {
   const [selectedSearchType, setSelectedSearchType] = useState(
     searchCategory[0]
   )
+  const [page, setPage] = useState(1)
   const [selectedSearchWhere, setSelectedSearchWhere] = useState(searchWhere[0])
   const [devices, setDevices] = useState<DeviceModel[]>([])
   const [isLoading, setLoading] = useState(false)
-  const [searchResults, setSearchResults] = useState<TorrentSearchResult[]>([])
+  const [searchResults, setSearchResults] = useState<TorrentSearchResult>({
+    data: { torrents: [] },
+    meta: { totalPages: 0 },
+  })
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
@@ -170,12 +184,14 @@ export const Download = () => {
       setPattern(searchParams.get(PATTERN) || '')
       setSelectedSearchWhere(searchParams.get(SEARCH_WHERE) || '')
       setSelectedSearchType(searchParams.get(SEARCH_CATEGORY) || '')
+      setPage(Number(searchParams.get(PAGE)) || 1)
       setLoading(true)
       try {
         const resp = await fetch(
           `/api/download/search/?pattern=${searchParams.get(PATTERN)}` +
             `&where=${searchParams.get(SEARCH_WHERE)}` +
-            `&category=${searchParams.get(SEARCH_CATEGORY)}`,
+            `&category=${searchParams.get(SEARCH_CATEGORY)}` +
+            `&page=${page}`,
           {
             method: 'GET',
             headers: {
@@ -184,9 +200,9 @@ export const Download = () => {
           }
         )
         if (resp.status === 200) {
-          const data = await resp.json()
-          setSearchResults(data.data.torrents)
-          if (data.data.torrents.length === 0) {
+          const response = await resp.json()
+          setSearchResults(response)
+          if (response.data.torrents.length === 0) {
             setToastData({ message: t('NO_RESULTS'), type: 'info' })
           }
         } else if (resp.status === 401) {
@@ -210,9 +226,24 @@ export const Download = () => {
         pattern,
         searchWhere: selectedSearchWhere,
         searchCategory: selectedSearchType,
+        page: page.toString(),
       })
     },
-    [pattern, selectedSearchType, selectedSearchWhere, setSearchParams]
+    [pattern, selectedSearchType, selectedSearchWhere, setSearchParams, page]
+  )
+
+  const submitPageChange = useCallback(
+    (event: React.ChangeEvent<unknown>, value: number) => {
+      event.preventDefault()
+      setPage(value)
+      setSearchParams({
+        pattern,
+        searchWhere: selectedSearchWhere,
+        searchCategory: selectedSearchType,
+        page: value.toString(),
+      })
+    },
+    [pattern, selectedSearchType, selectedSearchWhere, setSearchParams, setPage]
   )
 
   const getDevices = useCallback(async () => {
@@ -333,25 +364,48 @@ export const Download = () => {
           {isLoading ? <CircularProgress /> : t('SEARCH')}
         </Button>
       </Box>
-      {searchResults.length > 0 && (
-        <Box
-          sx={{
-            maxWidth: { sm: '1000px' },
-            mx: 'auto',
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-            gap: 2,
-          }}
-        >
-          {searchResults.map((result) => (
-            <TorrentCard
-              key={result.id}
-              result={result}
-              devices={devices}
-              addToDownloadQueue={addToDownloadQueue}
+      {searchResults.data.torrents.length > 0 && (
+        <>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              borderRadius: 1,
+              boxShadow: 1,
+              padding: 1,
+              marginBottom: 2,
+              backgroundColor: 'background.paper',
+              maxWidth: { sm: '1000px' },
+              mx: 'auto',
+            }}
+          >
+            <Pagination
+              count={searchResults.meta.totalPages}
+              onChange={submitPageChange}
+              disabled={isLoading}
+              hideNextButton
+              hidePrevButton
             />
-          ))}
-        </Box>
+          </Box>
+          <Box
+            sx={{
+              maxWidth: { sm: '1000px' },
+              mx: 'auto',
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+              gap: 2,
+            }}
+          >
+            {searchResults.data.torrents.map((result) => (
+              <TorrentCard
+                key={result.id}
+                result={result}
+                devices={devices}
+                addToDownloadQueue={addToDownloadQueue}
+              />
+            ))}
+          </Box>
+        </>
       )}
     </Box>
   )

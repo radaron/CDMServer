@@ -131,6 +131,19 @@ class StatusData(BaseData):
     data: list[StatusDataItem]
 
 
+class SearchResponseMeta(BaseData):
+    total_pages: int = 0
+
+
+class SearchResponseData(BaseData):
+    torrents: list[dict] = []
+
+
+class SearchResponse(BaseData):
+    data: SearchResponseData
+    meta: SearchResponseMeta
+
+
 class OmdbRatingData(OmdbBaseData):
     source: str
     value: str

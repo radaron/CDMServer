@@ -14,7 +14,7 @@ from ncoreparser import (
     NcoreConnectionError,
 )
 from service.util.auth import manager
-from service.models.api import AddDownloadData, TorrentData
+from service.models.api import AddDownloadData, TorrentData, SearchResponse
 from service.models.database import AsyncSession, get_session, select, Device, User, user_device_association
 from service.util.configuration import NCORE_USERNAME, NCORE_PASSWORD, SECRET_KEY
 from service.constant import map_category_path
@@ -29,18 +29,24 @@ async def get_order(
     pattern: str = None,
     category: str = SearchParamType.ALL_OWN.value,
     where: str = SearchParamWhere.NAME.value,
+    page: int = 1,
 ):
     client = AsyncClient(timeout=5)
     await client.login(NCORE_USERNAME, NCORE_PASSWORD)
-    torrents = await client.search(
+    result = await client.search(
         pattern=pattern,
         type=SearchParamType(category),
         where=SearchParamWhere(where),
         sort_by=ParamSort.SEEDERS,
         sort_order=ParamSeq.DECREASING,
+        page=page,
     )
 
-    return JSONResponse({"data": {"torrents": [dump_torrent(t) for t in torrents]}})
+    return JSONResponse(
+        SearchResponse(
+            data={"torrents": [dump_torrent(t) for t in result.torrents]}, meta={"total_pages": result.num_of_pages}
+        ).model_dump()
+    )
 
 
 @router.post("/")
