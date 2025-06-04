@@ -12,13 +12,10 @@ dependencies = [
   "aiomysql",
   "mysqlclient",
   "cryptography",
-  "python-multipart",
   "pydantic[email]",
   "passlib[bcrypt]",
   "jinja2",
-  "alembic",
   "ncoreparser",
-  "cryptography",
   "httpx",
   "redis",
 
