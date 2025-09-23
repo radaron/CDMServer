@@ -3,9 +3,8 @@ import {
   Box,
   Tabs,
   Tab,
-  LinearProgressProps,
-  LinearProgress,
   Typography,
+  Divider,
 } from '@mui/material'
 import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 import { manageContext } from '../Manage'
@@ -13,30 +12,9 @@ import { DeviceModel } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords } from '../../util'
+import { Torrent } from './interfaces'
+import { StatusItem } from './StatusItem'
 
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
-) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography
-          variant="body2"
-          sx={{ color: 'text.secondary' }}
-        >{`${Math.round(props.value)}%`}</Typography>
-      </Box>
-    </Box>
-  )
-}
-
-interface Torrent {
-  name: string
-  progress: number
-  status: string
-}
 
 export const Status = () => {
   const { t } = useTranslation()
@@ -163,10 +141,14 @@ export const Status = () => {
           </>
         ) : (
           statusData.map((torrent) => (
-            <div key={torrent.name}>
-              <LinearProgressWithLabel value={torrent.progress} />
-              <p>{separateWords(torrent.name)}</p>
-            </div>
+            <>
+              <StatusItem
+                key={torrent.name}
+                torrent={torrent}
+                selectedDeviceId={selectedDeviceId!}
+              />
+              <Divider />
+            </>
           ))
         )}
       </Box>

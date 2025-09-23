@@ -41,6 +41,8 @@ When the user clicks on "Download" or selects a target device for downloading, t
 ### Downloads
 - Users can search for torrents on Ncore.
 - Download files to multiple devices.
+- Users can view the status of their downloads.
+- Users can play, pause, or delete their downloads.
 
 ### IMDb Search
 - Search for movies and series using IMDb (OMDb database).
