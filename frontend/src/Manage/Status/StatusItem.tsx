@@ -118,6 +118,7 @@ export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; se
               sx={{ width: '100%', mt: 1 }}
             />
           }
+          disableTypography={true}
           sx={{ width: { xs: '100%', sm: 'auto' } }}
         />
       <Box sx={{

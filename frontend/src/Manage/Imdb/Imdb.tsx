@@ -115,8 +115,11 @@ export const Imdb = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_IMDB'))
   const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+      setHeaderTitle(t('HEADER_IMDB'))
+  }, [setHeaderTitle, t])
 
   const search = useCallback(async () => {
     if (searchParams.has(PATTERN) && searchParams.get(PATTERN)) {

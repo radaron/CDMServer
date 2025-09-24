@@ -32,7 +32,7 @@ export const DeleteUser: React.FC<DeleteUserProps> = ({
   const setToastData = context?.setToastData || (() => {})
 
   useEffect(() => {
-    setSelectedUser(users[0]?.email)
+    setSelectedUser(users[0]?.email || '')
   }, [users])
 
   const handleDelete = async (event: React.FormEvent<HTMLFormElement>) => {

@@ -24,8 +24,11 @@ export const Status = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_STATUS'))
   const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    setHeaderTitle(t('HEADER_STATUS'))
+  }, [setHeaderTitle, t])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -141,14 +144,13 @@ export const Status = () => {
           </>
         ) : (
           statusData.map((torrent) => (
-            <>
+            <Box key={torrent.name}>
               <StatusItem
-                key={torrent.name}
                 torrent={torrent}
                 selectedDeviceId={selectedDeviceId!}
               />
               <Divider />
-            </>
+            </Box>
           ))
         )}
       </Box>
