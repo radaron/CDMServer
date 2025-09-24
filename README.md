@@ -93,6 +93,7 @@ services:
       NCORE_PASSWORD: password
       OMDB_API_KEY: r1veWt
       SECRET_KEY: YTzqIUYPqWRewhar1veWth0WRH8d6MMpqP5BQp_pEB8=
+      ALLOWED_ORIGINS: https://mydomain.com
 ```
 - The `ADMIN_EMAIL` and `ADMIN_PASSWORD` is the default admin credentials
 - `DB_` variables should be the mysql database related variables
