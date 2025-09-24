@@ -14,7 +14,6 @@ export const Device = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_DEVICES'))
   const [devices, setDevices] = useState<DeviceModel[]>([])
   const [selectedDeviceData, setSelectedDeviceData] = useState<DeviceModel>({
     id: 0,
@@ -32,6 +31,10 @@ export const Device = () => {
     },
     userEmails: [],
   })
+
+  useEffect(() => {
+      setHeaderTitle(t('HEADER_DEVICES'))
+  }, [setHeaderTitle, t])
 
   const getDevices = useCallback(async () => {
     try {

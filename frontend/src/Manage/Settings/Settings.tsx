@@ -20,7 +20,6 @@ export const Settings = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_SETTINGS'))
   const [userInfo, setUserInfo] = useState<UserInfo>({
     email: '',
     isAdmin: false,
@@ -32,6 +31,10 @@ export const Settings = () => {
   const [ncorePassword, setNcorePassword] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
+  useEffect(() => {
+    setHeaderTitle(t('HEADER_SETTINGS'))
+  }, [setHeaderTitle, t])
 
   useEffect(() => {
     const getUserInfo = async () => {

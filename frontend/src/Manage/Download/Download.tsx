@@ -172,8 +172,11 @@ export const Download = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_DOWNLOADS'))
   const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+      setHeaderTitle(t('HEADER_DOWNLOADS'))
+  }, [setHeaderTitle, t])
 
   const search = useCallback(async () => {
     if (

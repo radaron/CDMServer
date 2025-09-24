@@ -3,9 +3,8 @@ import {
   Box,
   Tabs,
   Tab,
-  LinearProgressProps,
-  LinearProgress,
   Typography,
+  Divider,
 } from '@mui/material'
 import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 import { manageContext } from '../Manage'
@@ -13,30 +12,9 @@ import { DeviceModel } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords } from '../../util'
+import { Torrent } from './interfaces'
+import { StatusItem } from './StatusItem'
 
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
-) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography
-          variant="body2"
-          sx={{ color: 'text.secondary' }}
-        >{`${Math.round(props.value)}%`}</Typography>
-      </Box>
-    </Box>
-  )
-}
-
-interface Torrent {
-  name: string
-  progress: number
-  status: string
-}
 
 export const Status = () => {
   const { t } = useTranslation()
@@ -46,8 +24,11 @@ export const Status = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_STATUS'))
   const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    setHeaderTitle(t('HEADER_STATUS'))
+  }, [setHeaderTitle, t])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -113,6 +94,11 @@ export const Status = () => {
     return () => clearInterval(intervalId)
   }, [selectedDeviceId, setToastData, t])
 
+  const getDeviceLabel = (device: DeviceModel) => {
+    const name = device.name
+    const downloadCount = selectedDeviceId === device.id ? statusData.length : 0
+    return `${name}` + (downloadCount ? ` (${downloadCount})` : '')
+  }
   return (
     <>
       {devices.length > 0 && (
@@ -138,7 +124,7 @@ export const Status = () => {
             {devices.map((device) => (
               <Tab
                 key={device.id}
-                label={device.name}
+                label={getDeviceLabel(device)}
                 onClick={() => setSelectedDeviceId(device.id)}
               />
             ))}
@@ -163,10 +149,13 @@ export const Status = () => {
           </>
         ) : (
           statusData.map((torrent) => (
-            <div key={torrent.name}>
-              <LinearProgressWithLabel value={torrent.progress} />
-              <p>{separateWords(torrent.name)}</p>
-            </div>
+            <Box key={torrent.name}>
+              <StatusItem
+                torrent={torrent}
+                selectedDeviceId={selectedDeviceId!}
+              />
+              <Divider />
+            </Box>
           ))
         )}
       </Box>
