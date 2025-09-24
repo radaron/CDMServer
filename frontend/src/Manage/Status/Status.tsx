@@ -94,6 +94,11 @@ export const Status = () => {
     return () => clearInterval(intervalId)
   }, [selectedDeviceId, setToastData, t])
 
+  const getDeviceLabel = (device: DeviceModel) => {
+    const name = device.name
+    const downloadCount = selectedDeviceId === device.id ? statusData.length : 0
+    return `${name}` + (downloadCount ? ` (${downloadCount})` : '')
+  }
   return (
     <>
       {devices.length > 0 && (
@@ -119,7 +124,7 @@ export const Status = () => {
             {devices.map((device) => (
               <Tab
                 key={device.id}
-                label={device.name}
+                label={getDeviceLabel(device)}
                 onClick={() => setSelectedDeviceId(device.id)}
               />
             ))}
