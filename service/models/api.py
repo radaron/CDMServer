@@ -1,13 +1,19 @@
 from typing import Any
 from pydantic import BaseModel, EmailStr, ConfigDict, model_validator
 from pydantic.alias_generators import to_camel, to_pascal
+from service.constant import Instruction
 
 
 class BaseData(BaseModel):
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, model_dump_by_alias=True)
+    model_config = ConfigDict(
+        alias_generator=to_camel, populate_by_name=True, model_dump_by_alias=True, use_enum_values=True
+    )
 
     def model_dump(self, **kwargs) -> dict:
         return super().model_dump(by_alias=True, **kwargs)
+
+    def model_dump_snake_case(self, **kwargs) -> dict:
+        return super().model_dump(by_alias=False, **kwargs)
 
 
 class OmdbBaseData(BaseModel):
@@ -129,6 +135,14 @@ class StatusDataItem(BaseData):
 
 class StatusData(BaseData):
     data: list[StatusDataItem]
+
+
+class InstructionItemData(BaseData):
+    torrent_id: int
+
+
+class InstructionsData(BaseData):
+    instructions: dict[Instruction, InstructionItemData]
 
 
 class SearchResponseMeta(BaseData):

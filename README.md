@@ -41,6 +41,8 @@ When the user clicks on "Download" or selects a target device for downloading, t
 ### Downloads
 - Users can search for torrents on Ncore.
 - Download files to multiple devices.
+- Users can view the status of their downloads.
+- Users can play, pause, or delete their downloads.
 
 ### IMDb Search
 - Search for movies and series using IMDb (OMDb database).
@@ -91,6 +93,7 @@ services:
       NCORE_PASSWORD: password
       OMDB_API_KEY: r1veWt
       SECRET_KEY: YTzqIUYPqWRewhar1veWth0WRH8d6MMpqP5BQp_pEB8=
+      ALLOWED_ORIGINS: https://mydomain.com
 ```
 - The `ADMIN_EMAIL` and `ADMIN_PASSWORD` is the default admin credentials
 - `DB_` variables should be the mysql database related variables

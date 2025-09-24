@@ -13,6 +13,7 @@
   "CREDENTIALS_DELETED": "Bejelentkezési adatok törlődtek.",
   "DEFAULT_PATH_TITLE": "Egyéb letöltési útvonal",
   "DELETE_DEVICE_CONFIRM": "Biztosan törölni szeretné az eszközt?",
+  "DELETE_TORRENT_CONFIRM": "Biztosan törölni szeretné a torrentet?",
   "DELETE_NCORE_CREDENTIALS_CONFIRM": "Biztosan törölni szeretné a bejelentkezési adatokat?",
   "DELETE_USER_BUTTON": "Törlés",
   "DELETE_USER_CONFIRM": "Biztosan törölni szeretné a felhasználót?",

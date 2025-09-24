@@ -15,12 +15,10 @@ from service.api.status import router as status_router
 from service.api.omdb import router as omdb_router
 from service.models.database import init_db, User
 from service.util.auth import create_admin_user, manager
+from service.util.configuration import ALLOWED_ORIGINS
 
 
-allowed_origins = [
-    "http://localhost:3000",
-    "https://cdm.radaron.hu",
-]
+allowed_origins = ALLOWED_ORIGINS
 
 
 @asynccontextmanager

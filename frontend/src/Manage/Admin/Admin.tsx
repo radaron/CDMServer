@@ -13,7 +13,10 @@ export const Admin = () => {
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  setHeaderTitle(t('HEADER_ADMIN'))
+
+  useEffect(() => {
+    setHeaderTitle(t('HEADER_ADMIN'))
+  }, [setHeaderTitle, t])
 
   const getUsers = useCallback(async () => {
     try {

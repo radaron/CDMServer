@@ -19,3 +19,5 @@ ADMIN_PASSWORD = environ["ADMIN_PASSWORD"]
 OMDB_API_KEY = environ["OMDB_API_KEY"]
 
 SECRET_KEY = environ["SECRET_KEY"]
+
+ALLOWED_ORIGINS = environ["ALLOWED_ORIGINS"].split(",")

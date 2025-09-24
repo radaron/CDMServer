@@ -13,6 +13,7 @@
   "CREDENTIALS_DELETED": "Login credentials removed.",
   "DEFAULT_PATH_TITLE": "Default download path",
   "DELETE_DEVICE_CONFIRM": "Are you sure you want to delete device?",
+  "DELETE_TORRENT_CONFIRM": "Are you sure you want to delete torrent?",
   "DELETE_NCORE_CREDENTIALS_CONFIRM": "Are you sure you want to delete credentials?",
   "DELETE_USER_BUTTON": "Delete",
   "DELETE_USER_CONFIRM": "Are you sure you want to delete user?",

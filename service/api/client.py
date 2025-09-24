@@ -20,8 +20,17 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
     files = device.file_list
     device.updated = datetime.now(tz=timezone.utc)
     session.add(device)
+    instructions = copy(device.instructions)
+    device.instructions = {}
     await session.commit()
-    return JSONResponse({"data": {"files": {key: value["downloading_path"] for key, value in files.items()}}})
+    return JSONResponse(
+        {
+            "data": {
+                "files": {key: value["downloading_path"] for key, value in files.items()},
+                "instructions": instructions,
+            }
+        }
+    )
 
 
 @router.get("/download/{file_id}/")

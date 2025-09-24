@@ -1,4 +1,11 @@
+from enum import Enum
 from ncoreparser import SearchParamType
+
+
+class Instruction(Enum):
+    START = "start"
+    STOP = "stop"
+    DELETE = "delete"
 
 
 MOVIES_PATH_NAME = "movies_path"
