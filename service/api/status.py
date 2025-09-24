@@ -54,8 +54,8 @@ async def post_instructions(
     if device is None:
         return JSONResponse({"message": "Device not found"}, status_code=404)
 
-    current_instructions = copy(device.instructions) or {}
-    current_instructions.update(body.model_dump_snake_case().get("instructions", {}))
+    current_instructions = copy(device.instructions) or []
+    current_instructions.append(body.model_dump_snake_case().get("instructions", {}))
     device.instructions = current_instructions
     session.add(device)
     await session.commit()
