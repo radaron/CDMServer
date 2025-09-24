@@ -9,7 +9,7 @@ import {
   IconButton,
 } from '@mui/material'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
-import StopIcon from '@mui/icons-material/Stop'
+import PauseIcon from '@mui/icons-material/Pause'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Torrent } from './interfaces'
 import { separateWords } from '../../util'
@@ -140,7 +140,7 @@ export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; se
           aria-label="stop"
           color="warning"
         >
-          <StopIcon />
+          <PauseIcon />
         </IconButton>
         <IconButton
           size="small"
