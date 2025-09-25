@@ -13,16 +13,4 @@ export const feedbackCustomizations: Components<Theme> = {
       }),
     },
   },
-  MuiLinearProgress: {
-    styleOverrides: {
-      root: ({ theme }) => ({
-        height: 8,
-        borderRadius: 8,
-        backgroundColor: gray[200],
-        ...theme.applyStyles('dark', {
-          backgroundColor: gray[800],
-        }),
-      }),
-    },
-  },
 }
