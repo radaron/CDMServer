@@ -11,19 +11,102 @@ For comprehensive guidance on using the webpage, refer to the [Usage Guide](doc/
 
 This is a centralized solution where multiple clients can connect to the server, send their download status, and receive torrent files for downloading.
 
-[![](doc/images/diagrams/blocks_high.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=blocks_high.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks_high.png)
+```mermaid
+graph TD
+	A[cdm-client] -->|HTTP| D[cdm-server]
+	B[cdm-client] -->|HTTP| D
+	C[cdm-client] -->|HTTP| D
+```
 
 The client connects to the [Transmission](https://transmissionbt.com/) BitTorrent client to retrieve download information and manage downloads. It then communicates with the server to receive the downloadable torrent file and send the download status.
 
-[![](doc/images/diagrams/blocks.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=blocks.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fblocks.png)
+```mermaid
+graph TD
+	subgraph "Client machine"
+		A[Transmission-daemon]
+		B[cdm-client]
+		A <--> B
+	end
+
+	subgraph "Server machine"
+		C[cdm-server]
+		D[database]
+		C <--> D
+	end
+
+	E((Internet))
+
+	B --> E
+	E --> C
+```
 
 The client transmits download status data periodically, allowing the user to check the status in the browser.
 
-[![](doc/images/diagrams/sequence_status.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=sequence_status.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_status.png)
+```mermaid
+sequenceDiagram
+	actor user
+	participant cdm-server
+	participant cdm-client
+	participant transmission
+
+	cdm-client->>transmission: get all torrent statuses
+	activate cdm-client
+	activate transmission
+	transmission-->>cdm-client: all torrent statuses
+	deactivate transmission
+	cdm-client->>cdm-server: send all torrent data
+	deactivate cdm-client
+	user->>cdm-server: Get download status
+	activate cdm-server
+	cdm-server-->>user: return torrent status
+	deactivate cdm-server
+```
 
 When the user clicks on "Download" or selects a target device for downloading, the client can retrieve the chosen torrent file and add it to Transmission.
 
-[![](doc/images/diagrams/sequence_download.png)](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=sequence_download.png&dark=auto#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fradaron%2FCDMServer%2Fmaster%2Fdoc%2Fimages%2Fdiagrams%2Fsequence_download.png)
+```mermaid
+sequenceDiagram
+	actor user
+	participant cdm-server
+	participant cdm-client
+	participant transmission
+
+	user->>cdm-server: initiate download a movie
+	activate cdm-server
+	cdm-server->>cdm-server: Download the selected torrent file from NCore and store it temporary
+	cdm-server-->>user: added to download queue
+	deactivate cdm-server
+	user->>cdm-server: initiate download a series
+	activate cdm-client
+	activate cdm-server
+	cdm-server->>cdm-server: Download the selected torrent file from NCore and store it temporary
+	cdm-server-->>user: added to download queue
+	deactivate cdm-server
+	cdm-client->>cdm-server: check download queue
+	activate cdm-client
+	activate cdm-server
+	cdm-server-->>cdm-client: downloadable file list
+	deactivate cdm-server
+	cdm-client->>cdm-server: download the movie
+	activate cdm-server
+	cdm-server-->>cdm-client: torrent file for the movie
+	deactivate cdm-server
+	cdm-client->>transmission: add torrent file to downloads
+	activate transmission
+	transmission->>transmission: Downloading the movie to the disk
+	transmission-->>cdm-client: ok
+	deactivate transmission
+	cdm-client->>cdm-server: download the series
+	activate cdm-server
+	cdm-server-->>cdm-client: torrent file for the series
+	deactivate cdm-server
+	cdm-client->>transmission: add torrent file to downloads
+	activate transmission
+	transmission->>transmission: Downloading the series to the disk
+	transmission-->>cdm-client: ok
+	deactivate transmission
+	deactivate cdm-client
+```
 
 ## Available Features
 
