@@ -1,12 +1,80 @@
 import { Theme, alpha, Components } from '@mui/material/styles'
 import { svgIconClasses } from '@mui/material/SvgIcon'
+import { linearProgressClasses } from '@mui/material/LinearProgress'
 import { typographyClasses } from '@mui/material/Typography'
 import { buttonBaseClasses } from '@mui/material/ButtonBase'
 import { chipClasses } from '@mui/material/Chip'
 import { iconButtonClasses } from '@mui/material/IconButton'
-import { gray, red, green } from './themePrimitives'
+import { gray, red, green, orange } from './themePrimitives'
 
 export const dataDisplayCustomizations: Components<Theme> = {
+  MuiIconButton: {
+    styleOverrides: {
+      root: ({ ownerState }) => ({
+        ...(ownerState.color === 'success' && {
+          [`& .${svgIconClasses.root}`]: {
+            color: green[300],
+            fill: green[300],
+          },
+          '&:hover': {
+            backgroundColor: alpha(green[500], 0.5),
+          },
+          '&.Mui-disabled': {
+            color: green[300],
+            [`& .${svgIconClasses.root}`]: {
+              color: green[300],
+              fill: green[300],
+            },
+          },
+        }),
+        ...(ownerState.color === 'warning' && {
+          [`& .${svgIconClasses.root}`]: {
+            color: orange[300],
+            fill: orange[300],
+          },
+          '&:hover': {
+            backgroundColor: alpha(orange[500], 0.5),
+          },
+          '&.Mui-disabled': {
+            color: orange[300],
+            [`& .${svgIconClasses.root}`]: {
+              color: orange[300],
+              fill: orange[300],
+            },
+          },
+        }),
+        ...(ownerState.color === 'error' && {
+          [`& .${svgIconClasses.root}`]: {
+            color: red[300],
+            fill: red[300],
+          },
+          '&:hover': {
+            backgroundColor: alpha(red[500], 0.5),
+          },
+          '&.Mui-disabled': {
+            color: red[300],
+            [`& .${svgIconClasses.root}`]: {
+              color: red[300],
+              fill: red[300],
+            },
+          },
+        }),
+      }),
+    },
+  },
+  MuiLinearProgress: {
+    styleOverrides: {
+      root: ({ ownerState }) => ({
+        height: 8,
+        borderRadius: 8,
+        ...(ownerState.color === 'secondary' && {
+          [`& .${linearProgressClasses.bar}`]: {
+            backgroundColor: `${gray[500]} !important`,
+          },
+        }),
+      }),
+    },
+  },
   MuiList: {
     styleOverrides: {
       root: {

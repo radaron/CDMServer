@@ -9,6 +9,7 @@ export default defineConfig({
   ],
   build: {
     outDir: 'build',
+    chunkSizeWarningLimit: 1000,
   },
   server: {
     proxy: {

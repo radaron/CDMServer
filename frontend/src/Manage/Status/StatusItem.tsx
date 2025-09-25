@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   ListItem,
@@ -11,18 +11,28 @@ import {
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import DeleteIcon from '@mui/icons-material/Delete'
+import CheckIcon from '@mui/icons-material/Check'
+
 import { Torrent } from './interfaces'
 import { separateWords } from '../../util'
 import { useTranslation } from 'react-i18next'
 
+const COLORS = {
+  PRIMARY : 'primary',
+  SECONDARY: 'secondary',
+  SUCCESS : 'success',
+  ERROR   : 'error',
+  WARNING : 'warning'
+} as const
+
 
 function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number; color?: 'primary' | 'success' | 'error' | 'warning' }
+  props: LinearProgressProps & { value: number; color?: 'primary' | 'secondary' | 'error' | 'success' | 'warning' }
 ) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" color={props.color || 'primary'} {...props} />
+        <LinearProgress variant="determinate" {...props} />
       </Box>
       <Box sx={{ minWidth: 35 }}>
         <Typography
@@ -38,26 +48,31 @@ const getProgressColor = (status: string) => {
   const statusLower = status.toLowerCase()
 
   if (statusLower.includes('seeding') || statusLower.includes('complete')) {
-    return 'success'
+    return COLORS.SUCCESS
   }
 
-  if (statusLower.includes('error') || statusLower.includes('stopped')) {
-    return 'error'
+  if (statusLower.includes('error')) {
+    return COLORS.ERROR
+  }
+
+  if (statusLower.includes('stopped')) {
+    return COLORS.SECONDARY
   }
 
   if (statusLower.includes('downloading') || statusLower.includes('active')) {
-    return 'primary'
+    return COLORS.PRIMARY
   }
 
   if (statusLower.includes('queued') || statusLower.includes('waiting')) {
-    return 'warning'
+    return COLORS.WARNING
   }
 
-  return 'primary'
+  return COLORS.PRIMARY
 }
 
 export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; selectedDeviceId: number }) => {
   const { t } = useTranslation()
+  const [instructionSent, setInstructionSent] = useState<'start' | 'stop' | 'delete' | null>(null)
 
   const sendInstruction = async (instruction: 'start' | 'stop' | 'delete') => {
     try {
@@ -76,7 +91,7 @@ export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; se
       })
 
       if (resp.status === 200) {
-        console.log(`${instruction} instruction sent successfully for torrent:`, torrent.id)
+        setInstructionSent(instruction)
       } else {
         console.error(`Failed to send ${instruction} instruction:`, resp.status)
       }
@@ -84,6 +99,16 @@ export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; se
       console.error(`Error sending ${instruction} instruction:`, error)
     }
   }
+
+  useEffect(() => {
+    if (instructionSent) {
+      const timer = setTimeout(() => {
+        setInstructionSent(null)
+      }, 3000) // Clear after 3 seconds
+
+      return () => clearTimeout(timer)
+    }
+  }, [instructionSent])
 
   const handlePlayAction = async () => {
     await sendInstruction('start')
@@ -131,24 +156,27 @@ export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; se
           onClick={handlePlayAction}
           aria-label="play"
           color="success"
+          disabled={instructionSent === 'start'}
         >
-          <PlayArrowIcon />
+          {instructionSent === 'start' ? <CheckIcon /> : <PlayArrowIcon />}
         </IconButton>
         <IconButton
           size="small"
           onClick={handleStopAction}
           aria-label="stop"
           color="warning"
+          disabled={instructionSent === 'stop'}
         >
-          <PauseIcon />
+          {instructionSent === 'stop' ? <CheckIcon /> : <PauseIcon />}
         </IconButton>
         <IconButton
           size="small"
           onClick={handleDeleteAction}
           aria-label="delete"
           color="error"
+          disabled={instructionSent === 'delete'}
         >
-          <DeleteIcon />
+          {instructionSent === 'delete' ? <CheckIcon /> : <DeleteIcon />}
         </IconButton>
       </Box>
     </ListItem>
