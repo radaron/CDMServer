@@ -131,6 +131,7 @@ class StatusDataItem(BaseData):
     added_date: int
     total_size: int
     eta: int | None
+    is_deleted: bool = False
 
 
 class StatusData(BaseData):
