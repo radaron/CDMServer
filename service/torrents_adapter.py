@@ -16,6 +16,7 @@ class TorrentStatus(BaseModel):
     added_date: int
     total_size: int
     eta: int | None
+    is_deleted: bool
 
 
 class SortOrder(Enum):
@@ -34,6 +35,11 @@ class TorrentsAdapter:
         async with redis.from_url(self.redis_url) as redis_client:
             hash_key = f"client:{device_id}:torrents:{torrent.id}"
             sorted_set_key = f"client:{device_id}:torrent_order"
+
+            if torrent.is_deleted:
+                await redis_client.delete(hash_key)
+                await redis_client.zrem(sorted_set_key, torrent.id)
+                return
 
             await redis_client.set(hash_key, torrent.model_dump_json(), ex=EXPIRATION_TIME)
             await redis_client.zadd(sorted_set_key, {torrent.id: torrent.added_date})
