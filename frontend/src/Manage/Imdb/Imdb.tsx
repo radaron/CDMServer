@@ -118,7 +118,7 @@ export const Imdb = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-      setHeaderTitle(t('HEADER_IMDB'))
+    setHeaderTitle(t('HEADER_IMDB'))
   }, [setHeaderTitle, t])
 
   const search = useCallback(async () => {

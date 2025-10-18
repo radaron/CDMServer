@@ -18,16 +18,18 @@ import { separateWords } from '../../util'
 import { useTranslation } from 'react-i18next'
 
 const COLORS = {
-  PRIMARY : 'primary',
+  PRIMARY: 'primary',
   SECONDARY: 'secondary',
-  SUCCESS : 'success',
-  ERROR   : 'error',
-  WARNING : 'warning'
+  SUCCESS: 'success',
+  ERROR: 'error',
+  WARNING: 'warning',
 } as const
 
-
 function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number; color?: 'primary' | 'secondary' | 'error' | 'success' | 'warning' }
+  props: LinearProgressProps & {
+    value: number
+    color?: 'primary' | 'secondary' | 'error' | 'success' | 'warning'
+  }
 ) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -70,25 +72,36 @@ const getProgressColor = (status: string) => {
   return COLORS.PRIMARY
 }
 
-export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; selectedDeviceId: number }) => {
+export const StatusItem = ({
+  torrent,
+  selectedDeviceId,
+}: {
+  torrent: Torrent
+  selectedDeviceId: number
+}) => {
   const { t } = useTranslation()
-  const [instructionSent, setInstructionSent] = useState<'start' | 'stop' | 'delete' | null>(null)
+  const [instructionSent, setInstructionSent] = useState<
+    'start' | 'stop' | 'delete' | null
+  >(null)
 
   const sendInstruction = async (instruction: 'start' | 'stop' | 'delete') => {
     try {
-      const resp = await fetch(`/api/status/${selectedDeviceId}/instructions/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          instructions: {
-            [instruction]: {
-              torrent_id: torrent.id,
-            },
+      const resp = await fetch(
+        `/api/status/${selectedDeviceId}/instructions/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        }),
-      })
+          body: JSON.stringify({
+            instructions: {
+              [instruction]: {
+                torrent_id: torrent.id,
+              },
+            },
+          }),
+        }
+      )
 
       if (resp.status === 200) {
         setInstructionSent(instruction)
@@ -133,24 +146,26 @@ export const StatusItem = ({ torrent, selectedDeviceId }: { torrent: Torrent; se
         gap: 1,
       }}
     >
-        <ListItemText
-          primary={separateWords(torrent.name)}
-          secondary={
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={torrent.progress}
-              color={getProgressColor(torrent.status)}
-              sx={{ width: '100%', mt: 1 }}
-            />
-          }
-          disableTypography={true}
-          sx={{ width: { xs: '100%', sm: 'auto' } }}
-        />
-      <Box sx={{
-        display: 'flex',
-        gap: 0.5,
-        alignSelf: { xs: 'flex-end', sm: 'auto' }
-      }}>
+      <ListItemText
+        primary={separateWords(torrent.name)}
+        secondary={
+          <LinearProgressWithLabel
+            variant="determinate"
+            value={torrent.progress}
+            color={getProgressColor(torrent.status)}
+            sx={{ width: '100%', mt: 1 }}
+          />
+        }
+        disableTypography={true}
+        sx={{ width: { xs: '100%', sm: 'auto' } }}
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 0.5,
+          alignSelf: { xs: 'flex-end', sm: 'auto' },
+        }}
+      >
         <IconButton
           size="small"
           onClick={handlePlayAction}

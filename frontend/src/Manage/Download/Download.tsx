@@ -31,6 +31,7 @@ interface TorrentSearchResultElement {
   seeders: number
   leechers: number
   url: string
+  available: number[]
 }
 
 interface TorrentSearchResult {
@@ -95,7 +96,11 @@ const DownloadDropDownButton = ({
         onClose={handleClose}
       >
         {devices.map((device) => (
-          <MenuItem key={device.id} onClick={() => handleSelect(device.id)}>
+          <MenuItem
+            key={device.id}
+            onClick={() => handleSelect(device.id)}
+            disabled={result.available.indexOf(device.id) === -1}
+          >
             {device.name}
           </MenuItem>
         ))}
@@ -144,7 +149,7 @@ const TorrentCard = ({
         ) : (
           <Button
             variant="contained"
-            disabled={devices.length === 0}
+            disabled={devices.length === 0 || result.available.length === 0}
             onClick={() => addToDownloadQueue(result.id, devices[0]?.id)}
           >
             {t('DOWNLOAD_BUTTON')}
@@ -175,7 +180,7 @@ export const Download = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-      setHeaderTitle(t('HEADER_DOWNLOADS'))
+    setHeaderTitle(t('HEADER_DOWNLOADS'))
   }, [setHeaderTitle, t])
 
   const search = useCallback(async () => {

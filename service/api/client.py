@@ -82,6 +82,7 @@ async def add_device(data: StatusData, session: AsyncSession = Depends(get_sessi
                 "total_size": item.total_size,
                 "eta": item.eta,
                 "is_deleted": item.is_deleted,
+                "tracker_id": item.tracker_id,
             }
         )
         await torrents_adapter.set_torrent(device.id, torrent)

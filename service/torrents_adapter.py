@@ -17,6 +17,7 @@ class TorrentStatus(BaseModel):
     total_size: int
     eta: int | None
     is_deleted: bool
+    tracker_id: int | None = None
 
 
 class SortOrder(Enum):
