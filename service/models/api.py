@@ -121,6 +121,7 @@ class TorrentStatusData(BaseData):
     eta: int | None
     downloadDir: str
     totalSize: int
+    detailsUrl: str | None = None
 
 
 class StatusDataItem(BaseData):

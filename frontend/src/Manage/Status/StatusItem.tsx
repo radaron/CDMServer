@@ -7,6 +7,7 @@ import {
   LinearProgress,
   LinearProgressProps,
   IconButton,
+  Link,
 } from '@mui/material'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
@@ -147,7 +148,21 @@ export const StatusItem = ({
       }}
     >
       <ListItemText
-        primary={separateWords(torrent.name)}
+        primary={
+          <Link
+            href={torrent.detailsUrl}
+            underline="hover"
+            color="inherit"
+            sx={{
+              display: 'block',
+              '&:hover': {
+                color: 'primary.main',
+              },
+            }}
+          >
+            {separateWords(torrent.name)}
+          </Link>
+        }
         secondary={
           <LinearProgressWithLabel
             variant="determinate"

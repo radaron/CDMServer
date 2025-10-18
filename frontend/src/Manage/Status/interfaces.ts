@@ -9,4 +9,5 @@ export interface Torrent {
     | 'error'
     | 'complete'
     | 'queued'
+  detailsUrl?: string
 }
