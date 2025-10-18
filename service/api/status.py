@@ -1,6 +1,7 @@
 from copy import copy
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
+from ncoreparser import get_torrent_page_url
 from service.util.auth import manager
 from service.models.api import TorrentStatusData, InstructionsData
 from service.models.database import (
@@ -72,4 +73,5 @@ def dump_torrent(torrent: TorrentStatus) -> dict:
         eta=torrent.eta,
         downloadDir=torrent.download_dir,
         totalSize=torrent.total_size,
+        detailsUrl=get_torrent_page_url(torrent_id=str(torrent.tracker_id)) if torrent.tracker_id else None,
     ).model_dump()
