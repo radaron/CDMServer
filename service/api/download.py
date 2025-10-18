@@ -12,20 +12,31 @@ from ncoreparser import (
     ParamSeq,
     NcoreCredentialError,
     NcoreConnectionError,
+    SearchResult,
 )
 from service.util.auth import manager
 from service.models.api import AddDownloadData, TorrentData, SearchResponse
-from service.models.database import AsyncSession, get_session, select, Device, User, user_device_association
+from service.models.database import (
+    AsyncSession,
+    get_session,
+    select,
+    Device,
+    User,
+    user_device_association,
+    selectinload,
+    AsyncSessionLocal,
+)
 from service.util.configuration import NCORE_USERNAME, NCORE_PASSWORD, SECRET_KEY
 from service.constant import map_category_path
+from service.torrents_adapter import TorrentsAdapter
 
 
 router = APIRouter()
 
 
 @router.get("/search/")
-async def get_order(
-    _: User = Depends(manager),
+async def search_torrents(
+    user: User = Depends(manager),
     pattern: str = None,
     category: str = SearchParamType.ALL_OWN.value,
     where: str = SearchParamWhere.NAME.value,
@@ -33,7 +44,7 @@ async def get_order(
 ):
     client = AsyncClient(timeout=5)
     await client.login(NCORE_USERNAME, NCORE_PASSWORD)
-    result = await client.search(
+    result: SearchResult = await client.search(
         pattern=pattern,
         type=SearchParamType(category),
         where=SearchParamWhere(where),
@@ -41,10 +52,12 @@ async def get_order(
         sort_order=ParamSeq.DECREASING,
         page=page,
     )
+    availability = await get_tracker_ids_for_devices(user)
 
     return JSONResponse(
         SearchResponse(
-            data={"torrents": [dump_torrent(t) for t in result.torrents]}, meta={"total_pages": result.num_of_pages}
+            data={"torrents": [dump_torrent(torrent, availability) for torrent in result.torrents]},
+            meta={"total_pages": result.num_of_pages},
         ).model_dump()
     )
 
@@ -88,7 +101,7 @@ async def add_download(data: AddDownloadData, user=Depends(manager), session: As
     return JSONResponse({"message": "Torrent added successfully"})
 
 
-def dump_torrent(torrent: Torrent) -> dict:
+def dump_torrent(torrent: Torrent, availability: dict[int, set]) -> dict:
     return TorrentData(
         id=torrent["id"],
         title=torrent["title"],
@@ -97,7 +110,32 @@ def dump_torrent(torrent: Torrent) -> dict:
         leechers=torrent["leech"],
         category=torrent["type"].value,
         url=torrent["url"],
+        available=[
+            device_id for device_id, tracker_ids in availability.items() if int(torrent["id"]) not in tracker_ids
+        ],
     ).model_dump()
+
+
+async def get_tracker_ids_for_devices(user: User) -> dict[int, set]:
+    torrents_adapter = TorrentsAdapter()
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(Device)
+            .join(user_device_association)
+            .where(user_device_association.c.user_id == user.id)
+            # Lazyload is buggy in async mode
+            # See: https://stackoverflow.com/questions/68195361/how-to-properly-handle-many-to-many-in-async-sqlalchemy
+            .options(selectinload(Device.users))
+        )
+        devices = result.scalars().all()
+
+    availability = {}
+    for device in devices:
+        torrents = await torrents_adapter.get_torrents(device.id)
+        tracker_ids = {t.tracker_id for t in torrents if t.tracker_id}
+        availability[device.id] = tracker_ids
+
+    return availability
 
 
 def get_ncore_credential(user: User):

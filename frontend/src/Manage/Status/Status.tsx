@@ -1,11 +1,5 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
-import {
-  Box,
-  Tabs,
-  Tab,
-  Typography,
-  Divider,
-} from '@mui/material'
+import { Box, Tabs, Tab, Typography, Divider } from '@mui/material'
 import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
@@ -14,7 +8,6 @@ import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords } from '../../util'
 import { Torrent } from './interfaces'
 import { StatusItem } from './StatusItem'
-
 
 export const Status = () => {
   const { t } = useTranslation()

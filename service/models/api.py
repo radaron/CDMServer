@@ -110,6 +110,7 @@ class TorrentData(BaseData):
     leechers: str
     category: str
     url: str
+    available: list[int]
 
 
 class TorrentStatusData(BaseData):
@@ -132,6 +133,7 @@ class StatusDataItem(BaseData):
     total_size: int
     eta: int | None
     is_deleted: bool = False
+    tracker_id: int | None = None
 
 
 class StatusData(BaseData):

@@ -33,7 +33,7 @@ export const Device = () => {
   })
 
   useEffect(() => {
-      setHeaderTitle(t('HEADER_DEVICES'))
+    setHeaderTitle(t('HEADER_DEVICES'))
   }, [setHeaderTitle, t])
 
   const getDevices = useCallback(async () => {
