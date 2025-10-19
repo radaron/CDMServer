@@ -1,27 +1,29 @@
 from copy import copy
-from fastapi.responses import JSONResponse
+
 from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 from ncoreparser import get_torrent_page_url
-from service.util.auth import manager
-from service.models.api import TorrentStatusData, InstructionsData
+
+from service.models.api import InstructionsData, TorrentStatusData
 from service.models.database import (
     AsyncSession,
-    get_session,
-    select,
-    desc,
     Device,
     User,
+    get_session,
+    select,
     user_device_association,
 )
-from service.torrents_adapter import TorrentsAdapter, TorrentStatus, SortOrder
-
+from service.torrents_adapter import SortOrder, TorrentsAdapter, TorrentStatus
+from service.util.auth import manager
 
 router = APIRouter()
 
 
 @router.get("/{device_id}/")
 async def get_status(
-    user: User = Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None
+    user: User = Depends(manager),
+    session: AsyncSession = Depends(get_session),
+    device_id: int = None,
 ):
     result = await session.execute(
         select(Device)
@@ -73,5 +75,7 @@ def dump_torrent(torrent: TorrentStatus) -> dict:
         eta=torrent.eta,
         downloadDir=torrent.download_dir,
         totalSize=torrent.total_size,
-        detailsUrl=get_torrent_page_url(torrent_id=str(torrent.tracker_id)) if torrent.tracker_id else None,
+        detailsUrl=get_torrent_page_url(torrent_id=str(torrent.tracker_id))
+        if torrent.tracker_id
+        else None,
     ).model_dump()

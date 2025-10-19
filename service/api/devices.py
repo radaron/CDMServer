@@ -1,20 +1,21 @@
+from datetime import datetime, timedelta, timezone
 from secrets import token_hex
-from datetime import timedelta, datetime, timezone
-from fastapi.responses import JSONResponse
+
 from fastapi import APIRouter, Depends
-from service.util.auth import manager
-from service.models.api import NewDeviceData, EditDeviceData, DeviceData
+from fastapi.responses import JSONResponse
+
+from service.models.api import DeviceData, EditDeviceData, NewDeviceData
 from service.models.database import (
     AsyncSession,
+    Device,
+    IntegrityError,
+    User,
     get_session,
     select,
-    Device,
-    User,
-    user_device_association,
     selectinload,
-    IntegrityError,
+    user_device_association,
 )
-
+from service.util.auth import manager
 
 ACTIVE_THRESHOLD = timedelta(minutes=1)
 
@@ -23,7 +24,9 @@ router = APIRouter()
 
 
 @router.get("/")
-async def get_devices(user: User = Depends(manager), session: AsyncSession = Depends(get_session)):
+async def get_devices(
+    user: User = Depends(manager), session: AsyncSession = Depends(get_session)
+):
     result = await session.execute(
         select(Device)
         .join(user_device_association)
@@ -37,7 +40,11 @@ async def get_devices(user: User = Depends(manager), session: AsyncSession = Dep
 
 
 @router.post("/")
-async def add_device(data: NewDeviceData, user: User = Depends(manager), session: AsyncSession = Depends(get_session)):
+async def add_device(
+    data: NewDeviceData,
+    user: User = Depends(manager),
+    session: AsyncSession = Depends(get_session),
+):
     new_device = Device(name=data.name, token=token_hex(16))
     new_device.users.append(user)
     session.add(new_device)
@@ -46,7 +53,9 @@ async def add_device(data: NewDeviceData, user: User = Depends(manager), session
     except IntegrityError as e:
         await session.rollback()
         if "Duplicate entry" in str(e.orig):
-            return JSONResponse({"message": "Device name already exists"}, status_code=409)
+            return JSONResponse(
+                {"message": "Device name already exists"}, status_code=409
+            )
         raise
     return JSONResponse({"message": "Device added successfully"})
 
@@ -77,7 +86,9 @@ async def modify_device(
     users = result.scalars().all()
 
     if len(users) == 0:
-        return JSONResponse({"message": "At least 1 valid user should be added."}, status_code=400)
+        return JSONResponse(
+            {"message": "At least 1 valid user should be added."}, status_code=400
+        )
 
     device.users = users
 
@@ -88,7 +99,9 @@ async def modify_device(
 
 @router.delete("/{device_id}/")
 async def delete_device(
-    user: User = Depends(manager), session: AsyncSession = Depends(get_session), device_id: int = None
+    user: User = Depends(manager),
+    session: AsyncSession = Depends(get_session),
+    device_id: int = None,
 ):
     result = await session.execute(
         select(Device)

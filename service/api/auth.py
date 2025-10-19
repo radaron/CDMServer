@@ -1,10 +1,11 @@
 from datetime import timedelta
-from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Depends
-from fastapi_login.exceptions import InvalidCredentialsException
-from service.util.auth import manager, load_user, COOKIE_NAME, Hasher
-from service.models.api import LoginData
 
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
+from fastapi_login.exceptions import InvalidCredentialsException
+
+from service.models.api import LoginData
+from service.util.auth import COOKIE_NAME, Hasher, load_user, manager
 
 router = APIRouter()
 

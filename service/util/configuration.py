@@ -1,6 +1,5 @@
 from os import environ
 
-
 NCORE_USERNAME = environ["NCORE_USERNAME"]
 NCORE_PASSWORD = environ["NCORE_PASSWORD"]
 

@@ -1,19 +1,24 @@
-from copy import copy
 import os
+from copy import copy
 from datetime import datetime, timezone
-from fastapi.responses import JSONResponse, FileResponse
-from fastapi import APIRouter, Depends, Header
-from service.models.api import StatusData
-from service.models.database import AsyncSession, get_session, select, delete, Device
-from service.torrents_adapter import TorrentsAdapter, TorrentStatus
 
+from fastapi import APIRouter, Depends, Header
+from fastapi.responses import FileResponse, JSONResponse
+
+from service.models.api import StatusData
+from service.models.database import AsyncSession, Device, get_session, select
+from service.torrents_adapter import TorrentsAdapter, TorrentStatus
 
 router = APIRouter()
 
 
 @router.get("/")
-async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)):
-    devices = await session.execute(select(Device).where(Device.token == x_api_key).with_for_update())
+async def get_order(
+    session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)
+):
+    devices = await session.execute(
+        select(Device).where(Device.token == x_api_key).with_for_update()
+    )
     device = devices.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
@@ -26,7 +31,9 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
     return JSONResponse(
         {
             "data": {
-                "files": {key: value["downloading_path"] for key, value in files.items()},
+                "files": {
+                    key: value["downloading_path"] for key, value in files.items()
+                },
                 "instructions": instructions,
             }
         }
@@ -35,9 +42,13 @@ async def get_order(session: AsyncSession = Depends(get_session), x_api_key: str
 
 @router.get("/download/{file_id}/")
 async def download_file(
-    session: AsyncSession = Depends(get_session), x_api_key: str = Header(None), file_id: str = None
+    session: AsyncSession = Depends(get_session),
+    x_api_key: str = Header(None),
+    file_id: str = None,
 ):
-    devices = await session.execute(select(Device).where(Device.token == x_api_key).with_for_update())
+    devices = await session.execute(
+        select(Device).where(Device.token == x_api_key).with_for_update()
+    )
     device = devices.scalars().first()
     if device is None:
         return JSONResponse({"message": "Unathorized"}, status_code=401)
@@ -59,11 +70,17 @@ async def download_file(
     session.add(device)
     await session.commit()
 
-    return FileResponse(path=file_path, media_type="application/octet-stream", filename=file_name)
+    return FileResponse(
+        path=file_path, media_type="application/octet-stream", filename=file_name
+    )
 
 
 @router.post("/status/")
-async def add_device(data: StatusData, session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)):
+async def add_device(
+    data: StatusData,
+    session: AsyncSession = Depends(get_session),
+    x_api_key: str = Header(None),
+):
     result = await session.execute(select(Device).where(Device.token == x_api_key))
     device = result.scalars().first()
     if device is None:

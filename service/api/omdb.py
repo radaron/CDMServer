@@ -1,8 +1,15 @@
 import math
-from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Depends
+
 import httpx
-from service.models.api import OmdbMovieData, OmdbSearchData, OmdbSearchResponse, OmdbSearchEntityResponse
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
+
+from service.models.api import (
+    OmdbMovieData,
+    OmdbSearchData,
+    OmdbSearchEntityResponse,
+    OmdbSearchResponse,
+)
 from service.models.database import User
 from service.util.auth import manager
 from service.util.configuration import OMDB_API_KEY
