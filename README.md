@@ -2,7 +2,7 @@
 
 ## What is CDM?
 
-Centralized Download Manager: A server-client solution for managing your downloads. Search on Ncore or IMDb (OMDb) and seamlessly download content to your chosen device using Transmission (a torrent client).
+Centralized Download Manager: A server-client solution for managing your downloads. Search on Ncore or IMDb (OMDb) and seamlessly download content to your chosen device using Transmission or QBittorrent (torrent clients).
 
 ## How to use it
 For comprehensive guidance on using the webpage, refer to the [Usage Guide](doc/USAGE.md).
@@ -18,12 +18,12 @@ graph TD
 	C[cdm-client] -->|HTTP| D
 ```
 
-The client connects to the [Transmission](https://transmissionbt.com/) BitTorrent client to retrieve download information and manage downloads. It then communicates with the server to receive the downloadable torrent file and send the download status.
+The client connects to the [Transmission](https://transmissionbt.com/) or [QBitTorrent](https://www.qbittorrent.org/) BitTorrent client to retrieve download information and manage downloads. It then communicates with the server to receive the downloadable torrent file and send the download status.
 
 ```mermaid
 graph TD
 	subgraph "Client machine"
-		A[Transmission-daemon]
+		A[torrent client]
 		B[cdm-client]
 		A <--> B
 	end
@@ -47,13 +47,13 @@ sequenceDiagram
 	actor user
 	participant cdm-server
 	participant cdm-client
-	participant transmission
+	participant torrent client
 
-	cdm-client->>transmission: get all torrent statuses
+	cdm-client->>torrent client: get all torrent statuses
 	activate cdm-client
-	activate transmission
-	transmission-->>cdm-client: all torrent statuses
-	deactivate transmission
+	activate torrent client
+	torrent client-->>cdm-client: all torrent statuses
+	deactivate torrent client
 	cdm-client->>cdm-server: send all torrent data
 	deactivate cdm-client
 	user->>cdm-server: Get download status
@@ -62,14 +62,14 @@ sequenceDiagram
 	deactivate cdm-server
 ```
 
-When the user clicks on "Download" or selects a target device for downloading, the client can retrieve the chosen torrent file and add it to Transmission.
+When the user clicks on "Download" or selects a target device for downloading, the client can retrieve the chosen torrent file and add it to the torrent client.
 
 ```mermaid
 sequenceDiagram
 	actor user
 	participant cdm-server
 	participant cdm-client
-	participant transmission
+	participant torrent client
 
 	user->>cdm-server: initiate download a movie
 	activate cdm-server
@@ -91,20 +91,20 @@ sequenceDiagram
 	activate cdm-server
 	cdm-server-->>cdm-client: torrent file for the movie
 	deactivate cdm-server
-	cdm-client->>transmission: add torrent file to downloads
-	activate transmission
-	transmission->>transmission: Downloading the movie to the disk
-	transmission-->>cdm-client: ok
-	deactivate transmission
+	cdm-client->>torrent client: add torrent file to downloads
+	activate torrent client
+	torrent client->>torrent client: Downloading the movie to the disk
+	torrent client-->>cdm-client: ok
+	deactivate torrent client
 	cdm-client->>cdm-server: download the series
 	activate cdm-server
 	cdm-server-->>cdm-client: torrent file for the series
 	deactivate cdm-server
-	cdm-client->>transmission: add torrent file to downloads
-	activate transmission
-	transmission->>transmission: Downloading the series to the disk
-	transmission-->>cdm-client: ok
-	deactivate transmission
+	cdm-client->>torrent client: add torrent file to downloads
+	activate torrent client
+	torrent client->>torrent client: Downloading the series to the disk
+	torrent client-->>cdm-client: ok
+	deactivate torrent client
 	deactivate cdm-client
 ```
 
