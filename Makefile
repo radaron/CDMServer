@@ -50,3 +50,6 @@ build-frontend-fe:
 
 docker-compose: build-frontend
 	docker compose up --build
+
+bump:
+	uv version --bump $(filter-out $@,$(MAKECMDGOALS))
