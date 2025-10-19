@@ -48,7 +48,7 @@ build-frontend:
 	cp -r frontend/build/assets/ assets/
 	cp frontend/build/index.html templates/index.html
 
-build-frontend-fe:
+build-frontend-ci:
 	rm -rf assets/* templates/*
 	cd frontend && pnpm build
 	cp -r frontend/build/assets/ assets/
