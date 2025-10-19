@@ -23,8 +23,23 @@ dependencies = [
   "bcrypt==3.2.2",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
-    "pytest>=8.4.2",
-    "ruff>=0.14.1",
+  "pytest",
+  "pylint",
+  "black",
 ]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["service"]
+
+[tool.black]
+line-length = 120
+
+[tool.pylint]
+disable = ["missing-docstring"]
+max-line-length = 120

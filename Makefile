@@ -1,39 +1,48 @@
-VIRTUALENV = .venv
-ACTIVATE = . $(VIRTUALENV)/bin/activate
-
-.venv:
-	python3.13 -m venv $(VIRTUALENV)
-	$(ACTIVATE) && pip install --upgrade pip pip-tools
-
-clean:
-	rm -rf $(VIRTUALENV)
-
-virtualenv: .venv
-
-lock: virtualenv
-	$(ACTIVATE) && pip-compile --upgrade --strip-extras --generate-hashes pyproject.toml --output-file requirements.txt
-	$(ACTIVATE) && pip-compile --upgrade --strip-extras --generate-hashes --extra dev pyproject.toml --output-file requirements-dev.txt
-
 reqs-fe:
-	cd frontend && rm -rf node_modules && pnpm install
+	export NVM_DIR="$$HOME/.nvm" && \
+	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && \
+	cd frontend && \
+	rm -rf node_modules && \
+	nvm use && \
+	pnpm install
 
-reqs:
-	$(ACTIVATE) && pip install -r requirements-dev.txt
+reqs: reqs-fe
+	uv sync --dev
 
 format:
-	$(ACTIVATE) && black service/
-	cd frontend && pnpm format
+	export NVM_DIR="$$HOME/.nvm" && \
+	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && \
+	cd frontend && \
+	nvm use && \
+	pnpm format
+	uv run ruff format service/
+	uv run ruff check --select I --fix service/
+
+check-format-ci:
+	uv run ruff format --check service/
+	uv run ruff check --select I service/
+	cd frontend && pnpm format:check
 
 lint:
-	$(ACTIVATE) && python -m pylint service/
+	uv run ruff check service/
 
 start-backend:
-	source .env.sh && $(ACTIVATE) && uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
+	source .env.sh && uv run uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
 
-start-frontent:
+start-frontend:
 	cd frontend && pnpm start
 
 build-frontend:
+	rm -rf assets/* templates/*
+	export NVM_DIR="$$HOME/.nvm" && \
+	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && \
+	cd frontend && \
+	nvm use && \
+	pnpm build
+	cp -r frontend/build/assets/ assets/
+	cp frontend/build/index.html templates/index.html
+
+build-frontend-fe:
 	rm -rf assets/* templates/*
 	cd frontend && pnpm build
 	cp -r frontend/build/assets/ assets/
