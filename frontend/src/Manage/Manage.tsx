@@ -55,7 +55,6 @@ export const Manage = () => {
   })
   const [headerTitle, setHeaderTitle] = useState<string>('')
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -118,11 +117,7 @@ export const Manage = () => {
         open={toastData.message.length > 0}
         autoHideDuration={4000}
         onClose={() => setToastData({ message: '', type: 'info' })}
-        anchorOrigin={
-          isMobile
-            ? { vertical: 'bottom', horizontal: 'center' }
-            : { vertical: 'bottom', horizontal: 'right' }
-        }
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
           severity={toastData.type}
