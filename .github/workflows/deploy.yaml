@@ -33,6 +33,9 @@ jobs:
           cache: pnpm
           cache-dependency-path: frontend/pnpm-lock.yaml
 
+      - name : Install dependencies
+        run: make reqs-ci
+
       - name: Check formatting
         run: make check-format-ci
 
