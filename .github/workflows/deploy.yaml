@@ -54,8 +54,7 @@ jobs:
 
       - name: Build frontend
         run: |
-          make reqs-fe
-          make build-frontend
+          make build-frontend-ci
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
