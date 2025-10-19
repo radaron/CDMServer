@@ -1,12 +1,14 @@
 from fastapi_login import LoginManager
-from sqlalchemy.future import select
 from passlib.context import CryptContext
+from sqlalchemy.future import select
+
 from service.models.database import AsyncSessionLocal, User
 from service.util.configuration import ADMIN_EMAIL, ADMIN_PASSWORD, SECRET_KEY
 
-
 COOKIE_NAME = "access-token"
-manager = LoginManager(SECRET_KEY, token_url="/api/auth/login/", use_cookie=True, cookie_name=COOKIE_NAME)
+manager = LoginManager(
+    SECRET_KEY, token_url="/api/auth/login/", use_cookie=True, cookie_name=COOKIE_NAME
+)
 
 
 @manager.user_loader()
@@ -24,7 +26,10 @@ async def create_admin_user():
             admin_user.password = Hasher.get_password_hash(ADMIN_PASSWORD)
         else:
             admin_user = User(
-                email=ADMIN_EMAIL, password=Hasher.get_password_hash(ADMIN_PASSWORD), is_admin=True, name="Admin"
+                email=ADMIN_EMAIL,
+                password=Hasher.get_password_hash(ADMIN_PASSWORD),
+                is_admin=True,
+                name="Admin",
             )
             session.add(admin_user)
         await session.commit()

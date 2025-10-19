@@ -2,28 +2,24 @@
 import asyncio
 from datetime import datetime, timezone
 from typing import AsyncGenerator
+
 from sqlalchemy import (
-    Column,
-    Integer,
-    BigInteger,
-    String,
-    select,
-    desc,
-    Boolean,
-    ForeignKey,
-    DateTime,
     JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
     Table,
-    delete,
 )
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Mapped, mapped_column, selectinload
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from service.constant import DEFAULT_DEVICE_SETTINGS
 from service.util.configuration import DB_HOST, DB_NAME, DB_PASSWORD, DB_USER
 from service.util.logger import logger
-from service.constant import DEFAULT_DEVICE_SETTINGS
-
 
 DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
@@ -40,7 +36,9 @@ async def init_db(retries: int = 5, delay: int = 5):
             break
         except Exception as e:  # pylint: disable=broad-exception-caught
             if attempt < retries - 1:
-                logger.warning("Database connection failed. Retrying in %s seconds...", delay)
+                logger.warning(
+                    "Database connection failed. Retrying in %s seconds...", delay
+                )
                 await asyncio.sleep(delay)
             else:
                 logger.error("Database connection failed. Maximum retries reached.")
@@ -68,7 +66,9 @@ class User(Base):
     name = Column(String(255), nullable=False)
     password = Column(String(255))
     is_admin = Column(Boolean(), default=False)
-    devices: Mapped[list["Device"]] = relationship("Device", secondary=user_device_association, back_populates="users")
+    devices: Mapped[list["Device"]] = relationship(
+        "Device", secondary=user_device_association, back_populates="users"
+    )
     ncore_user = Column(String(255), nullable=True)
     ncore_pass = Column(String(255), nullable=True)
 
@@ -82,4 +82,6 @@ class Device(Base):
     instructions = Column(JSON, default=[])
     settings = Column(JSON, default=DEFAULT_DEVICE_SETTINGS)
     updated = Column(DateTime, default=datetime.now(tz=timezone.utc))
-    users: Mapped[list["User"]] = relationship("User", secondary=user_device_association, back_populates="devices")
+    users: Mapped[list["User"]] = relationship(
+        "User", secondary=user_device_association, back_populates="devices"
+    )

@@ -1,8 +1,9 @@
 from enum import Enum
-from pydantic import BaseModel
-import redis.asyncio as redis
-from service.util.configuration import REDIS_HOST, REDIS_PORT
 
+import redis.asyncio as redis
+from pydantic import BaseModel
+
+from service.util.configuration import REDIS_HOST, REDIS_PORT
 
 EXPIRATION_TIME = 60  # 60 seconds
 
@@ -42,12 +43,16 @@ class TorrentsAdapter:
                 await redis_client.zrem(sorted_set_key, torrent.id)
                 return
 
-            await redis_client.set(hash_key, torrent.model_dump_json(), ex=EXPIRATION_TIME)
+            await redis_client.set(
+                hash_key, torrent.model_dump_json(), ex=EXPIRATION_TIME
+            )
             await redis_client.zadd(sorted_set_key, {torrent.id: torrent.added_date})
 
             await redis_client.expire(sorted_set_key, EXPIRATION_TIME)
 
-    async def get_torrents(self, device_id: int, order: SortOrder = SortOrder.ASC) -> list[TorrentStatus]:
+    async def get_torrents(
+        self, device_id: int, order: SortOrder = SortOrder.ASC
+    ) -> list[TorrentStatus]:
         """
         Retrieves torrents in the specified order using a sorted set and hash.
         """

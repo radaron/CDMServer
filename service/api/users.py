@@ -1,31 +1,38 @@
 from cryptography.fernet import Fernet
-from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
-from service.util.auth import manager, Hasher
-from service.util.configuration import SECRET_KEY
-from service.util.logger import logger
+from fastapi.responses import JSONResponse
+
+from service.models.api import MeData, ModifyMyData, NewUserData, UserData
 from service.models.database import (
     AsyncSession,
-    User,
     Device,
+    User,
     get_session,
     select,
-    user_device_association,
     selectinload,
+    user_device_association,
 )
-from service.models.api import NewUserData, MeData, ModifyMyData, UserData
-
+from service.util.auth import Hasher, manager
+from service.util.configuration import SECRET_KEY
+from service.util.logger import logger
 
 router = APIRouter()
 
 
 @router.post("/")
-async def register(data: NewUserData, session: AsyncSession = Depends(get_session), user: User = Depends(manager)):
+async def register(
+    data: NewUserData,
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(manager),
+):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     try:
         new_user = User(
-            email=data.email, password=Hasher.get_password_hash(data.password), is_admin=data.is_admin, name=data.name
+            email=data.email,
+            password=Hasher.get_password_hash(data.password),
+            is_admin=data.is_admin,
+            name=data.name,
         )
         session.add(new_user)
         await session.commit()
@@ -36,18 +43,31 @@ async def register(data: NewUserData, session: AsyncSession = Depends(get_sessio
 
 
 @router.get("/")
-async def get_users(session: AsyncSession = Depends(get_session), user: User = Depends(manager)):
+async def get_users(
+    session: AsyncSession = Depends(get_session), user: User = Depends(manager)
+):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     user_objects = await session.execute(select(User))
     user_objects = user_objects.scalars().all()
     return JSONResponse(
-        {"data": {"users": [UserData(id=u.id, email=u.email, name=u.name).model_dump() for u in user_objects]}}
+        {
+            "data": {
+                "users": [
+                    UserData(id=u.id, email=u.email, name=u.name).model_dump()
+                    for u in user_objects
+                ]
+            }
+        }
     )
 
 
 @router.delete("/{user_id}/")
-async def delete_user(session: AsyncSession = Depends(get_session), user: User = Depends(manager), user_id: int = None):
+async def delete_user(
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(manager),
+    user_id: int = None,
+):
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
 
@@ -80,7 +100,11 @@ async def delete_user(session: AsyncSession = Depends(get_session), user: User =
 
 
 @router.patch("/me/")
-async def modify_user(data: ModifyMyData, session: AsyncSession = Depends(get_session), user: User = Depends(manager)):
+async def modify_user(
+    data: ModifyMyData,
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(manager),
+):
     result = await session.execute(select(User).where(User.id == user.id))
     user_object = result.scalars().first()
 
@@ -89,12 +113,18 @@ async def modify_user(data: ModifyMyData, session: AsyncSession = Depends(get_se
     if isinstance(data.ncore_user, str) and isinstance(data.ncore_pass, str):
         cipher_suite = Fernet(SECRET_KEY)
         user_object.ncore_user = data.ncore_user
-        user_object.ncore_pass = cipher_suite.encrypt(data.ncore_pass.encode("utf-8")) if data.ncore_pass else ""
+        user_object.ncore_pass = (
+            cipher_suite.encrypt(data.ncore_pass.encode("utf-8"))
+            if data.ncore_pass
+            else ""
+        )
     if isinstance(data.password, str) and len(data.password) > 0:
         user_object.password = Hasher.get_password_hash(data.password)
 
     await session.commit()
-    return JSONResponse({"message": f"User {user.id} updated successfully"}, status_code=200)
+    return JSONResponse(
+        {"message": f"User {user.id} updated successfully"}, status_code=200
+    )
 
 
 @router.get("/me/")
