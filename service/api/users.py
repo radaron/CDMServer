@@ -1,6 +1,8 @@
 from cryptography.fernet import Fernet
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from service.models.api import MeData, ModifyMyData, NewUserData, UserData
 from service.models.database import (
@@ -8,8 +10,6 @@ from service.models.database import (
     Device,
     User,
     get_session,
-    select,
-    selectinload,
     user_device_association,
 )
 from service.util.auth import Hasher, manager

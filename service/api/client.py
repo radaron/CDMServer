@@ -4,9 +4,10 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, Header
 from fastapi.responses import FileResponse, JSONResponse
+from sqlalchemy import select
 
 from service.models.api import StatusData
-from service.models.database import AsyncSession, Device, get_session, select
+from service.models.database import AsyncSession, Device, get_session
 from service.torrents_adapter import TorrentsAdapter, TorrentStatus
 
 router = APIRouter()

@@ -15,6 +15,8 @@ from ncoreparser import (
     SearchResult,
     Torrent,
 )
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from service.constant import map_category_path
 from service.models.api import AddDownloadData, SearchResponse, TorrentData
@@ -24,8 +26,6 @@ from service.models.database import (
     Device,
     User,
     get_session,
-    select,
-    selectinload,
     user_device_association,
 )
 from service.torrents_adapter import TorrentsAdapter
