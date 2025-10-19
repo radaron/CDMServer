@@ -3,16 +3,16 @@ from secrets import token_hex
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import selectinload
 
 from service.models.api import DeviceData, EditDeviceData, NewDeviceData
 from service.models.database import (
     AsyncSession,
     Device,
-    IntegrityError,
     User,
     get_session,
-    select,
-    selectinload,
     user_device_association,
 )
 from service.util.auth import manager

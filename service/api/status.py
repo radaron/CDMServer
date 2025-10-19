@@ -3,6 +3,7 @@ from copy import copy
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from ncoreparser import get_torrent_page_url
+from sqlalchemy import select
 
 from service.models.api import InstructionsData, TorrentStatusData
 from service.models.database import (
@@ -10,7 +11,6 @@ from service.models.database import (
     Device,
     User,
     get_session,
-    select,
     user_device_association,
 )
 from service.torrents_adapter import SortOrder, TorrentsAdapter, TorrentStatus
