@@ -9,6 +9,12 @@ reqs-fe:
 reqs: reqs-fe
 	uv sync --dev
 
+reqs-fe-ci:
+	cd frontend && pnpm install --frozen-lockfile
+
+reqs-ci: reqs-fe-ci
+	uv sync --dev --frozen
+
 format:
 	export NVM_DIR="$$HOME/.nvm" && \
 	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && \
