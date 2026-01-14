@@ -413,6 +413,27 @@ export const Download = () => {
               />
             ))}
           </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              borderRadius: 1,
+              boxShadow: 1,
+              padding: 1,
+              marginTop: 2,
+              backgroundColor: 'background.paper',
+              maxWidth: { sm: '1000px' },
+              mx: 'auto',
+            }}
+          >
+            <Pagination
+              count={searchResults.meta.totalPages}
+              onChange={submitPageChange}
+              disabled={isLoading}
+              hideNextButton
+              hidePrevButton
+            />
+          </Box>
         </>
       )}
     </Box>
