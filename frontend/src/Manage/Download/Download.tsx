@@ -306,6 +306,9 @@ export const Download = () => {
   useEffect(() => {
     getDevices()
   }, [getDevices])
+  useEffect(() => {
+    submitSearch(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box>
