@@ -402,6 +402,7 @@ export const Download = () => {
           >
             <Pagination
               count={searchResults.meta.totalPages}
+              page={page}
               onChange={submitPageChange}
               disabled={isLoading}
               hideNextButton
@@ -441,6 +442,7 @@ export const Download = () => {
           >
             <Pagination
               count={searchResults.meta.totalPages}
+              page={page}
               onChange={submitPageChange}
               disabled={isLoading}
               hideNextButton

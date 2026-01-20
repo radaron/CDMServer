@@ -234,6 +234,7 @@ export const Imdb = () => {
           >
             <Pagination
               count={searchResults.meta.totalPages}
+              page={page}
               onChange={submitPageChange}
               disabled={isLoading}
               hideNextButton
@@ -252,6 +253,28 @@ export const Imdb = () => {
             {searchResults.data.map((result) => (
               <IMDBCard key={result.imdbId} result={result} />
             ))}
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              borderRadius: 1,
+              boxShadow: 1,
+              padding: 1,
+              marginTop: 2,
+              backgroundColor: 'background.paper',
+              maxWidth: { sm: '1000px' },
+              mx: 'auto',
+            }}
+          >
+            <Pagination
+              count={searchResults.meta.totalPages}
+              page={page}
+              onChange={submitPageChange}
+              disabled={isLoading}
+              hideNextButton
+              hidePrevButton
+            />
           </Box>
         </>
       )}
