@@ -307,9 +307,17 @@ export const Download = () => {
     getDevices()
   }, [getDevices])
   useEffect(() => {
-    submitSearch(
-      new Event('submit') as unknown as React.FormEvent<HTMLFormElement>
-    )
+    if (
+      !(
+        searchParams.has(PATTERN) ||
+        searchParams.has(SEARCH_CATEGORY) ||
+        searchParams.has(SEARCH_WHERE)
+      )
+    ) {
+      submitSearch(
+        new Event('submit') as unknown as React.FormEvent<HTMLFormElement>
+      )
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
