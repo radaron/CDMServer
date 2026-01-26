@@ -21,10 +21,10 @@ import {
   DOWNLOAD_PAGE,
   STATUS_PAGE,
   SETTINGS_PAGE,
-  IMDB_PAGE,
+  TMDB_PAGE,
 } from './../constant'
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
-import TheaterComedyIcon from '@mui/icons-material/TheaterComedy'
+import MovieFilterIcon from '@mui/icons-material/MovieFilter'
 import DevicesIcon from '@mui/icons-material/Devices'
 import SettingsIcon from '@mui/icons-material/Settings'
 import TimelineIcon from '@mui/icons-material/Timeline'
@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({
       icon: <DownloadIcon />,
       href: DOWNLOAD_PAGE,
     },
-    { label: t('HEADER_IMDB'), icon: <TheaterComedyIcon />, href: IMDB_PAGE },
+    { label: t('HEADER_TMDB'), icon: <MovieFilterIcon />, href: TMDB_PAGE },
     { label: t('HEADER_DEVICES'), icon: <DevicesIcon />, href: DEVICE_PAGE },
     {
       label: t('HEADER_SETTINGS'),

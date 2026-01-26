@@ -10,14 +10,14 @@ import { Device } from './Manage/Device'
 import { Download } from './Manage/Download'
 import { Status } from './Manage/Status'
 import { Settings } from './Manage/Settings'
-import { Imdb } from './Manage/Imdb'
+import { Tmdb } from './Manage/Tmdb'
 import {
   DEVICE_PAGE,
   ADMIN_PAGE,
   DOWNLOAD_PAGE,
   STATUS_PAGE,
   SETTINGS_PAGE,
-  IMDB_PAGE,
+  TMDB_PAGE,
 } from './Manage/constant'
 import { LOGIN_PAGE, MANAGE_PAGE } from './constant'
 
@@ -35,7 +35,7 @@ export const Router = () => {
             <Route path={ADMIN_PAGE} element={<Admin />} />
             <Route path={DEVICE_PAGE} element={<Device />} />
             <Route path={DOWNLOAD_PAGE} element={<Download />} />
-            <Route path={IMDB_PAGE} element={<Imdb />} />
+            <Route path={TMDB_PAGE} element={<Tmdb />} />
             <Route path={SETTINGS_PAGE} element={<Settings />} />
             <Route path={STATUS_PAGE} element={<Status />} />
           </Route>

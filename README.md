@@ -2,7 +2,7 @@
 
 ## What is CDM?
 
-Centralized Download Manager: A server-client solution for managing your downloads. Search on Ncore or IMDb (OMDb) and seamlessly download content to your chosen device using Transmission or QBittorrent (torrent clients).
+Centralized Download Manager: A server-client solution for managing your downloads. Search on Ncore or TMDB and seamlessly download content to your chosen device using Transmission or QBittorrent (torrent clients).
 
 ## How to use it
 For comprehensive guidance on using the webpage, refer to the [Usage Guide](doc/USAGE.md).
@@ -127,8 +127,8 @@ sequenceDiagram
 - Users can view the status of their downloads.
 - Users can play, pause, or delete their downloads.
 
-### IMDb Search
-- Search for movies and series using IMDb (OMDb database).
+### TMDB Search
+- Search for movies and series using TMDB.
 - Get a downloadable list of movies and series with a single click.
 
 ## Installation and configuration
@@ -174,14 +174,14 @@ services:
       REDIS_PORT: 6379
       NCORE_USERNAME: user
       NCORE_PASSWORD: password
-      OMDB_API_KEY: r1veWt
+      TMDB_API_KEY: your_tmdb_key
       SECRET_KEY: YTzqIUYPqWRewhar1veWth0WRH8d6MMpqP5BQp_pEB8=
       ALLOWED_ORIGINS: https://mydomain.com
 ```
 - The `ADMIN_EMAIL` and `ADMIN_PASSWORD` is the default admin credentials
 - `DB_` variables should be the mysql database related variables
 - `NCORE_USERNAME` and `NCORE_PASSWORD` also need for the searching logic
-- `OMDB_API_KEY` - Create your own key [here](https://www.omdbapi.com/apikey.aspx).
+- `TMDB_API_KEY` - Create your own key [here](https://www.themoviedb.org/settings/api).
 - `SECRET_KEY` is need session and credential encryption. It is a 32 url-safe base64-encoded string.
 
 ## See also

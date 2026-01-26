@@ -1,1 +1,0 @@
-export { Imdb } from './Imdb'

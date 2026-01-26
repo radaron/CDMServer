@@ -1,0 +1,1 @@
+export { Tmdb } from './Tmdb'

@@ -15,7 +15,7 @@ REDIS_PORT = environ["REDIS_PORT"]
 ADMIN_EMAIL = environ["ADMIN_EMAIL"]
 ADMIN_PASSWORD = environ["ADMIN_PASSWORD"]
 
-OMDB_API_KEY = environ["OMDB_API_KEY"]
+TMDB_API_KEY = environ["TMDB_API_KEY"]
 
 SECRET_KEY = environ["SECRET_KEY"]
 
