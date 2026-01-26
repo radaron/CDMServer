@@ -1,6 +1,6 @@
 [project]
 name = "CDMServer"
-version = "2.15.0"
+version = "2.15.1"
 description = "A short description of your project"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.13"
@@ -16,7 +16,6 @@ dependencies = [
   "passlib[bcrypt]",
   "jinja2",
   "ncoreparser",
-  "httpx",
   "redis",
   "aiohttp>=3.13.3",
   "themoviedb>=1.0.2",
