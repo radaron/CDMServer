@@ -16,8 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { MANAGE_PAGE, REDIRECT_URL } from '../constant'
 import { redirectToPage } from '../util'
-import { STATUS_PAGE } from '../Manage/constant'
-import AppTheme from '../AppTheme'
+import { TMDB_PAGE } from '../Manage/constant'
 import { neonGradient } from '../customizations/themePrimitives'
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -82,7 +81,7 @@ export const Login = () => {
         await resp.json()
         const redirectUrl = searchParams.has(REDIRECT_URL)
           ? searchParams.get(REDIRECT_URL) || ''
-          : `${MANAGE_PAGE}/${STATUS_PAGE}`
+          : `${MANAGE_PAGE}/${TMDB_PAGE}`
         redirectToPage(redirectUrl)
       } else {
         setAlertMessage(t('LOGIN_FAILED'))

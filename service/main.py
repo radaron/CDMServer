@@ -12,8 +12,8 @@ from service.api.auth import router as login_router
 from service.api.client import router as client_router
 from service.api.devices import router as devices_router
 from service.api.download import router as download_router
-from service.api.omdb import router as omdb_router
 from service.api.status import router as status_router
+from service.api.tmdb import router as tmdb_router
 from service.api.users import router as users_router
 from service.models.database import User, init_db
 from service.util.auth import create_admin_user, manager
@@ -36,7 +36,7 @@ app.include_router(devices_router, prefix="/api/devices")
 app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")
 app.include_router(status_router, prefix="/api/status")
-app.include_router(omdb_router, prefix="/api/omdb")
+app.include_router(tmdb_router, prefix="/api/tmdb")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
@@ -50,7 +50,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):  # pylint: disable=unused-argument
-    return RedirectResponse(url="/manage/status", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(url="/manage/tmdb", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/login", response_class=HTMLResponse)

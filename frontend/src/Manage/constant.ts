@@ -3,7 +3,7 @@ export const DEVICE_PAGE = 'device'
 export const DOWNLOAD_PAGE = 'download'
 export const STATUS_PAGE = 'status'
 export const SETTINGS_PAGE = 'settings'
-export const IMDB_PAGE = 'imdb'
+export const TMDB_PAGE = 'tmdb'
 
 export const DRAWER_WIDTH = 240
 

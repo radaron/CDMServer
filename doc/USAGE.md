@@ -40,10 +40,10 @@ The download page allows you to search Ncore content and filter results by categ
 
    ![Download Button Screenshot](/doc/images/screenshots/download_button.png)
 
-## IMDb Integration
-You can search for movies on IMDb (via OMDb). In the search results, clicking the **Download** button will redirect you to the download page, pre-filtered by the selected movie's IMDb ID.
+## TMDB Integration
+You can search for movies on TMDB. In the search results, clicking the **Download** button will redirect you to the download page, pre-filtered by the selected movie's TMDB ID.
 
-![IMDb Screenshot](/doc/images/screenshots/imdb.png)
+![TMDB Screenshot](/doc/images/screenshots/tmdb.png)
 
 ## Admin Page
 
