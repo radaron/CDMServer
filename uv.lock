@@ -165,7 +165,7 @@ wheels = [
 
 [[package]]
 name = "cdmserver"
-version = "2.15.0"
+version = "2.15.1"
 source = { virtual = "." }
 dependencies = [
     { name = "aiohttp" },
@@ -174,7 +174,6 @@ dependencies = [
     { name = "cryptography" },
     { name = "fastapi" },
     { name = "fastapi-login" },
-    { name = "httpx" },
     { name = "jinja2" },
     { name = "mysqlclient" },
     { name = "ncoreparser" },
@@ -200,7 +199,6 @@ requires-dist = [
     { name = "cryptography" },
     { name = "fastapi" },
     { name = "fastapi-login" },
-    { name = "httpx" },
     { name = "jinja2" },
     { name = "mysqlclient" },
     { name = "ncoreparser" },
