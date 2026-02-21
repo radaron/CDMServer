@@ -151,6 +151,8 @@ export const StatusItem = ({
         primary={
           <Link
             href={torrent.detailsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             underline="hover"
             color="inherit"
             sx={{
