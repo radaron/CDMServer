@@ -405,8 +405,6 @@ export const Download = () => {
               page={page}
               onChange={submitPageChange}
               disabled={isLoading}
-              hideNextButton
-              hidePrevButton
             />
           </Box>
           <Box
@@ -445,8 +443,6 @@ export const Download = () => {
               page={page}
               onChange={submitPageChange}
               disabled={isLoading}
-              hideNextButton
-              hidePrevButton
             />
           </Box>
         </>
