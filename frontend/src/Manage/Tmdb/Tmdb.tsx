@@ -286,8 +286,6 @@ export const Tmdb = () => {
                 page={page}
                 onChange={submitPageChange}
                 disabled={isLoading}
-                hideNextButton
-                hidePrevButton
               />
             </Box>
             <Box
@@ -324,8 +322,6 @@ export const Tmdb = () => {
                 page={page}
                 onChange={submitPageChange}
                 disabled={isLoading}
-                hideNextButton
-                hidePrevButton
               />
             </Box>
           </>
