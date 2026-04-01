@@ -155,6 +155,19 @@ export const navigationCustomizations: Components<Theme> = {
       }),
     },
   },
+  MuiPagination: {
+    styleOverrides: {
+      root: {
+        maxWidth: '100%',
+        overflowX: 'auto',
+        '& .MuiPagination-ul': {
+          flexWrap: 'nowrap',
+          width: 'max-content',
+          margin: '0 auto',
+        },
+      },
+    },
+  },
   MuiPaginationItem: {
     styleOverrides: {
       root: ({ theme }) => ({
