@@ -271,4 +271,5 @@ async def context_download_workflow() -> str:
     return json.dumps(payload)
 
 
-mcp_sse_app = mcp.http_app(path="/sse", transport="sse")
+mcp_http_app = mcp.http_app(path="/", transport="streamable-http")
+mcp_sse_app = mcp.http_app(path="/", transport="sse")
