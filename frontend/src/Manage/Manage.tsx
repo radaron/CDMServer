@@ -48,6 +48,7 @@ export const Manage = () => {
     name: '',
     ncoreUser: '',
     isNcoreCredentialSet: false,
+    hasMcpClientSecret: false,
   })
   const [toastData, setToastData] = useState<ToastData>({
     message: '',
@@ -77,6 +78,7 @@ export const Manage = () => {
             name: '',
             ncoreUser: '',
             isNcoreCredentialSet: false,
+            hasMcpClientSecret: false,
           })
         }
       } catch (error) {
@@ -86,6 +88,7 @@ export const Manage = () => {
           name: '',
           ncoreUser: '',
           isNcoreCredentialSet: false,
+          hasMcpClientSecret: false,
         })
       }
     }

@@ -3,7 +3,7 @@ import { manageContext } from '../../Manage'
 import { DeviceModel } from '../../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
-import { redirectToPage } from '../../../util'
+import { copyTextToClipboard, redirectToPage } from '../../../util'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -31,9 +31,13 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
 
-  const copyTokenToClipboard = () => {
-    navigator.clipboard.writeText(deviceData.token)
-    setToastData({ message: t('TOKEN_COPIED'), type: 'success' })
+  const copyTokenToClipboard = async () => {
+    try {
+      await copyTextToClipboard(deviceData.token)
+      setToastData({ message: t('TOKEN_COPIED'), type: 'success' })
+    } catch (error) {
+      setToastData({ message: t('TOKEN_COPY_ERROR'), type: 'error' })
+    }
   }
 
   const deleteDevice = async () => {

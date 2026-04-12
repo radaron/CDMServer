@@ -1,6 +1,6 @@
 [project]
 name = "CDMServer"
-version = "2.19.0"
+version = "2.20.0"
 description = "A short description of your project"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.13"
@@ -17,6 +17,7 @@ dependencies = [
   "jinja2",
   "ncoreparser",
   "redis",
+  "fastmcp",
   "aiohttp>=3.13.3",
   "themoviedb>=1.0.2",
   # It is need because: https://github.com/pyca/bcrypt/issues/684

@@ -1,5 +1,6 @@
 export const redirectToPage = (path: string) => {
-  const fullRelativePath = `${window.location.origin}/${path}`
+  const normalizedPath = path.replace(/^\/+/, '')
+  const fullRelativePath = `${window.location.origin}/${normalizedPath}`
   window.location.href = fullRelativePath
 }
 
@@ -39,5 +40,17 @@ export const hideKeyBoard = () => {
   const activeElement = document.activeElement as HTMLElement
   if (activeElement && activeElement.blur) {
     activeElement.blur()
+  }
+}
+
+export const copyTextToClipboard = async (text: string): Promise<void> => {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
+
+  const promptResult = window.prompt('Copy to clipboard:', text)
+  if (promptResult === null) {
+    throw new Error('clipboard unavailable')
   }
 }

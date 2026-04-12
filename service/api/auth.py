@@ -1,11 +1,14 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from fastapi_login.exceptions import InvalidCredentialsException
+from sqlalchemy import select
 
 from service.models.api import LoginData
+from service.models.database import AsyncSessionLocal, User
 from service.util.auth import COOKIE_NAME, Hasher, load_user, manager
+from service.util.oauth_flow import consume_authorization_code, validate_pkce
 
 router = APIRouter()
 
@@ -34,3 +37,88 @@ async def logout(_=Depends(manager)):
     response = JSONResponse({"message": "Successfully logged out"})
     response.delete_cookie(COOKIE_NAME)
     return response
+
+
+@router.post("/oauth/token")
+async def oauth_token(request: Request):
+    content_type = request.headers.get("content-type", "")
+    if "application/json" in content_type:
+        payload = await request.json()
+        grant_type = payload.get("grant_type", payload.get("grantType"))
+        client_id = payload.get("client_id", payload.get("clientId"))
+        code = payload.get("code")
+        redirect_uri = payload.get("redirect_uri", payload.get("redirectUri"))
+        code_verifier = payload.get("code_verifier", payload.get("codeVerifier"))
+    else:
+        form = await request.form()
+        grant_type = form.get("grant_type")
+        client_id = form.get("client_id")
+        code = form.get("code")
+        redirect_uri = form.get("redirect_uri")
+        code_verifier = form.get("code_verifier")
+
+    if not isinstance(grant_type, str) or not isinstance(client_id, str):
+        return JSONResponse({"error": "invalid_request"}, status_code=400)
+
+    if grant_type != "authorization_code":
+        return JSONResponse({"error": "unsupported_grant_type"}, status_code=400)
+
+    if not isinstance(code, str) or not isinstance(redirect_uri, str):
+        return JSONResponse({"error": "invalid_request"}, status_code=400)
+    return await _exchange_authorization_code(
+        client_id=client_id,
+        code=code,
+        redirect_uri=redirect_uri,
+        code_verifier=code_verifier if isinstance(code_verifier, str) else None,
+    )
+
+
+async def _exchange_authorization_code(
+    client_id: str,
+    code: str,
+    redirect_uri: str,
+    code_verifier: str | None,
+) -> JSONResponse:
+    code_data = consume_authorization_code(code)
+    if code_data is None:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+    if code_data.client_id != client_id or code_data.redirect_uri != redirect_uri:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+    if not validate_pkce(
+        code_verifier=code_verifier,
+        code_challenge=code_data.code_challenge,
+        code_challenge_method=code_data.code_challenge_method,
+    ):
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(User).where(User.email == code_data.user_email)
+        )
+        authorized_user = result.scalars().first()
+
+    if code_data.client_id != client_id:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+    if authorized_user is None:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+    if not authorized_user.mcp_client_secret_hash:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+
+    expiration = timedelta(minutes=30)
+    access_token = manager.create_access_token(
+        data={
+            "sub": authorized_user.email,
+            "token_use": "mcp_access",
+            "mcp_user_id": authorized_user.id,
+            "mcp_client_secret_hash": authorized_user.mcp_client_secret_hash,
+        },
+        expires=expiration,
+    )
+    return JSONResponse(
+        {
+            "access_token": access_token,
+            "token_type": "Bearer",
+            "expires_in": int(expiration.total_seconds()),
+            "scope": code_data.scope or "cdm:mcp",
+        }
+    )

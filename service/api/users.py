@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from service.models.api import (
+    McpClientSecretRegenerateResponse,
     MeData,
     ModifyMyData,
     ModifyUserData,
@@ -21,6 +22,10 @@ from service.models.database import (
 from service.util.auth import Hasher, manager
 from service.util.configuration import SECRET_KEY
 from service.util.logger import logger
+from service.util.mcp_api_key import (
+    generate_mcp_client_secret,
+    hash_mcp_client_secret,
+)
 
 router = APIRouter()
 
@@ -169,6 +174,28 @@ def get_user(user: User = Depends(manager)):
             name=user.name,
             ncore_user=user.ncore_user,
             is_ncore_credential_set=bool(user.ncore_user and user.ncore_pass),
+            has_mcp_client_secret=bool(user.mcp_client_secret_hash),
         ).model_dump(),
         status_code=200,
+    )
+
+
+@router.post("/me/mcp-client-secret/regenerate/")
+async def regenerate_mcp_client_secret(
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(manager),
+):
+    result = await session.execute(select(User).where(User.id == user.id))
+    user_object = result.scalars().first()
+
+    if user_object is None:
+        return JSONResponse({"message": "Forbidden"}, status_code=403)
+
+    client_secret = generate_mcp_client_secret()
+    user_object.mcp_client_secret_hash = hash_mcp_client_secret(client_secret)
+
+    await session.commit()
+
+    return JSONResponse(
+        McpClientSecretRegenerateResponse(client_secret=client_secret).model_dump()
     )
