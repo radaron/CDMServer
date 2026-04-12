@@ -28,6 +28,8 @@
   "DEVICE_SETTINGS_TITLE": "Settings",
   "DEVICE_SETTINGS_UPDATE_ERROR": "Could not update settings.",
   "DEVICE_SETTINGS_UPDATE_SUCCESS": "Settings updated.",
+  "DEVICE_CLEAN_ADDED": "Clean instruction added.",
+  "DEVICE_CLEAN_FAILED": "Failed to add clean instruction.",
   "DIRECTOR": "Director",
   "DOWNLOAD": "Download",
   "DOWNLOAD_ADDED": "Added to download queue.",
