@@ -7,6 +7,8 @@
   "BOOKS_PATH_TITLE": "Books download path",
   "CATEGORY": "Category",
   "CHANGE_LOGIN_PASSWORD": "Change login password",
+  "CHANGE_USER_PASSWORD_BUTTON": "Set User Password",
+  "CHANGE_USER_PASSWORD_TITLE": "Change User Password",
   "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm Password",
   "CREATE_USER_BUTTON": "Create User",
   "CREDENTIALS_UPDATED": "Login credentials updated.",
@@ -89,5 +91,7 @@
   "USER_ADD_SUCCESS": "User added successfully.",
   "USER_DELETE_ERROR": "Could not delete user.",
   "USER_DELETE_SUCCESS": "User deleted successfully.",
-  "USER_FETCH_ERROR": "Could not fetch users."
+  "USER_FETCH_ERROR": "Could not fetch users.",
+  "USER_PASSWORD_UPDATE_ERROR": "Could not update user password.",
+  "USER_PASSWORD_UPDATE_SUCCESS": "User password updated successfully."
 }

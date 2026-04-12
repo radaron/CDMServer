@@ -4,7 +4,13 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from service.models.api import MeData, ModifyMyData, NewUserData, UserData
+from service.models.api import (
+    MeData,
+    ModifyMyData,
+    ModifyUserData,
+    NewUserData,
+    UserData,
+)
 from service.models.database import (
     AsyncSession,
     Device,
@@ -97,6 +103,33 @@ async def delete_user(
     await session.commit()
 
     return JSONResponse({"message": f"User {user_id} deleted successfully"})
+
+
+@router.patch("/{user_id}/")
+async def modify_user_by_id(
+    data: ModifyUserData,
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(manager),
+    user_id: int = None,
+):
+    if not user.is_admin:
+        return JSONResponse({"message": "Forbidden"}, status_code=403)
+
+    result = await session.execute(select(User).where(User.id == user_id))
+    user_object = result.scalars().first()
+
+    if user_object is None:
+        return JSONResponse({"message": "User not found"}, status_code=404)
+
+    if len(data.password) == 0:
+        return JSONResponse({"message": "Password cannot be empty"}, status_code=400)
+
+    user_object.password = Hasher.get_password_hash(data.password)
+    await session.commit()
+
+    return JSONResponse(
+        {"message": f"User {user_id} password updated successfully"}, status_code=200
+    )
 
 
 @router.patch("/me/")
