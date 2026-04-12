@@ -71,6 +71,7 @@ class User(Base):
     )
     ncore_user = Column(String(255), nullable=True)
     ncore_pass = Column(String(255), nullable=True)
+    mcp_client_secret_hash = Column("mcp_api_key_hash", String(64), nullable=True)
 
 
 class Device(Base):

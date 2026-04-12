@@ -12,69 +12,66 @@ import { manageContext } from '../Manage'
 import { UserInfo } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
-import { hideKeyBoard, redirectToPage } from '../../util'
+import { copyTextToClipboard, hideKeyBoard, redirectToPage } from '../../util'
 import { NCORE_PASSWORD_PLACEHOLDER } from '../constant'
+
+interface McpClientSecretResponse {
+  clientSecret: string
+}
+
+const EMPTY_USER_INFO: UserInfo = {
+  email: '',
+  isAdmin: false,
+  name: '',
+  ncoreUser: '',
+  isNcoreCredentialSet: false,
+  hasMcpClientSecret: false,
+}
 
 export const Settings = () => {
   const { t } = useTranslation()
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    email: '',
-    isAdmin: false,
-    name: '',
-    ncoreUser: '',
-    isNcoreCredentialSet: false,
-  })
+  const [userInfo, setUserInfo] = useState<UserInfo>(EMPTY_USER_INFO)
   const [ncoreUserName, setNcoreUserName] = useState('')
   const [ncorePassword, setNcorePassword] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [mcpClientSecret, setMcpClientSecret] = useState('')
 
   useEffect(() => {
     setHeaderTitle(t('HEADER_SETTINGS'))
   }, [setHeaderTitle, t])
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const resp = await fetch('/api/users/me/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        if (resp.status === 200) {
-          const data = await resp.json()
-          setUserInfo(data)
-        } else if (resp.status === 401) {
-          redirectToPage(LOGIN_PAGE)
-        } else {
-          setUserInfo({
-            email: '',
-            isAdmin: false,
-            name: '',
-            ncoreUser: '',
-            isNcoreCredentialSet: false,
-          })
-        }
-      } catch (error) {
-        setUserInfo({
-          email: '',
-          isAdmin: false,
-          name: '',
-          ncoreUser: '',
-          isNcoreCredentialSet: false,
-        })
+  const getUserInfo = async () => {
+    try {
+      const userResp = await fetch('/api/users/me/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (userResp.status === 200) {
+        const data = await userResp.json()
+        setUserInfo(data)
+      } else if (userResp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      } else {
+        setUserInfo(EMPTY_USER_INFO)
       }
+    } catch (error) {
+      setUserInfo(EMPTY_USER_INFO)
     }
+  }
+
+  useEffect(() => {
     getUserInfo()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (userInfo.isNcoreCredentialSet === true) {
-      setNcoreUserName(userInfo.ncoreUser)
+      setNcoreUserName(userInfo.ncoreUser || '')
       setNcorePassword(NCORE_PASSWORD_PLACEHOLDER)
     }
   }, [userInfo])
@@ -154,6 +151,55 @@ export const Settings = () => {
     }
   }
 
+  const regenerateMcpClientSecret = async () => {
+    if (
+      userInfo.hasMcpClientSecret &&
+      !window.confirm(t('MCP_CLIENT_SECRET_REGENERATE_CONFIRM'))
+    ) {
+      return
+    }
+
+    try {
+      const resp = await fetch('/api/users/me/mcp-client-secret/regenerate/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      if (resp.status === 200) {
+        const data: McpClientSecretResponse = await resp.json()
+        setMcpClientSecret(data.clientSecret)
+        setUserInfo((current) => ({ ...current, hasMcpClientSecret: true }))
+        setToastData({ message: t('MCP_CLIENT_SECRET_GENERATED'), type: 'success' })
+      } else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      } else {
+        setToastData({
+          message: t('MCP_CLIENT_SECRET_GENERATE_ERROR'),
+          type: 'error',
+        })
+      }
+    } catch (error) {
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
+    }
+  }
+
+  const copyMcpClientSecret = async () => {
+    try {
+      await copyTextToClipboard(mcpClientSecret)
+      setToastData({ message: t('MCP_CLIENT_SECRET_COPIED'), type: 'success' })
+    } catch (error) {
+      setToastData({ message: t('MCP_CLIENT_SECRET_COPY_ERROR'), type: 'error' })
+    }
+  }
+
+  const copyMcpClientId = async () => {
+    try {
+      await copyTextToClipboard(userInfo.email)
+      setToastData({ message: t('MCP_CLIENT_ID_COPIED'), type: 'success' })
+    } catch (error) {
+      setToastData({ message: t('MCP_CLIENT_ID_COPY_ERROR'), type: 'error' })
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -220,6 +266,58 @@ export const Settings = () => {
         >
           {t('SET_NCORE_CREDENTIALS_BUTTON')}
         </Button>
+      </Box>
+      <Divider sx={{ my: 3 }} />
+      <Box
+        sx={{
+          display: 'grid',
+          width: '100%',
+          maxWidth: 400,
+          margin: '0 auto',
+          gap: 2,
+        }}
+      >
+        <Typography variant="h6" component="div" sx={{ textAlign: 'center' }}>
+          {t('MCP_CLIENT_SECRET_TITLE')}
+        </Typography>
+        <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+          {t('MCP_CLIENT_ID_TITLE')}
+        </Typography>
+        <TextField value={userInfo.email} slotProps={{ input: { readOnly: true } }} />
+        <Button
+          variant="outlined"
+          onClick={copyMcpClientId}
+          disabled={userInfo.email.length === 0}
+        >
+          {t('MCP_CLIENT_ID_COPY_BUTTON')}
+        </Button>
+        <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+          {userInfo.hasMcpClientSecret
+            ? t('MCP_CLIENT_SECRET_STATUS_SET')
+            : t('MCP_CLIENT_SECRET_STATUS_NOT_SET')}
+        </Typography>
+        <Button variant="contained" onClick={regenerateMcpClientSecret}>
+          {userInfo.hasMcpClientSecret
+            ? t('MCP_CLIENT_SECRET_REGENERATE_BUTTON')
+            : t('MCP_CLIENT_SECRET_GENERATE_BUTTON')}
+        </Button>
+        {mcpClientSecret.length > 0 && (
+          <>
+            <TextField
+              value={mcpClientSecret}
+              slotProps={{ input: { readOnly: true } }}
+            />
+            <Button variant="outlined" onClick={copyMcpClientSecret}>
+              {t('MCP_CLIENT_SECRET_COPY_BUTTON')}
+            </Button>
+            <Typography
+              variant="caption"
+              sx={{ textAlign: 'center', color: 'warning.main' }}
+            >
+              {t('MCP_CLIENT_SECRET_SHOW_ONCE_WARNING')}
+            </Typography>
+          </>
+        )}
       </Box>
       <Divider sx={{ my: 3 }} />
       <Box
