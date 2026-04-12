@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography'
 import SettingsIcon from '@mui/icons-material/Settings'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices'
 import Chip from '@mui/material/Chip'
 
 interface DeviceElementProps {
@@ -54,6 +55,36 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
       } catch (error) {
         setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
       }
+    }
+  }
+
+  const cleanDevice = async () => {
+    const paths = Array.from(
+      new Set(Object.values(deviceData.settings).filter(Boolean))
+    )
+    try {
+      const resp = await fetch(`/api/status/${deviceData.id}/instructions/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          instructions: {
+            clean: {
+              paths,
+            },
+          },
+        }),
+      })
+      if (resp.status === 200) {
+        setToastData({ message: t('DEVICE_CLEAN_ADDED'), type: 'success' })
+      } else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      } else {
+        setToastData({ message: t('DEVICE_CLEAN_FAILED'), type: 'error' })
+      }
+    } catch (error) {
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
     }
   }
 
@@ -99,6 +130,9 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
         </Button>
         <Button color="error" variant="contained" onClick={deleteDevice}>
           <DeleteIcon />
+        </Button>
+        <Button color="primary" variant="contained" onClick={cleanDevice}>
+          <CleaningServicesIcon />
         </Button>
       </CardActions>
     </Card>

@@ -117,7 +117,8 @@ class StatusData(BaseData):
 
 
 class InstructionItemData(BaseData):
-    torrent_id: int
+    torrent_id: int | None = None
+    paths: list[str] | None = None
 
 
 class InstructionsData(BaseData):

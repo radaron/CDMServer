@@ -7,6 +7,7 @@ class Instruction(Enum):
     START = "start"
     STOP = "stop"
     DELETE = "delete"
+    CLEAN = "clean"
 
 
 MOVIES_PATH_NAME = "movies_path"
