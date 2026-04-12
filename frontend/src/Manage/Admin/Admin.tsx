@@ -3,13 +3,20 @@ import { useEffect, useState, useContext, useCallback } from 'react'
 import { Box, Divider } from '@mui/material'
 import { manageContext } from '../Manage'
 import { DeleteUser } from './DeleteUser'
+import { ChangeUserPassword } from './ChangeUserPassword'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
 
+interface AdminUser {
+  email: string
+  id: number
+  name: string
+}
+
 export const Admin = () => {
   const { t } = useTranslation()
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<AdminUser[]>([])
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
@@ -54,6 +61,8 @@ export const Admin = () => {
       }}
     >
       <NewUser fetchUsers={getUsers} />
+      <Divider sx={{ my: 3 }} />
+      <ChangeUserPassword users={users} />
       <Divider sx={{ my: 3 }} />
       <DeleteUser fetchUsers={getUsers} users={users} />
     </Box>

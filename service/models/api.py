@@ -33,6 +33,10 @@ class ModifyMyData(BaseData):
     ncore_pass: str | None = None
 
 
+class ModifyUserData(BaseData):
+    password: str
+
+
 class LoginData(BaseData):
     email: EmailStr
     password: str

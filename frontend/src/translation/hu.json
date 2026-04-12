@@ -7,6 +7,8 @@
   "BOOKS_PATH_TITLE": "Könyvek letöltési útvonal",
   "CATEGORY": "Kategória",
   "CHANGE_LOGIN_PASSWORD": "Bejelentkezési jelszó módosítása",
+  "CHANGE_USER_PASSWORD_BUTTON": "Felhasználói jelszó beállítása",
+  "CHANGE_USER_PASSWORD_TITLE": "Felhasználói jelszó módosítása",
   "CONFIRM_PASSWORD_PLACEHOLDER": "Jelszó megerősítése",
   "CREATE_USER_BUTTON": "Felhasználó létrehozása",
   "CREDENTIALS_UPDATED": "Bejelentkezési adatok frissültek.",
@@ -89,5 +91,7 @@
   "USER_ADD_SUCCESS": "A felhasználó sikeresen hozzáadva.",
   "USER_DELETE_ERROR": "A felhasználót nem sikerült törölni.",
   "USER_DELETE_SUCCESS": "A felhasználó sikeresen törölve.",
-  "USER_FETCH_ERROR": "A felhasználókat nem sikerült lekérni."
+  "USER_FETCH_ERROR": "A felhasználókat nem sikerült lekérni.",
+  "USER_PASSWORD_UPDATE_ERROR": "A felhasználó jelszavát nem sikerült módosítani.",
+  "USER_PASSWORD_UPDATE_SUCCESS": "A felhasználó jelszava sikeresen módosítva."
 }
