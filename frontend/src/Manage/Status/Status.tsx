@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, useCallback } from 'react'
-import { Box, Tabs, Tab, Typography, Divider } from '@mui/material'
+import { useState, useEffect, useContext, useCallback, useMemo } from 'react'
+import { Box, Tabs, Tab, Typography, Divider, TextField } from '@mui/material'
 import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
 import { manageContext } from '../Manage'
 import { DeviceModel } from '../types'
@@ -9,11 +9,18 @@ import { redirectToPage, separateWords } from '../../util'
 import { Torrent } from './interfaces'
 import { StatusItem } from './StatusItem'
 
+const normalizeForSearch = (text: string) => {
+  return separateWords(text)
+    .toLowerCase()
+    .replace(/[\s\-.]+/g, '')
+}
+
 export const Status = () => {
   const { t } = useTranslation()
   const [devices, setDevices] = useState<DeviceModel[]>([])
   const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null)
   const [statusData, setStatusData] = useState<Torrent[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
@@ -92,6 +99,21 @@ export const Status = () => {
     const downloadCount = selectedDeviceId === device.id ? statusData.length : 0
     return `${name}` + (downloadCount ? ` (${downloadCount})` : '')
   }
+
+  const filteredStatusData = useMemo(() => {
+    const normalizedSearchTerm = normalizeForSearch(searchTerm)
+    if (!normalizedSearchTerm) {
+      return statusData
+    }
+
+    return statusData.filter((torrent) =>
+      normalizeForSearch(torrent.name).includes(normalizedSearchTerm)
+    )
+  }, [searchTerm, statusData])
+
+  const hasTorrents = statusData.length > 0
+  const hasNoFilteredResults = hasTorrents && filteredStatusData.length === 0
+
   return (
     <>
       {devices.length > 0 && (
@@ -130,18 +152,33 @@ export const Status = () => {
           backgroundColor: 'background.paper',
           borderRadius: 1,
           padding: 2,
-          textAlign: statusData.length === 0 ? 'center' : 'left',
+          textAlign: !hasTorrents || hasNoFilteredResults ? 'center' : 'left',
           maxWidth: { sm: '1000px' },
           mx: 'auto',
         }}
       >
-        {statusData.length === 0 ? (
+        {hasTorrents && (
+          <TextField
+            placeholder={t('SEARCH_ACTIVE_DOWNLOADS_PLACEHOLDER')}
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            autoComplete="off"
+            fullWidth
+            size="small"
+            sx={{ mb: 2 }}
+          />
+        )}
+        {!hasTorrents ? (
           <>
             <HourglassDisabledIcon sx={{ fontSize: 80 }} />
             <Typography variant="h6">{t('MISSING_TORRENTS')}</Typography>
           </>
+        ) : hasNoFilteredResults ? (
+          <Typography variant="h6">
+            {t('NO_ACTIVE_DOWNLOAD_MATCHES')}
+          </Typography>
         ) : (
-          statusData.map((torrent) => (
+          filteredStatusData.map((torrent) => (
             <Box key={torrent.name}>
               <StatusItem
                 torrent={torrent}
