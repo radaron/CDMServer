@@ -16,7 +16,7 @@ from service.api.oauth import router as oauth_router
 from service.api.status import router as status_router
 from service.api.tmdb import router as tmdb_router
 from service.api.users import router as users_router
-from service.mcp_server import mcp_sse_app
+from service.mcp_server import mcp_http_app, mcp_sse_app
 from service.models.database import init_db
 from service.util.auth import create_admin_user, manager
 from service.util.configuration import ALLOWED_ORIGINS
@@ -27,7 +27,7 @@ NON_SPA_PREFIXES = ("/api", "/assets", "/mcp", "/.well-known")
 
 @asynccontextmanager
 async def lifespan(app_obj: FastAPI):  # pylint: disable=unused-argument
-    async with mcp_sse_app.lifespan(app_obj):
+    async with mcp_http_app.lifespan(app_obj), mcp_sse_app.lifespan(app_obj):
         await init_db()
         await create_admin_user()
         yield
@@ -50,7 +50,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
-app.mount("/mcp", mcp_sse_app, name="mcp")
+app.mount("/mcp/sse", mcp_sse_app, name="mcp-sse")
+app.mount("/mcp", mcp_http_app, name="mcp")
 templates = Jinja2Templates(directory="templates")
 
 

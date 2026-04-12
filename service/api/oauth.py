@@ -1,3 +1,5 @@
+import secrets
+import time
 from urllib.parse import parse_qsl, quote, urlencode, urlparse, urlunparse
 
 from fastapi import APIRouter, Depends, Request
@@ -9,7 +11,6 @@ from service.util.oauth_flow import create_authorization_code
 
 router = APIRouter()
 OAUTH_BASE_PATH = "/api/auth/oauth"
-MCP_WELL_KNOWN_PREFIXES = ("/mcp/.well-known", "/mcp/sse/.well-known")
 
 
 def append_query_params(url: str, **kwargs: str) -> str:
@@ -26,9 +27,11 @@ def build_oauth_metadata(request: Request) -> dict:
         "issuer": oauth_issuer,
         "authorization_endpoint": f"{oauth_issuer}/authorize",
         "token_endpoint": f"{oauth_issuer}/token",
+        "registration_endpoint": f"{oauth_issuer}/register",
         "grant_types_supported": ["authorization_code"],
         "response_types_supported": ["code"],
         "token_endpoint_auth_methods_supported": [
+            "none",
             "client_secret_post",
             "client_secret_basic",
         ],
@@ -46,6 +49,49 @@ def build_openid_metadata(request: Request) -> dict:
         }
     )
     return metadata
+
+
+async def _read_registration_payload(request: Request) -> dict:
+    content_type = request.headers.get("content-type", "")
+    if "application/json" in content_type:
+        payload = await request.json()
+        return payload if isinstance(payload, dict) else {}
+    form = await request.form()
+    return dict(form)
+
+
+@router.post("/api/auth/oauth/register")
+async def oauth_register_client(request: Request):
+    payload = await _read_registration_payload(request)
+
+    redirect_uris = payload.get("redirect_uris", payload.get("redirectUris", []))
+    if isinstance(redirect_uris, str):
+        redirect_uris = [redirect_uris]
+    if not isinstance(redirect_uris, list) or any(
+        not isinstance(uri, str) for uri in redirect_uris
+    ):
+        return JSONResponse({"error": "invalid_client_metadata"}, status_code=400)
+
+    token_endpoint_auth_method = payload.get("token_endpoint_auth_method", "none")
+    supported_auth_methods = {"none", "client_secret_post", "client_secret_basic"}
+    if token_endpoint_auth_method not in supported_auth_methods:
+        return JSONResponse({"error": "invalid_client_metadata"}, status_code=400)
+
+    now = int(time.time())
+    response: dict = {
+        "client_id": secrets.token_urlsafe(24),
+        "client_id_issued_at": now,
+        "redirect_uris": redirect_uris,
+        "grant_types": ["authorization_code"],
+        "response_types": ["code"],
+        "token_endpoint_auth_method": token_endpoint_auth_method,
+        "scope": "cdm:mcp",
+    }
+    if token_endpoint_auth_method != "none":
+        response["client_secret"] = secrets.token_urlsafe(32)
+        response["client_secret_expires_at"] = 0
+
+    return JSONResponse(response, status_code=201)
 
 
 @router.get("/api/auth/oauth/authorize")
@@ -90,12 +136,18 @@ async def oauth_authorize(request: Request, user: User = Depends(manager.optiona
     return RedirectResponse(url=target, status_code=302)
 
 
+@router.get("/.well-known/oauth-authorization-server/mcp")
 @router.get("/.well-known/oauth-authorization-server/mcp/sse")
+@router.get("/mcp/.well-known/oauth-authorization-server")
+@router.get("/mcp/sse/.well-known/oauth-authorization-server")
 async def oauth_authorization_server_metadata(request: Request):
     return JSONResponse(build_oauth_metadata(request))
 
 
+@router.get("/.well-known/openid-configuration/mcp")
 @router.get("/.well-known/openid-configuration/mcp/sse")
+@router.get("/mcp/.well-known/openid-configuration")
 @router.get("/mcp/sse/.well-known/openid-configuration")
+@router.get("/mcp/sse//.well-known/openid-configuration")
 async def openid_configuration(request: Request):
     return JSONResponse(build_openid_metadata(request))
