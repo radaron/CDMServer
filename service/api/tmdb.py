@@ -32,7 +32,9 @@ async def search(
     language: str | None = None,
     _: User = Depends(manager),
 ):
-    data, total_pages = await search_media(pattern=pattern, page=page, language=language)
+    data, total_pages = await search_media(
+        pattern=pattern, page=page, language=language
+    )
     return JSONResponse(
         TmdbSearchResponse(
             data=data, meta=TmdbSearchResponseMeta(total_pages=total_pages)

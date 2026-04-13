@@ -29,7 +29,9 @@ async def search_torrents(
         user=user, pattern=pattern, category=category, where=where, page=page
     )
     return JSONResponse(
-        SearchResponse(data={"torrents": torrents}, meta={"total_pages": total_pages}).model_dump()
+        SearchResponse(
+            data={"torrents": torrents}, meta={"total_pages": total_pages}
+        ).model_dump()
     )
 
 

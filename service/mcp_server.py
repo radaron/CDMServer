@@ -21,7 +21,12 @@ from service.core.download_service import (
     search_torrents_for_user,
 )
 from service.core.tmdb_service import search_media
-from service.models.database import AsyncSessionLocal, Device, User, user_device_association
+from service.models.database import (
+    AsyncSessionLocal,
+    Device,
+    User,
+    user_device_association,
+)
 from service.util.configuration import SECRET_KEY
 
 ACTIVE_THRESHOLD = timedelta(minutes=1)
@@ -110,7 +115,9 @@ async def get_user_devices(user_id: int) -> list[dict]:
 async def tmdb_search(
     pattern: Annotated[
         str,
-        Field(description="Text to search for (title, keyword, or phrase).", min_length=1),
+        Field(
+            description="Text to search for (title, keyword, or phrase).", min_length=1
+        ),
     ],
     page: Annotated[int, Field(description="TMDB result page number.", ge=1)] = 1,
     language: Annotated[
@@ -123,7 +130,9 @@ async def tmdb_search(
     ] = None,
 ) -> dict:
     await get_authenticated_user()
-    data, total_pages = await search_media(pattern=pattern, page=page, language=language)
+    data, total_pages = await search_media(
+        pattern=pattern, page=page, language=language
+    )
     return {"data": data, "meta": {"totalPages": total_pages}}
 
 

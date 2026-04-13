@@ -23,7 +23,9 @@ interface ChangeUserPasswordProps {
   users: User[]
 }
 
-export const ChangeUserPassword: React.FC<ChangeUserPasswordProps> = ({ users }) => {
+export const ChangeUserPassword: React.FC<ChangeUserPasswordProps> = ({
+  users,
+}) => {
   const { t } = useTranslation()
   const [selectedUserId, setSelectedUserId] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -50,13 +52,19 @@ export const ChangeUserPassword: React.FC<ChangeUserPasswordProps> = ({ users })
       })
 
       if (resp.status === 200) {
-        setToastData({ message: t('USER_PASSWORD_UPDATE_SUCCESS'), type: 'success' })
+        setToastData({
+          message: t('USER_PASSWORD_UPDATE_SUCCESS'),
+          type: 'success',
+        })
         setNewPassword('')
         setConfirmPassword('')
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
-        setToastData({ message: t('USER_PASSWORD_UPDATE_ERROR'), type: 'error' })
+        setToastData({
+          message: t('USER_PASSWORD_UPDATE_ERROR'),
+          type: 'error',
+        })
       }
     } catch (error) {
       setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
