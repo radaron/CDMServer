@@ -20,8 +20,60 @@ def append_query_params(url: str, **kwargs: str) -> str:
     return urlunparse(parsed._replace(query=urlencode(query)))
 
 
+def _first_proxy_value(value: str | None) -> str | None:
+    if value is None:
+        return None
+    first_value = value.split(",", maxsplit=1)[0].strip()
+    return first_value or None
+
+
+def _forwarded_header_params(request: Request) -> dict[str, str]:
+    forwarded = request.headers.get("forwarded")
+    if not forwarded:
+        return {}
+
+    params: dict[str, str] = {}
+    first_entry = forwarded.split(",", maxsplit=1)[0]
+    for item in first_entry.split(";"):
+        key, separator, raw_value = item.partition("=")
+        if not separator:
+            continue
+        params[key.strip().lower()] = raw_value.strip().strip('"')
+    return params
+
+
+def _external_base_url(request: Request) -> str:
+    parsed_base_url = urlparse(str(request.base_url))
+    forwarded = _forwarded_header_params(request)
+
+    scheme = (
+        forwarded.get("proto")
+        or _first_proxy_value(request.headers.get("x-forwarded-proto"))
+        or parsed_base_url.scheme
+    )
+    host = (
+        forwarded.get("host")
+        or _first_proxy_value(request.headers.get("x-forwarded-host"))
+        or parsed_base_url.netloc
+    )
+
+    if host == parsed_base_url.hostname:
+        forwarded_port = (
+            _first_proxy_value(request.headers.get("x-forwarded-port"))
+            or parsed_base_url.port
+        )
+        if forwarded_port:
+            port = str(forwarded_port)
+            if (scheme == "https" and port != "443") or (
+                scheme == "http" and port != "80"
+            ):
+                host = f"{host}:{port}"
+
+    return f"{scheme}://{host}".rstrip("/")
+
+
 def build_oauth_metadata(request: Request) -> dict:
-    base_url = str(request.base_url).rstrip("/")
+    base_url = _external_base_url(request)
     oauth_issuer = f"{base_url}{OAUTH_BASE_PATH}"
     return {
         "issuer": oauth_issuer,
