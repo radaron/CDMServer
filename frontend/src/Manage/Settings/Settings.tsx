@@ -168,7 +168,10 @@ export const Settings = () => {
         const data: McpClientSecretResponse = await resp.json()
         setMcpClientSecret(data.clientSecret)
         setUserInfo((current) => ({ ...current, hasMcpClientSecret: true }))
-        setToastData({ message: t('MCP_CLIENT_SECRET_GENERATED'), type: 'success' })
+        setToastData({
+          message: t('MCP_CLIENT_SECRET_GENERATED'),
+          type: 'success',
+        })
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
@@ -187,7 +190,10 @@ export const Settings = () => {
       await copyTextToClipboard(mcpClientSecret)
       setToastData({ message: t('MCP_CLIENT_SECRET_COPIED'), type: 'success' })
     } catch (error) {
-      setToastData({ message: t('MCP_CLIENT_SECRET_COPY_ERROR'), type: 'error' })
+      setToastData({
+        message: t('MCP_CLIENT_SECRET_COPY_ERROR'),
+        type: 'error',
+      })
     }
   }
 
@@ -280,10 +286,16 @@ export const Settings = () => {
         <Typography variant="h6" component="div" sx={{ textAlign: 'center' }}>
           {t('MCP_CLIENT_SECRET_TITLE')}
         </Typography>
-        <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+        <Typography
+          variant="body2"
+          sx={{ textAlign: 'center', color: 'text.secondary' }}
+        >
           {t('MCP_CLIENT_ID_TITLE')}
         </Typography>
-        <TextField value={userInfo.email} slotProps={{ input: { readOnly: true } }} />
+        <TextField
+          value={userInfo.email}
+          slotProps={{ input: { readOnly: true } }}
+        />
         <Button
           variant="outlined"
           onClick={copyMcpClientId}
@@ -291,7 +303,10 @@ export const Settings = () => {
         >
           {t('MCP_CLIENT_ID_COPY_BUTTON')}
         </Button>
-        <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+        <Typography
+          variant="body2"
+          sx={{ textAlign: 'center', color: 'text.secondary' }}
+        >
           {userInfo.hasMcpClientSecret
             ? t('MCP_CLIENT_SECRET_STATUS_SET')
             : t('MCP_CLIENT_SECRET_STATUS_NOT_SET')}
