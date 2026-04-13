@@ -23,5 +23,5 @@ WORKDIR /app
 COPY --from=builder /app/ /app/
 EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
-CMD ["python", "-m", "uvicorn", "service.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "info"]
+CMD ["python", "-m", "uvicorn", "service.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "info", "--proxy-headers", "--forwarded-allow-ips", "*"]
 LABEL org.opencontainers.image.source=https://github.com/radaron/CDMServer
