@@ -8,9 +8,15 @@ from sqlalchemy import select
 from service.models.api import LoginData
 from service.models.database import AsyncSessionLocal, User
 from service.util.auth import COOKIE_NAME, Hasher, load_user, manager
-from service.util.oauth_flow import consume_authorization_code, validate_pkce
+from service.util.oauth_flow import (
+    consume_authorization_code,
+    create_refresh_token,
+    decode_refresh_token,
+    validate_pkce,
+)
 
 router = APIRouter()
+ACCESS_TOKEN_EXPIRATION = timedelta(minutes=30)
 
 
 @router.post("/login/")
@@ -49,6 +55,7 @@ async def oauth_token(request: Request):
         code = payload.get("code")
         redirect_uri = payload.get("redirect_uri", payload.get("redirectUri"))
         code_verifier = payload.get("code_verifier", payload.get("codeVerifier"))
+        refresh_token = payload.get("refresh_token", payload.get("refreshToken"))
     else:
         form = await request.form()
         grant_type = form.get("grant_type")
@@ -56,21 +63,30 @@ async def oauth_token(request: Request):
         code = form.get("code")
         redirect_uri = form.get("redirect_uri")
         code_verifier = form.get("code_verifier")
+        refresh_token = form.get("refresh_token")
 
     if not isinstance(grant_type, str) or not isinstance(client_id, str):
         return JSONResponse({"error": "invalid_request"}, status_code=400)
 
-    if grant_type != "authorization_code":
-        return JSONResponse({"error": "unsupported_grant_type"}, status_code=400)
+    if grant_type == "authorization_code":
+        if not isinstance(code, str) or not isinstance(redirect_uri, str):
+            return JSONResponse({"error": "invalid_request"}, status_code=400)
+        return await _exchange_authorization_code(
+            client_id=client_id,
+            code=code,
+            redirect_uri=redirect_uri,
+            code_verifier=code_verifier if isinstance(code_verifier, str) else None,
+        )
 
-    if not isinstance(code, str) or not isinstance(redirect_uri, str):
-        return JSONResponse({"error": "invalid_request"}, status_code=400)
-    return await _exchange_authorization_code(
-        client_id=client_id,
-        code=code,
-        redirect_uri=redirect_uri,
-        code_verifier=code_verifier if isinstance(code_verifier, str) else None,
-    )
+    if grant_type == "refresh_token":
+        if not isinstance(refresh_token, str):
+            return JSONResponse({"error": "invalid_request"}, status_code=400)
+        return await _refresh_access_token(
+            client_id=client_id,
+            refresh_token=refresh_token,
+        )
+
+    return JSONResponse({"error": "unsupported_grant_type"}, status_code=400)
 
 
 async def _exchange_authorization_code(
@@ -104,7 +120,46 @@ async def _exchange_authorization_code(
     if not authorized_user.mcp_client_secret_hash:
         return JSONResponse({"error": "invalid_grant"}, status_code=400)
 
-    expiration = timedelta(minutes=30)
+    return _build_token_response(
+        client_id=client_id,
+        authorized_user=authorized_user,
+        scope=code_data.scope or "cdm:mcp",
+    )
+
+
+async def _refresh_access_token(client_id: str, refresh_token: str) -> JSONResponse:
+    refresh_payload = decode_refresh_token(refresh_token)
+    if refresh_payload is None:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+    if refresh_payload["client_id"] != client_id:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(User).where(User.id == refresh_payload["mcp_user_id"])
+        )
+        authorized_user = result.scalars().first()
+
+    if authorized_user is None:
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+    if (
+        not authorized_user.mcp_client_secret_hash
+        or authorized_user.mcp_client_secret_hash
+        != refresh_payload["mcp_client_secret_hash"]
+    ):
+        return JSONResponse({"error": "invalid_grant"}, status_code=400)
+
+    scope = refresh_payload.get("scope")
+    return _build_token_response(
+        client_id=client_id,
+        authorized_user=authorized_user,
+        scope=scope if isinstance(scope, str) else "cdm:mcp",
+    )
+
+
+def _build_token_response(
+    client_id: str, authorized_user: User, scope: str
+) -> JSONResponse:
     access_token = manager.create_access_token(
         data={
             "sub": authorized_user.email,
@@ -112,13 +167,21 @@ async def _exchange_authorization_code(
             "mcp_user_id": authorized_user.id,
             "mcp_client_secret_hash": authorized_user.mcp_client_secret_hash,
         },
-        expires=expiration,
+        expires=ACCESS_TOKEN_EXPIRATION,
+    )
+    refresh_token = create_refresh_token(
+        client_id=client_id,
+        user_id=authorized_user.id,
+        user_email=authorized_user.email,
+        client_secret_hash=authorized_user.mcp_client_secret_hash,
+        scope=scope,
     )
     return JSONResponse(
         {
             "access_token": access_token,
+            "refresh_token": refresh_token,
             "token_type": "Bearer",
-            "expires_in": int(expiration.total_seconds()),
-            "scope": code_data.scope or "cdm:mcp",
+            "expires_in": int(ACCESS_TOKEN_EXPIRATION.total_seconds()),
+            "scope": scope,
         }
     )

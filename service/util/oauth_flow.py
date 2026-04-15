@@ -4,7 +4,14 @@ import secrets
 import time
 from dataclasses import dataclass
 
+from jwt import InvalidTokenError
+from jwt import decode as jwt_decode
+from jwt import encode as jwt_encode
+
+from service.util.configuration import SECRET_KEY
+
 AUTH_CODE_TTL_SECONDS = 300
+REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60
 
 
 @dataclass
@@ -71,3 +78,44 @@ def validate_pkce(
         encoded = base64.urlsafe_b64encode(digest).decode("utf-8").rstrip("=")
         return encoded == code_challenge
     return False
+
+
+def create_refresh_token(
+    *,
+    client_id: str,
+    user_id: int,
+    user_email: str,
+    client_secret_hash: str,
+    scope: str,
+) -> str:
+    expires_at = int(time.time()) + REFRESH_TOKEN_TTL_SECONDS
+    return jwt_encode(
+        {
+            "sub": user_email,
+            "token_use": "mcp_refresh",
+            "client_id": client_id,
+            "mcp_user_id": user_id,
+            "mcp_client_secret_hash": client_secret_hash,
+            "scope": scope,
+            "exp": expires_at,
+        },
+        SECRET_KEY,
+        algorithm="HS256",
+    )
+
+
+def decode_refresh_token(refresh_token: str) -> dict | None:
+    try:
+        payload = jwt_decode(refresh_token, SECRET_KEY, algorithms=["HS256"])
+    except InvalidTokenError:
+        return None
+
+    if payload.get("token_use") != "mcp_refresh":
+        return None
+    if not isinstance(payload.get("client_id"), str):
+        return None
+    if not isinstance(payload.get("mcp_user_id"), int):
+        return None
+    if not isinstance(payload.get("mcp_client_secret_hash"), str):
+        return None
+    return payload

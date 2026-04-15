@@ -50,7 +50,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
-app.mount("/mcp/sse", mcp_sse_app, name="mcp-sse")
+app.mount("/sse", mcp_sse_app, name="mcp-sse")
 app.mount("/mcp", mcp_http_app, name="mcp")
 templates = Jinja2Templates(directory="templates")
 

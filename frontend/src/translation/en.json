@@ -60,7 +60,7 @@
   "LOGGING_IN": "Logging in",
   "LOGOUT_FAILED": "Failed to log out.",
   "MISSING_TORRENTS": "No torrents found.",
-  "MCP_CLIENT_SECRET_TITLE": "MCP client secret",
+  "MCP_CLIENT_SECRET_TITLE": "MCP client",
   "MCP_CLIENT_ID_TITLE": "MCP client ID",
   "MCP_CLIENT_ID_COPY_BUTTON": "Copy client ID",
   "MCP_CLIENT_ID_COPIED": "MCP client ID copied.",
