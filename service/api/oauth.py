@@ -80,7 +80,7 @@ def build_oauth_metadata(request: Request) -> dict:
         "authorization_endpoint": f"{oauth_issuer}/authorize",
         "token_endpoint": f"{oauth_issuer}/token",
         "registration_endpoint": f"{oauth_issuer}/register",
-        "grant_types_supported": ["authorization_code"],
+        "grant_types_supported": ["authorization_code", "refresh_token"],
         "response_types_supported": ["code"],
         "token_endpoint_auth_methods_supported": [
             "none",
@@ -134,7 +134,7 @@ async def oauth_register_client(request: Request):
         "client_id": secrets.token_urlsafe(24),
         "client_id_issued_at": now,
         "redirect_uris": redirect_uris,
-        "grant_types": ["authorization_code"],
+        "grant_types": ["authorization_code", "refresh_token"],
         "response_types": ["code"],
         "token_endpoint_auth_method": token_endpoint_auth_method,
         "scope": "cdm:mcp",
@@ -188,18 +188,15 @@ async def oauth_authorize(request: Request, user: User = Depends(manager.optiona
     return RedirectResponse(url=target, status_code=302)
 
 
-@router.get("/.well-known/oauth-authorization-server/mcp")
-@router.get("/.well-known/oauth-authorization-server/mcp/sse")
-@router.get("/mcp/.well-known/oauth-authorization-server")
-@router.get("/mcp/sse/.well-known/oauth-authorization-server")
+@router.get("/.well-known/oauth-authorization-server")
+@router.get("/.well-known/oauth-authorization-server/sse/")
+@router.get("/.well-known/oauth-authorization-server/mcp/")
 async def oauth_authorization_server_metadata(request: Request):
     return JSONResponse(build_oauth_metadata(request))
 
 
-@router.get("/.well-known/openid-configuration/mcp")
-@router.get("/.well-known/openid-configuration/mcp/sse")
-@router.get("/mcp/.well-known/openid-configuration")
-@router.get("/mcp/sse/.well-known/openid-configuration")
-@router.get("/mcp/sse//.well-known/openid-configuration")
+@router.get("/.well-known/openid-configuration")
+@router.get("/.well-known/openid-configuration/mcp/")
+@router.get("/.well-known/openid-configuration/sse/")
 async def openid_configuration(request: Request):
     return JSONResponse(build_openid_metadata(request))

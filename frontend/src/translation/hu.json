@@ -60,7 +60,7 @@
   "LOGGING_IN": "Bejelentkezés folyamatban",
   "LOGOUT_FAILED": "A kijelentkezés nem sikerült.",
   "MISSING_TORRENTS": "Nincsenek torrentek.",
-  "MCP_CLIENT_SECRET_TITLE": "MCP kliens titok",
+  "MCP_CLIENT_SECRET_TITLE": "MCP kliens",
   "MCP_CLIENT_ID_TITLE": "MCP kliens azonosító",
   "MCP_CLIENT_ID_COPY_BUTTON": "Kliens azonosító másolása",
   "MCP_CLIENT_ID_COPIED": "MCP kliens azonosító a vágólapra másolva.",
