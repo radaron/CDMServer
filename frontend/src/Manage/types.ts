@@ -3,6 +3,7 @@ import { AlertColor } from '@mui/material/Alert'
 import { AlertPropsColorOverrides } from '@mui/material/Alert'
 
 export interface UserInfo {
+  id: number
   email: string
   isAdmin: boolean
   name: string

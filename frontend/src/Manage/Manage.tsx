@@ -43,6 +43,7 @@ export const manageContext = createContext<{
 export const Manage = () => {
   const { t } = useTranslation()
   const [userInfo, setUserInfo] = useState<UserInfo>({
+    id: 0,
     email: '',
     isAdmin: false,
     name: '',
@@ -73,6 +74,7 @@ export const Manage = () => {
           redirectToPage(LOGIN_PAGE)
         } else {
           setUserInfo({
+            id: 0,
             email: '',
             isAdmin: false,
             name: '',
@@ -83,6 +85,7 @@ export const Manage = () => {
         }
       } catch (error) {
         setUserInfo({
+          id: 0,
           email: '',
           isAdmin: false,
           name: '',
