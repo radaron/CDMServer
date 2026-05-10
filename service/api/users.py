@@ -73,7 +73,7 @@ async def get_users(
     )
 
 
-@router.delete("/{user_id}/")
+@router.delete("/{user_id:int}/")
 async def delete_user(
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
@@ -110,7 +110,7 @@ async def delete_user(
     return JSONResponse({"message": f"User {user_id} deleted successfully"})
 
 
-@router.patch("/{user_id}/")
+@router.patch("/{user_id:int}/")
 async def modify_user_by_id(
     data: ModifyUserData,
     session: AsyncSession = Depends(get_session),
