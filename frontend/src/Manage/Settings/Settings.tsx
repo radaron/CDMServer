@@ -20,6 +20,7 @@ interface McpClientSecretResponse {
 }
 
 const EMPTY_USER_INFO: UserInfo = {
+  id: 0,
   email: '',
   isAdmin: false,
   name: '',
@@ -39,6 +40,7 @@ export const Settings = () => {
   const [loginPassword, setLoginPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [mcpClientSecret, setMcpClientSecret] = useState('')
+  const userApiUrl = `/api/users/${userInfo.id}/`
 
   useEffect(() => {
     setHeaderTitle(t('HEADER_SETTINGS'))
@@ -82,7 +84,7 @@ export const Settings = () => {
     event.preventDefault()
     hideKeyBoard()
     try {
-      const resp = await fetch('/api/users/me/', {
+      const resp = await fetch(userApiUrl, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +109,7 @@ export const Settings = () => {
   const deleteNcoreCredential = async () => {
     if (window.confirm(t('DELETE_NCORE_CREDENTIALS_CONFIRM'))) {
       try {
-        const resp = await fetch('/api/users/me/', {
+        const resp = await fetch(userApiUrl, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -134,7 +136,7 @@ export const Settings = () => {
     event.preventDefault()
     hideKeyBoard()
     try {
-      const resp = await fetch('/api/users/me/', {
+      const resp = await fetch(userApiUrl, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: loginPassword }),
@@ -160,7 +162,9 @@ export const Settings = () => {
     }
 
     try {
-      const resp = await fetch('/api/users/me/mcp-client-secret/regenerate/', {
+      const resp = await fetch(
+        `/api/users/${userInfo.id}/mcp-client-secret/regenerate/`,
+        {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       })
