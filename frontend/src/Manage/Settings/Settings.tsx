@@ -165,9 +165,10 @@ export const Settings = () => {
       const resp = await fetch(
         `/api/users/${userInfo.id}/mcp-client-secret/regenerate/`,
         {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      })
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
       if (resp.status === 200) {
         const data: McpClientSecretResponse = await resp.json()
         setMcpClientSecret(data.clientSecret)
