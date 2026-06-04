@@ -26,13 +26,6 @@ export const toggleLanguage = () => {
 export const separateWords = (text: string): string => {
   return text
     .split(/[\s\-.]+/)
-    .flatMap((word) => {
-      const chunks: string[] = []
-      for (let i = 0; i < word.length; i += 10) {
-        chunks.push(word.slice(i, i + 10))
-      }
-      return chunks.join('-')
-    })
     .join(' ')
 }
 
