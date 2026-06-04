@@ -24,9 +24,7 @@ export const toggleLanguage = () => {
 }
 
 export const separateWords = (text: string): string => {
-  return text
-    .split(/[\s\-.]+/)
-    .join(' ')
+  return text.split(/[\s\-.]+/).join(' ')
 }
 
 export const hideKeyBoard = () => {
