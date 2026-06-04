@@ -1,6 +1,6 @@
 [project]
 name = "CDMServer"
-version = "2.22.3"
+version = "2.22.4"
 description = "A short description of your project"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.13"

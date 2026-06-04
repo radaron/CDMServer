@@ -16,6 +16,7 @@ services:
       - "6379:6379"
   cdm-server:
     build: .
+    platform: linux/amd64
     container_name: cdm
     ports:
       - "8000:8000"
