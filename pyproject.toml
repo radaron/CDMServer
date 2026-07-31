@@ -17,7 +17,6 @@ dependencies = [
   "jinja2",
   "ncoreparser",
   "redis",
-  "fastmcp",
   "aiohttp>=3.13.3",
   "themoviedb>=1.0.2",
   # It is need because: https://github.com/pyca/bcrypt/issues/684

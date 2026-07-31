@@ -40,7 +40,6 @@ class ModifyUserData(BaseData):
 class LoginData(BaseData):
     email: EmailStr
     password: str
-    keep_logged_in: bool = False
 
 
 class MeData(BaseData):
@@ -49,11 +48,6 @@ class MeData(BaseData):
     name: str
     ncore_user: str | None = None
     is_ncore_credential_set: bool
-    has_mcp_client_secret: bool = False
-
-
-class McpClientSecretRegenerateResponse(BaseData):
-    client_secret: str
 
 
 class UserData(BaseData):

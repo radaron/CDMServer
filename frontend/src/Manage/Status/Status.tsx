@@ -6,6 +6,7 @@ import { DeviceModel } from '../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords } from '../../util'
+import { apiFetch } from '../../api'
 import { Torrent } from './interfaces'
 import { StatusItem } from './StatusItem'
 
@@ -36,7 +37,7 @@ export const Status = () => {
 
   const getDevices = useCallback(async () => {
     try {
-      const resp = await fetch('/api/devices/', {
+      const resp = await apiFetch('/api/devices/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ export const Status = () => {
     const getStatus = async () => {
       if (selectedDeviceId) {
         try {
-          const resp = await fetch(`/api/status/${selectedDeviceId}/`, {
+          const resp = await apiFetch(`/api/status/${selectedDeviceId}/`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

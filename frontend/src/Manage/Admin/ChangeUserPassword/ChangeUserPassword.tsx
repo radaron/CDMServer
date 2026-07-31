@@ -12,6 +12,7 @@ import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
+import { apiFetch } from '../../../api'
 
 interface User {
   email: string
@@ -41,7 +42,7 @@ export const ChangeUserPassword: React.FC<ChangeUserPasswordProps> = ({
     event.preventDefault()
 
     try {
-      const resp = await fetch(`/api/users/${selectedUserId}/`, {
+      const resp = await apiFetch(`/api/users/${selectedUserId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

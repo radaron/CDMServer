@@ -4,6 +4,7 @@ import { DeviceModel } from '../../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { copyTextToClipboard, redirectToPage } from '../../../util'
+import { apiFetch } from '../../../api'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -43,7 +44,7 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
   const deleteDevice = async () => {
     if (window.confirm(t('DELETE_DEVICE_CONFIRM'))) {
       try {
-        const resp = await fetch(`/api/devices/${deviceData.id}/`, {
+        const resp = await apiFetch(`/api/devices/${deviceData.id}/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -67,19 +68,22 @@ export const DeviceElement: React.FC<DeviceElementProps> = ({
       new Set(Object.values(deviceData.settings).filter(Boolean))
     )
     try {
-      const resp = await fetch(`/api/status/${deviceData.id}/instructions/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          instructions: {
-            clean: {
-              paths,
-            },
+      const resp = await apiFetch(
+        `/api/status/${deviceData.id}/instructions/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        }),
-      })
+          body: JSON.stringify({
+            instructions: {
+              clean: {
+                paths,
+              },
+            },
+          }),
+        }
+      )
       if (resp.status === 200) {
         setToastData({ message: t('DEVICE_CLEAN_ADDED'), type: 'success' })
       } else if (resp.status === 401) {

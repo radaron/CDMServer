@@ -4,6 +4,7 @@ import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
+import { apiFetch } from '../../../api'
 
 interface AddDeviceProps {
   refetch: () => void
@@ -18,7 +19,7 @@ export const AddDevice: React.FC<AddDeviceProps> = ({ refetch }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      const resp = await fetch('/api/devices/', {
+      const resp = await apiFetch('/api/devices/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

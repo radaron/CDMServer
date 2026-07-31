@@ -17,6 +17,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import { Torrent } from './interfaces'
 import { separateWords } from '../../util'
 import { useTranslation } from 'react-i18next'
+import { apiFetch } from '../../api'
 
 const COLORS = {
   PRIMARY: 'primary',
@@ -87,7 +88,7 @@ export const StatusItem = ({
 
   const sendInstruction = async (instruction: 'start' | 'stop' | 'delete') => {
     try {
-      const resp = await fetch(
+      const resp = await apiFetch(
         `/api/status/${selectedDeviceId}/instructions/`,
         {
           method: 'POST',

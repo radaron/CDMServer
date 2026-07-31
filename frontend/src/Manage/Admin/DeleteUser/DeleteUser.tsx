@@ -12,6 +12,7 @@ import { manageContext } from '../../Manage'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
+import { apiFetch } from '../../../api'
 
 interface DeleteUserProps {
   fetchUsers: () => void
@@ -40,7 +41,7 @@ export const DeleteUser: React.FC<DeleteUserProps> = ({
     if (window.confirm(t('DELETE_USER_CONFIRM'))) {
       const id = users.filter((user) => user.email === selectedUser)[0].id
       try {
-        const resp = await fetch(`/api/users/${id}/`, {
+        const resp = await apiFetch(`/api/users/${id}/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

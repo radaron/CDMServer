@@ -7,6 +7,7 @@ import { ChangeUserPassword } from './ChangeUserPassword'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
+import { apiFetch } from '../../api'
 
 interface AdminUser {
   email: string
@@ -27,7 +28,7 @@ export const Admin = () => {
 
   const getUsers = useCallback(async () => {
     try {
-      const resp = await fetch('/api/users/', {
+      const resp = await apiFetch('/api/users/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

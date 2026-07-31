@@ -12,25 +12,26 @@ from service.api.auth import router as login_router
 from service.api.client import router as client_router
 from service.api.devices import router as devices_router
 from service.api.download import router as download_router
-from service.api.oauth import router as oauth_router
 from service.api.status import router as status_router
 from service.api.tmdb import router as tmdb_router
 from service.api.users import router as users_router
-from service.mcp_server import mcp_http_app, mcp_sse_app
 from service.models.database import init_db
-from service.util.auth import create_admin_user, manager
+from service.util.auth import (
+    REFRESH_COOKIE_NAME,
+    create_admin_user,
+    decode_user_refresh_token,
+)
 from service.util.configuration import ALLOWED_ORIGINS
 
 allowed_origins = ALLOWED_ORIGINS
-NON_SPA_PREFIXES = ("/api", "/assets", "/mcp", "/.well-known")
+NON_SPA_PREFIXES = ("/api", "/assets")
 
 
 @asynccontextmanager
 async def lifespan(app_obj: FastAPI):  # pylint: disable=unused-argument
-    async with mcp_http_app.lifespan(app_obj), mcp_sse_app.lifespan(app_obj):
-        await init_db()
-        await create_admin_user()
-        yield
+    await init_db()
+    await create_admin_user()
+    yield
 
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
@@ -41,7 +42,6 @@ app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")
 app.include_router(status_router, prefix="/api/status")
 app.include_router(tmdb_router, prefix="/api/tmdb")
-app.include_router(oauth_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
@@ -50,8 +50,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
-app.mount("/sse", mcp_sse_app, name="mcp-sse")
-app.mount("/mcp", mcp_http_app, name="mcp")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -79,8 +77,12 @@ async def spa_fallback(request: Request, call_next):
     if "text/html" not in accept and "*/*" not in accept:
         return response
 
-    user = await manager.optional(request)
-    if user is None:
+    refresh_token = request.cookies.get(REFRESH_COOKIE_NAME)
+    has_session = (
+        refresh_token is not None
+        and decode_user_refresh_token(refresh_token) is not None
+    )
+    if not has_session:
         redirect_url = path
         if request.url.query:
             redirect_url += f"?{request.url.query}"

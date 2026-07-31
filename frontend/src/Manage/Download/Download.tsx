@@ -21,6 +21,7 @@ import { searchWhere, searchCategory } from '../constant'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage, separateWords, hideKeyBoard } from '../../util'
+import { apiFetch } from '../../api'
 import { PATTERN, SEARCH_WHERE, SEARCH_CATEGORY, PAGE } from './constant'
 
 interface TorrentSearchResultElement {
@@ -195,7 +196,7 @@ export const Download = () => {
       setPage(Number(searchParams.get(PAGE)) || 1)
       setLoading(true)
       try {
-        const resp = await fetch(
+        const resp = await apiFetch(
           `/api/download/search/?pattern=${searchParams.get(PATTERN)}` +
             `&where=${searchParams.get(SEARCH_WHERE)}` +
             `&category=${searchParams.get(SEARCH_CATEGORY)}` +
@@ -256,7 +257,7 @@ export const Download = () => {
 
   const getDevices = useCallback(async () => {
     try {
-      const resp = await fetch('/api/devices/', {
+      const resp = await apiFetch('/api/devices/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -277,7 +278,7 @@ export const Download = () => {
 
   const addToDownloadQueue = async (torrentId: number, deviceId: number) => {
     try {
-      const resp = await fetch('/api/download/', {
+      const resp = await apiFetch('/api/download/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
