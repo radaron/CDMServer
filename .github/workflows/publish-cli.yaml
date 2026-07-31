@@ -1,0 +1,27 @@
+name: Publish CLI to PyPI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'cli/**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build and publish
+        working-directory: cli
+        run: |
+          uv build
+          uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
