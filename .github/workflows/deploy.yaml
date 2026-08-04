@@ -7,7 +7,6 @@ on:
       - master
     paths:
       - 'pyproject.toml'
-      - '!cli/**'
 
 permissions:
   contents: write

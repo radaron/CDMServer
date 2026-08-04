@@ -1,11 +1,12 @@
 name: Publish CLI to PyPI
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
     paths:
-      - 'cli/**'
+      - 'cli/pyproject.toml'
 
 jobs:
   publish:
