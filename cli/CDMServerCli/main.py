@@ -531,6 +531,7 @@ def _print_tmdb_table(items: list, title: str) -> None:
         title=f"[bold]{title}[/bold]",
     )
     t.add_column("TMDB ID", style="dim", width=10)
+    t.add_column("IMDB ID", style="dim", width=10)
     t.add_column("Title", min_width=30)
     t.add_column("Year", width=6)
     t.add_column("Type", width=8)
@@ -539,6 +540,7 @@ def _print_tmdb_table(items: list, title: str) -> None:
         rating = f"{item['rating']:.1f}" if item.get("rating") else "—"
         t.add_row(
             str(item["tmdbId"]),
+            str(item["imdbId"] or "-"),
             item["title"],
             str(item.get("year") or "—"),
             item.get("mediaType", ""),
