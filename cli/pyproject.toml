@@ -1,6 +1,6 @@
 [project]
-name = "CDM-CLI"
-version = "0.1.0"
+name = "CDMCli"
+version = "1.0.0"
 description = "CDM Server CLI"
 requires-python = ">=3.11"
 dependencies = [
