@@ -1,5 +1,5 @@
 [project]
-name = "cdm_cli"
+name = "CDMServerCli"
 version = "1.0.0"
 description = "CDM Server CLI"
 requires-python = ">=3.11"
