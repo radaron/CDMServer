@@ -8,7 +8,6 @@ export interface UserInfo {
   name: string
   ncoreUser: string
   isNcoreCredentialSet: boolean
-  hasMcpClientSecret: boolean
 }
 
 export interface ToastData {

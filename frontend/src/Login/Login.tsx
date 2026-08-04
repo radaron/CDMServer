@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   FormLabel,
   Stack,
   TextField,
@@ -16,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { MANAGE_PAGE, REDIRECT_URL } from '../constant'
 import { redirectToPage } from '../util'
+import { setAccessToken } from '../api'
 import { TMDB_PAGE } from '../Manage/constant'
 import { neonGradient } from '../customizations/themePrimitives'
 
@@ -55,15 +54,12 @@ export const Login = () => {
   const { t } = useTranslation()
   const [inputEmail, setInputEmail] = useState('')
   const [inputPassword, setInputPassword] = useState('')
-  const [keepSignedIn, setKeepSignedIn] = useState(false)
-
   const [alertMessage, setAlertMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [searchParams] = useSearchParams()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(event)
     setLoading(true)
     try {
       const resp = await fetch('/api/auth/login/', {
@@ -74,11 +70,11 @@ export const Login = () => {
         body: JSON.stringify({
           email: inputEmail,
           password: inputPassword,
-          keepLoggedIn: keepSignedIn,
         }),
       })
       if (resp.status === 200) {
-        await resp.json()
+        const data = await resp.json()
+        setAccessToken(data.access_token)
         const redirectUrl = searchParams.has(REDIRECT_URL)
           ? searchParams.get(REDIRECT_URL) || ''
           : `${MANAGE_PAGE}/${TMDB_PAGE}`
@@ -147,16 +143,6 @@ export const Login = () => {
               onChange={(e) => setInputPassword(e.target.value)}
             />
           </FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={keepSignedIn}
-                onChange={(e) => setKeepSignedIn(e.target.checked)}
-                color="primary"
-              />
-            }
-            label={t('KEEP_ME_SIGNED_IN')}
-          />
           {!loading ? (
             <Button variant="contained" fullWidth type="submit">
               {t('LOGIN')}

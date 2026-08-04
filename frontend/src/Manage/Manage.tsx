@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../constant'
 import { DRAWER_WIDTH } from './constant'
 import { redirectToPage } from '../util'
+import { apiFetch, clearAccessToken } from '../api'
 import { UserInfo, ToastData } from './types'
 import { neonGradient } from '../customizations/themePrimitives'
 
@@ -48,7 +49,6 @@ export const Manage = () => {
     name: '',
     ncoreUser: '',
     isNcoreCredentialSet: false,
-    hasMcpClientSecret: false,
   })
   const [toastData, setToastData] = useState<ToastData>({
     message: '',
@@ -60,7 +60,7 @@ export const Manage = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const resp = await fetch('/api/users/me/', {
+        const resp = await apiFetch('/api/users/me/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +78,6 @@ export const Manage = () => {
             name: '',
             ncoreUser: '',
             isNcoreCredentialSet: false,
-            hasMcpClientSecret: false,
           })
         }
       } catch (error) {
@@ -88,7 +87,6 @@ export const Manage = () => {
           name: '',
           ncoreUser: '',
           isNcoreCredentialSet: false,
-          hasMcpClientSecret: false,
         })
       }
     }
@@ -97,14 +95,14 @@ export const Manage = () => {
 
   const logOut = async () => {
     try {
-      const resp = await fetch('/api/auth/logout/', {
+      const resp = await apiFetch('/api/auth/logout/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       })
       if (resp.status === 200) {
-        await resp.json()
+        clearAccessToken()
         redirectToPage(LOGIN_PAGE)
       } else {
         setToastData({ message: t('LOGOUT_FAILED'), type: 'error' })

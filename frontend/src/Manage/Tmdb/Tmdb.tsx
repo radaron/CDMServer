@@ -21,6 +21,7 @@ import { manageContext } from '../Manage'
 import { LOGIN_PAGE, MANAGE_PAGE } from '../../constant'
 import { DOWNLOAD_PAGE, searchWhere } from '../constant'
 import { redirectToPage, hideKeyBoard } from '../../util'
+import { apiFetch } from '../../api'
 import { PATTERN, PAGE } from './constant'
 
 interface TmdbResultElement {
@@ -146,7 +147,7 @@ export const Tmdb = () => {
       setPage(searchPage)
       setLoading(true)
       try {
-        const resp = await fetch(
+        const resp = await apiFetch(
           `/api/tmdb/search/?pattern=${searchPattern}&page=${searchPage}&language=${language}`,
           {
             method: 'GET',
@@ -177,7 +178,7 @@ export const Tmdb = () => {
   const fetchPopular = useCallback(async () => {
     setLoading(true)
     try {
-      const resp = await fetch(`/api/tmdb/popular/?language=${language}`, {
+      const resp = await apiFetch(`/api/tmdb/popular/?language=${language}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -16,6 +16,7 @@ import { DeviceModel } from '../../types'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../../constant'
 import { redirectToPage } from '../../../util'
+import { apiFetch } from '../../../api'
 import { DownloadFolders } from '../../constant'
 import FormControl from '@mui/material/FormControl'
 
@@ -52,7 +53,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      const resp = await fetch(`/api/devices/${data.id}/`, {
+      const resp = await apiFetch(`/api/devices/${data.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

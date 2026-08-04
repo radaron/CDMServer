@@ -1,4 +1,3 @@
-# pylint: disable=unused-import
 import asyncio
 from datetime import datetime, timezone
 from typing import AsyncGenerator
@@ -34,7 +33,7 @@ async def init_db(retries: int = 5, delay: int = 5):
             async with engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
             break
-        except Exception as e:  # pylint: disable=broad-exception-caught
+        except Exception as e:
             if attempt < retries - 1:
                 logger.warning(
                     "Database connection failed. Retrying in %s seconds...", delay
@@ -71,7 +70,6 @@ class User(Base):
     )
     ncore_user = Column(String(255), nullable=True)
     ncore_pass = Column(String(255), nullable=True)
-    mcp_client_secret_hash = Column(String(64), nullable=True)
 
 
 class Device(Base):
