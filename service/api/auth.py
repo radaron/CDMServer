@@ -58,7 +58,7 @@ async def refresh(request: Request):
     body = {}
     try:
         body = await request.json()
-    except Exception:  # pylint: disable=broad-exception-caught
+    except Exception:
         pass
     token = body.get("refresh_token") or request.cookies.get(REFRESH_COOKIE_NAME)
     if not token:

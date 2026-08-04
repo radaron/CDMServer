@@ -28,7 +28,7 @@ NON_SPA_PREFIXES = ("/api", "/assets")
 
 
 @asynccontextmanager
-async def lifespan(app_obj: FastAPI):  # pylint: disable=unused-argument
+async def lifespan(app_obj: FastAPI):
     await init_db()
     await create_admin_user()
     yield
@@ -54,12 +54,12 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def root(request: Request):  # pylint: disable=unused-argument
+async def root(request: Request):
     return RedirectResponse(url="/manage/tmdb", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/login", response_class=HTMLResponse)
-async def login(request: Request):  # pylint: disable=unused-argument
+async def login(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 

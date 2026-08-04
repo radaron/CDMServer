@@ -42,7 +42,7 @@ async def register(
         )
         session.add(new_user)
         await session.commit()
-    except Exception as e:  # pylint: disable=broad-exception-caught
+    except Exception as e:
         logger.error(e)
         return JSONResponse({"message": "User creation failed"}, status_code=400)
     return JSONResponse({"message": "User created successfully"})
