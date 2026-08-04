@@ -1,6 +1,6 @@
 [project]
 name = "CDMServerCli"
-version = "1.0.0"
+version = "1.0.1"
 description = "CDM Server CLI"
 requires-python = ">=3.11"
 dependencies = [
@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-cdm = "cdm.main:app"
+cdm = "CDMServerCli.main:app"
 
 [build-system]
 requires = ["hatchling"]
