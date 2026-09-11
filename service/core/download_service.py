@@ -1,4 +1,3 @@
-import tempfile
 from copy import copy
 
 from cryptography.fernet import Fernet
@@ -86,7 +85,7 @@ async def add_download_for_user(
         torrent = await client.get_torrent(torrent_id)
         if torrent is None:
             raise TorrentNotFoundError
-        file_path = await client.download(torrent, tempfile.gettempdir(), override=True)
+        file_path = await client.download(torrent, settings.torrent_dir, override=True)
     except NcoreCredentialError as exception:
         raise InvalidNcoreCredentialsError from exception
     except NcoreConnectionError as exception:

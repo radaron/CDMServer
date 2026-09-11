@@ -25,6 +25,8 @@ services:
       - redis
     env_file:
       - .env
+    volumes:
+      - torrent-files:/torrents
   cdm-worker:
     build: .
     platform: linux/amd64
@@ -37,3 +39,8 @@ services:
       - redis
     env_file:
       - .env
+    volumes:
+      - torrent-files:/torrents
+
+volumes:
+  torrent-files:

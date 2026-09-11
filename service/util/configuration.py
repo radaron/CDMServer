@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     smtp_host: str = ""
     smtp_port: int = 0
 
+    torrent_dir: str = "/torrents"
+
     @property
     def allowed_origins_list(self) -> list[str]:
         return self.allowed_origins.split(",")

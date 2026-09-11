@@ -1,4 +1,3 @@
-import tempfile
 from copy import copy
 
 from celery import group
@@ -48,7 +47,7 @@ def _download(user: User, torrent_id: int, device: Device) -> None:
     torrent = client.get_torrent(torrent_id)
     if torrent is None:
         raise ValueError(f"Torrent {torrent_id} not found")
-    file_path = client.download(torrent, tempfile.gettempdir(), override=True)
+    file_path = client.download(torrent, settings.torrent_dir, override=True)
 
     download_path = next(
         value
