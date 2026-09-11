@@ -172,3 +172,13 @@ class TmdbPopularResponse(BaseData):
 
 class TmdbImdbResponse(BaseData):
     imdb_id: str | None = None
+
+
+class SessionData(BaseData):
+    jti: str
+    user_id: int
+    user_email: str
+    user_name: str
+    client_type: str
+    created_at: str
+    last_used_at: str

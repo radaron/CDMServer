@@ -1,4 +1,5 @@
-import time
+import uuid
+from datetime import datetime, timezone
 
 from fastapi import Request
 from fastapi_login import LoginManager
@@ -6,9 +7,10 @@ from jwt import InvalidTokenError
 from jwt import decode as jwt_decode
 from jwt import encode as jwt_encode
 from passlib.context import CryptContext
+from sqlalchemy import delete
 from sqlalchemy.future import select
 
-from service.models.database import AsyncSessionLocal, User
+from service.models.database import AsyncSessionLocal, RefreshSession, User
 from service.util.configuration import ADMIN_EMAIL, ADMIN_PASSWORD, SECRET_KEY
 
 REFRESH_COOKIE_NAME = "refresh-token"
@@ -41,23 +43,24 @@ async def create_admin_user():
         await session.commit()
 
 
-def create_user_refresh_token(user_email: str, user_id: int) -> str:
-    expires_at = int(time.time()) + USER_REFRESH_TOKEN_TTL_SECONDS
-    return jwt_encode(
-        {
-            "sub": user_email,
-            "user_id": user_id,
-            "token_use": "user_refresh",
-            "exp": expires_at,
-        },
-        SECRET_KEY,
-        algorithm="HS256",
-    )
+def client_type_from_user_agent(user_agent: str) -> str:
+    match user_agent:
+        case ua if ua.startswith("CDMServerCli/"):
+            return "cli"
+        case ua if "Mozilla" in ua:
+            return "browser"
+        case _:
+            return "unknown"
 
 
 def decode_user_refresh_token(refresh_token: str) -> dict | None:
     try:
-        payload = jwt_decode(refresh_token, SECRET_KEY, algorithms=["HS256"])
+        payload = jwt_decode(
+            refresh_token,
+            SECRET_KEY,
+            algorithms=["HS256"],
+            options={"verify_exp": False},
+        )
     except InvalidTokenError:
         return None
     if payload.get("token_use") != "user_refresh":
@@ -66,7 +69,51 @@ def decode_user_refresh_token(refresh_token: str) -> dict | None:
         return None
     if not isinstance(payload.get("user_id"), int):
         return None
+    if not isinstance(payload.get("jti"), str):
+        return None
     return payload
+
+
+async def create_refresh_token_and_session(
+    user_email: str, user_id: int, client_type: str = "browser"
+) -> str:
+    jti = str(uuid.uuid4())
+    token = jwt_encode(
+        {
+            "sub": user_email,
+            "user_id": user_id,
+            "token_use": "user_refresh",
+            "jti": jti,
+        },
+        SECRET_KEY,
+        algorithm="HS256",
+    )
+    async with AsyncSessionLocal() as session:
+        session.add(RefreshSession(jti=jti, user_id=user_id, client_type=client_type))
+        await session.commit()
+    return token
+
+
+async def validate_and_touch_session(
+    jti: str, client_type: str
+) -> RefreshSession | None:
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(RefreshSession).where(RefreshSession.jti == jti)
+        )
+        row = result.scalars().first()
+        if not row:
+            return None
+        row.last_used_at = datetime.now(tz=timezone.utc)
+        row.client_type = client_type
+        await session.commit()
+        return row
+
+
+async def delete_refresh_session_by_jti(jti: str) -> None:
+    async with AsyncSessionLocal() as session:
+        await session.execute(delete(RefreshSession).where(RefreshSession.jti == jti))
+        await session.commit()
 
 
 async def get_user_from_refresh_cookie(request: Request) -> User | None:

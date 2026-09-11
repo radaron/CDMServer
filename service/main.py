@@ -12,6 +12,7 @@ from service.api.auth import router as login_router
 from service.api.client import router as client_router
 from service.api.devices import router as devices_router
 from service.api.download import router as download_router
+from service.api.sessions import router as sessions_router
 from service.api.status import router as status_router
 from service.api.tmdb import router as tmdb_router
 from service.api.users import router as users_router
@@ -37,6 +38,7 @@ async def lifespan(app_obj: FastAPI):
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
 app.include_router(login_router, prefix="/api/auth")
 app.include_router(users_router, prefix="/api/users")
+app.include_router(sessions_router, prefix="/api/sessions")
 app.include_router(devices_router, prefix="/api/devices")
 app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")

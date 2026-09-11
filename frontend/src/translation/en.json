@@ -110,5 +110,14 @@
   "USER_DELETE_SUCCESS": "User deleted successfully.",
   "USER_FETCH_ERROR": "Could not fetch users.",
   "USER_PASSWORD_UPDATE_ERROR": "Could not update user password.",
-  "USER_PASSWORD_UPDATE_SUCCESS": "User password updated successfully."
+  "USER_PASSWORD_UPDATE_SUCCESS": "User password updated successfully.",
+  "SESSION_TITLE": "Active Sessions",
+  "SESSION_USER": "User",
+  "SESSION_CLIENT": "Client",
+  "SESSION_CREATED": "Created",
+  "SESSION_LAST_USED": "Last Used",
+  "SESSION_REVOKE_BUTTON": "Revoke",
+  "SESSION_REVOKE_SUCCESS": "Session revoked successfully.",
+  "SESSION_REVOKE_ERROR": "Could not revoke session.",
+  "SESSION_FETCH_ERROR": "Could not fetch sessions."
 }

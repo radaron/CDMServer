@@ -110,5 +110,14 @@
   "USER_DELETE_SUCCESS": "A felhasználó sikeresen törölve.",
   "USER_FETCH_ERROR": "A felhasználókat nem sikerült lekérni.",
   "USER_PASSWORD_UPDATE_ERROR": "A felhasználó jelszavát nem sikerült módosítani.",
-  "USER_PASSWORD_UPDATE_SUCCESS": "A felhasználó jelszava sikeresen módosítva."
+  "USER_PASSWORD_UPDATE_SUCCESS": "A felhasználó jelszava sikeresen módosítva.",
+  "SESSION_TITLE": "Aktív munkamenetek",
+  "SESSION_USER": "Felhasználó",
+  "SESSION_CLIENT": "Kliens",
+  "SESSION_CREATED": "Létrehozva",
+  "SESSION_LAST_USED": "Utoljára használva",
+  "SESSION_REVOKE_BUTTON": "Visszavonás",
+  "SESSION_REVOKE_SUCCESS": "Munkamenet sikeresen visszavonva.",
+  "SESSION_REVOKE_ERROR": "A munkamenetet nem sikerült visszavonni.",
+  "SESSION_FETCH_ERROR": "A munkameneteket nem sikerült lekérni."
 }

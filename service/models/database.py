@@ -16,6 +16,18 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+__all__ = [
+    "AsyncSession",
+    "AsyncSessionLocal",
+    "Base",
+    "Device",
+    "RefreshSession",
+    "User",
+    "get_session",
+    "init_db",
+    "user_device_association",
+]
+
 from service.constant import DEFAULT_DEVICE_SETTINGS
 from service.util.configuration import DB_HOST, DB_NAME, DB_PASSWORD, DB_USER
 from service.util.logger import logger
@@ -68,8 +80,21 @@ class User(Base):
     devices: Mapped[list["Device"]] = relationship(
         "Device", secondary=user_device_association, back_populates="users"
     )
+    sessions: Mapped[list["RefreshSession"]] = relationship(
+        "RefreshSession", back_populates="user", cascade="all, delete-orphan"
+    )
     ncore_user = Column(String(255), nullable=True)
     ncore_pass = Column(String(255), nullable=True)
+
+
+class RefreshSession(Base):
+    __tablename__ = "refresh_sessions"
+    jti: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user: Mapped["User"] = relationship("User", back_populates="sessions")
+    client_type = Column(String(16), nullable=False, default="browser")
+    created_at = Column(DateTime, default=lambda: datetime.now(tz=timezone.utc))
+    last_used_at = Column(DateTime, default=lambda: datetime.now(tz=timezone.utc))
 
 
 class Device(Base):

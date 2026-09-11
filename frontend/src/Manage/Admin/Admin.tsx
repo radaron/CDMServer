@@ -4,6 +4,7 @@ import { Box, Divider } from '@mui/material'
 import { manageContext } from '../Manage'
 import { DeleteUser } from './DeleteUser'
 import { ChangeUserPassword } from './ChangeUserPassword'
+import { RevokeSession } from './Sessions/RevokeSession'
 import { useTranslation } from 'react-i18next'
 import { LOGIN_PAGE } from '../../constant'
 import { redirectToPage } from '../../util'
@@ -66,6 +67,8 @@ export const Admin = () => {
       <ChangeUserPassword users={users} />
       <Divider sx={{ my: 3 }} />
       <DeleteUser fetchUsers={getUsers} users={users} />
+      <Divider sx={{ my: 3 }} />
+      <RevokeSession />
     </Box>
   )
 }
