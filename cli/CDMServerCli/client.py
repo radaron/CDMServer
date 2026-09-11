@@ -1,4 +1,5 @@
 import sys
+from importlib.metadata import version
 
 import httpx
 from rich.console import Console
@@ -6,6 +7,8 @@ from rich.console import Console
 from . import config
 
 console = Console(stderr=True)
+
+CLI_USER_AGENT = f"CDMServerCli/{version('CDMServerCli')}"
 
 
 class CDMError(Exception):
@@ -23,6 +26,7 @@ class CDMClient:
         if require_auth and not self._refresh:
             console.print("[bold red]✗[/bold red] Not logged in. Run [bold]cdm login[/bold] first.")
             sys.exit(1)
+        self._http = httpx.Client(headers={"User-Agent": CLI_USER_AGENT})
 
     def _auth_headers(self) -> dict:
         h = {"Content-Type": "application/json"}
@@ -34,7 +38,7 @@ class CDMClient:
         if not self._refresh:
             return False
         try:
-            resp = httpx.post(
+            resp = self._http.post(
                 f"{self.base}/api/auth/refresh/",
                 json={"refresh_token": self._refresh},
                 timeout=10,
@@ -52,10 +56,10 @@ class CDMClient:
     def request(self, method: str, path: str, **kwargs) -> httpx.Response:
         url = f"{self.base}{path}"
         kwargs.setdefault("timeout", 30)
-        resp = httpx.request(method, url, headers=self._auth_headers(), **kwargs)
+        resp = self._http.request(method, url, headers=self._auth_headers(), **kwargs)
         if resp.status_code == 401:
             if self._do_refresh():
-                resp = httpx.request(method, url, headers=self._auth_headers(), **kwargs)
+                resp = self._http.request(method, url, headers=self._auth_headers(), **kwargs)
         if resp.status_code == 401:
             config.clear_tokens()
             console.print("[bold red]✗[/bold red] Session expired. Run [bold]cdm login[/bold] again.")

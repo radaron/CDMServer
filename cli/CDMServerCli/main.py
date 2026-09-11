@@ -12,7 +12,7 @@ from rich.table import Table
 from rich.text import Text
 
 from . import config
-from .client import CDMClient
+from .client import CDMClient, CLI_USER_AGENT  # CLI_USER_AGENT used for pre-auth requests
 
 app = typer.Typer(
     name="cdm",
@@ -103,6 +103,7 @@ def login(
         resp = httpx.post(
             f"{server_url}/api/auth/login/",
             json={"email": email, "password": password},
+            headers={"User-Agent": CLI_USER_AGENT},
             timeout=10,
         )
     except httpx.ConnectError:
