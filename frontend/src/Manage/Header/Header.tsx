@@ -22,6 +22,7 @@ import {
   STATUS_PAGE,
   SETTINGS_PAGE,
   TMDB_PAGE,
+  WISHLIST_PAGE,
 } from './../constant'
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
 import MovieFilterIcon from '@mui/icons-material/MovieFilter'
@@ -29,6 +30,7 @@ import DevicesIcon from '@mui/icons-material/Devices'
 import SettingsIcon from '@mui/icons-material/Settings'
 import TimelineIcon from '@mui/icons-material/Timeline'
 import DownloadIcon from '@mui/icons-material/Download'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { getLanguage, toggleLanguage } from '../../util'
@@ -80,6 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
       href: DOWNLOAD_PAGE,
     },
     { label: t('HEADER_TMDB'), icon: <MovieFilterIcon />, href: TMDB_PAGE },
+    { label: t('WISHLIST_TAB'), icon: <BookmarkIcon />, href: WISHLIST_PAGE },
     { label: t('HEADER_DEVICES'), icon: <DevicesIcon />, href: DEVICE_PAGE },
     {
       label: t('HEADER_SETTINGS'),

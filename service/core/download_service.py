@@ -26,7 +26,7 @@ from service.models.database import (
     user_device_association,
 )
 from service.torrents_adapter import TorrentsAdapter
-from service.util.configuration import NCORE_PASSWORD, NCORE_USERNAME, SECRET_KEY
+from service.util.configuration import settings
 
 
 class DeviceNotFoundError(Exception):
@@ -53,7 +53,7 @@ async def search_torrents_for_user(
     page: int = 1,
 ) -> tuple[list[dict], int]:
     client = AsyncClient(timeout=5)
-    await client.login(NCORE_USERNAME, NCORE_PASSWORD)
+    await client.login(settings.ncore_username, settings.ncore_password)
     result: SearchResult = await client.search(
         pattern=pattern,
         type=SearchParamType(category),
@@ -147,13 +147,13 @@ async def get_tracker_ids_for_devices(user: User) -> dict[int, set]:
 
 
 def get_ncore_credential(user: User) -> tuple[str, str]:
-    cipher_suite = Fernet(SECRET_KEY)
+    cipher_suite = Fernet(settings.secret_key)
     if user.ncore_user and user.ncore_pass:
         ncore_username = user.ncore_user
         ncore_password = cipher_suite.decrypt(user.ncore_pass.encode("utf-8")).decode(
             "utf-8"
         )
     else:
-        ncore_username = NCORE_USERNAME
-        ncore_password = NCORE_PASSWORD
+        ncore_username = settings.ncore_username
+        ncore_password = settings.ncore_password
     return ncore_username, ncore_password

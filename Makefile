@@ -39,7 +39,7 @@ start-frontend:
 	cd frontend && pnpm start
 
 build-frontend:
-	rm -rf assets/* templates/*
+	rm -rf assets/* templates/index.html
 	export NVM_DIR="$$HOME/.nvm" && \
 	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh" && \
 	cd frontend && \
@@ -49,7 +49,7 @@ build-frontend:
 	cp frontend/build/index.html templates/index.html
 
 build-frontend-ci:
-	rm -rf assets/* templates/*
+	rm -rf assets/* templates/index.html
 	cd frontend && pnpm build
 	cp -r frontend/build/assets/ assets/
 	cp frontend/build/index.html templates/index.html

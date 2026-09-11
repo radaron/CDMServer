@@ -119,5 +119,18 @@
   "SESSION_REVOKE_BUTTON": "Visszavonás",
   "SESSION_REVOKE_SUCCESS": "Munkamenet sikeresen visszavonva.",
   "SESSION_REVOKE_ERROR": "A munkamenetet nem sikerült visszavonni.",
-  "SESSION_FETCH_ERROR": "A munkameneteket nem sikerült lekérni."
+  "SESSION_FETCH_ERROR": "A munkameneteket nem sikerült lekérni.",
+  "WISHLIST_TAB": "Kívánságlista",
+  "WISHLIST_ADD_BUTTON": "Kívánságlistához adás",
+  "WISHLIST_MODAL_TITLE": "Hozzáadás a kívánságlistához",
+  "WISHLIST_DEVICE_LABEL": "Eszköz",
+  "WISHLIST_TYPE_LABEL": "Minőség",
+  "WISHLIST_ADDED": "Hozzáadva a kívánságlistához. A letöltés hamarosan elindul.",
+  "WISHLIST_ALREADY_EXISTS": "Már szerepel a kívánságlistádon.",
+  "WISHLIST_ADD_ERROR": "Nem sikerült hozzáadni a kívánságlistához.",
+  "WISHLIST_FETCH_ERROR": "A kívánságlistát nem sikerült lekérni.",
+  "WISHLIST_DELETE_ERROR": "Nem sikerült eltávolítani a kívánságlistáról.",
+  "WISHLIST_REMOVE": "Eltávolítás a kívánságlistáról",
+  "WISHLIST_ADDED_DATE": "Hozzáadva",
+  "WISHLIST_EMPTY": "A kívánságlistád üres."
 }

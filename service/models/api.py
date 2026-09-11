@@ -182,3 +182,19 @@ class SessionData(BaseData):
     client_type: str
     created_at: str
     last_used_at: str
+
+
+class AddWishlistData(BaseData):
+    imdb_id: str
+    device_id: int
+    torrent_type: str
+
+
+class WishlistItemData(BaseData):
+    id: int
+    imdb_id: str
+    title: str
+    device_id: int
+    device_name: str
+    torrent_type: str
+    created_at: str

@@ -19,7 +19,7 @@ from service.models.database import (
     user_device_association,
 )
 from service.util.auth import Hasher, manager
-from service.util.configuration import SECRET_KEY
+from service.util.configuration import settings
 from service.util.logger import logger
 
 router = APIRouter()
@@ -144,7 +144,7 @@ async def modify_user(
     if user_object is None:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     if isinstance(data.ncore_user, str) and isinstance(data.ncore_pass, str):
-        cipher_suite = Fernet(SECRET_KEY)
+        cipher_suite = Fernet(settings.secret_key)
         user_object.ncore_user = data.ncore_user
         user_object.ncore_pass = (
             cipher_suite.encrypt(data.ncore_pass.encode("utf-8"))

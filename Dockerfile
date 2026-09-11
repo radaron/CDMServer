@@ -15,6 +15,7 @@ RUN --mount=from=uv,source=/uv,target=/bin/uv \
     uv pip install -r requirements.txt --target /app
 
 COPY service/ /app/service/
+COPY worker/ /app/worker/
 COPY templates/ /app/templates/
 COPY assets/ /app/assets/
 

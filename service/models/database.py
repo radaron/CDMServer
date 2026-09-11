@@ -11,6 +11,7 @@ from sqlalchemy import (
     Integer,
     String,
     Table,
+    UniqueConstraint,
 )
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -23,16 +24,17 @@ __all__ = [
     "Device",
     "RefreshSession",
     "User",
+    "Wishlist",
     "get_session",
     "init_db",
     "user_device_association",
 ]
 
 from service.constant import DEFAULT_DEVICE_SETTINGS
-from service.util.configuration import DB_HOST, DB_NAME, DB_PASSWORD, DB_USER
+from service.util.configuration import settings
 from service.util.logger import logger
 
-DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+DATABASE_URL = f"mysql+aiomysql://{settings.db_user}:{settings.db_password}@{settings.db_host}/{settings.db_name}"
 
 engine = create_async_engine(DATABASE_URL)
 AsyncSessionLocal = async_sessionmaker(engine)
@@ -109,3 +111,25 @@ class Device(Base):
     users: Mapped[list["User"]] = relationship(
         "User", secondary=user_device_association, back_populates="devices"
     )
+
+
+class Wishlist(Base):
+    __tablename__ = "wishlists"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "device_id",
+            "imdb_id",
+            "torrent_type",
+            name="uq_wishlist_user_device_imdb_type",
+        ),
+    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    device_id = Column(Integer, ForeignKey("devices.id"), nullable=False)
+    imdb_id = Column(String(16), nullable=False)
+    title = Column(String(500), nullable=False)
+    torrent_type = Column(String(32), nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(tz=timezone.utc))
+    user: Mapped["User"] = relationship("User")
+    device: Mapped["Device"] = relationship("Device")

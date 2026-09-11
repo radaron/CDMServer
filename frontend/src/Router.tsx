@@ -11,6 +11,7 @@ import { Download } from './Manage/Download'
 import { Status } from './Manage/Status'
 import { Settings } from './Manage/Settings'
 import { Tmdb } from './Manage/Tmdb'
+import { Wishlist } from './Manage/Wishlist/Wishlist'
 import {
   DEVICE_PAGE,
   ADMIN_PAGE,
@@ -18,6 +19,7 @@ import {
   STATUS_PAGE,
   SETTINGS_PAGE,
   TMDB_PAGE,
+  WISHLIST_PAGE,
 } from './Manage/constant'
 import { LOGIN_PAGE, MANAGE_PAGE } from './constant'
 
@@ -36,6 +38,7 @@ export const Router = () => {
             <Route path={DEVICE_PAGE} element={<Device />} />
             <Route path={DOWNLOAD_PAGE} element={<Download />} />
             <Route path={TMDB_PAGE} element={<Tmdb />} />
+            <Route path={WISHLIST_PAGE} element={<Wishlist />} />
             <Route path={SETTINGS_PAGE} element={<Settings />} />
             <Route path={STATUS_PAGE} element={<Status />} />
           </Route>

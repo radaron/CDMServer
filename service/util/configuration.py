@@ -1,22 +1,34 @@
-from os import environ
+from pydantic_settings import BaseSettings
 
-NCORE_USERNAME = environ["NCORE_USERNAME"]
-NCORE_PASSWORD = environ["NCORE_PASSWORD"]
 
-DB_HOST = environ["DB_HOST"]
-DB_PORT = environ["DB_PORT"]
-DB_NAME = environ["DB_NAME"]
-DB_USER = environ["DB_USER"]
-DB_PASSWORD = environ["DB_PASSWORD"]
+class Settings(BaseSettings):
+    ncore_username: str
+    ncore_password: str
 
-REDIS_HOST = environ["REDIS_HOST"]
-REDIS_PORT = environ["REDIS_PORT"]
+    db_host: str
+    db_port: str
+    db_name: str
+    db_user: str
+    db_password: str
 
-ADMIN_EMAIL = environ["ADMIN_EMAIL"]
-ADMIN_PASSWORD = environ["ADMIN_PASSWORD"]
+    redis_host: str
+    redis_port: str
 
-TMDB_API_KEY = environ["TMDB_API_KEY"]
+    admin_email: str
+    admin_password: str
 
-SECRET_KEY = environ["SECRET_KEY"]
+    tmdb_api_key: str
+    secret_key: str
 
-ALLOWED_ORIGINS = environ["ALLOWED_ORIGINS"].split(",")
+    allowed_origins: str
+    smtp_from: str = ""
+    smtp_token: str = ""
+    smtp_host: str = ""
+    smtp_port: int = 0
+
+    @property
+    def allowed_origins_list(self) -> list[str]:
+        return self.allowed_origins.split(",")
+
+
+settings = Settings()

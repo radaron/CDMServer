@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; color: #222; background: #f9f9f9; padding: 24px; }
+    h2 { margin-bottom: 16px; }
+    table { border-collapse: collapse; width: 100%; background: #fff; }
+    th { background: #333; color: #fff; padding: 10px 14px; text-align: left; }
+    td { padding: 9px 14px; border-bottom: 1px solid #e0e0e0; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; }
+    .downloaded { background: #d4edda; color: #155724; }
+    .failed     { background: #f8d7da; color: #721c24; }
+    .waiting    { background: #fff3cd; color: #856404; }
+  </style>
+</head>
+<body>
+  <h2>CDM Wishlist — Weekly Scan Results</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Device</th>
+        <th>Type</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in outcomes %}
+      <tr>
+        <td>{{ item.title }}</td>
+        <td>{{ item.device_name }}</td>
+        <td>{{ item.torrent_type }}</td>
+        <td>
+          {% if item.success %}
+            <span class="badge downloaded">DOWNLOADED</span>
+          {% elif item.found %}
+            <span class="badge failed">FAILED</span>
+          {% else %}
+            <span class="badge waiting">NOT FOUND</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

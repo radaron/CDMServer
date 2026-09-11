@@ -3,7 +3,7 @@ from enum import Enum
 import redis.asyncio as redis
 from pydantic import BaseModel
 
-from service.util.configuration import REDIS_HOST, REDIS_PORT
+from service.util.configuration import settings
 
 EXPIRATION_TIME = 60  # 60 seconds
 
@@ -28,7 +28,7 @@ class SortOrder(Enum):
 
 class TorrentsAdapter:
     def __init__(self):
-        self.redis_url = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+        self.redis_url = f"redis://{settings.redis_host}:{settings.redis_port}"
 
     async def set_torrent(self, device_id: int, torrent: TorrentStatus) -> None:
         """

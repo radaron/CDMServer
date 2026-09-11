@@ -30,6 +30,18 @@ DEFAULT_DEVICE_SETTINGS = {
 }
 
 
+MOVIE_TORRENT_TYPES = [
+    "hd_hun",
+    "hd",
+    "dvd_hun",
+    "dvd",
+    "dvd9_hun",
+    "dvd9",
+    "sd_hun",
+    "sd",
+]
+
+
 def map_category_path(category: SearchParamType) -> str:
     category_map = {
         # Movies

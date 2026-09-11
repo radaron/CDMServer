@@ -4,6 +4,7 @@ export const DOWNLOAD_PAGE = 'download'
 export const STATUS_PAGE = 'status'
 export const SETTINGS_PAGE = 'settings'
 export const TMDB_PAGE = 'tmdb'
+export const WISHLIST_PAGE = 'wishlist'
 
 export const DRAWER_WIDTH = 240
 

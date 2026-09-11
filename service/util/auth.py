@@ -11,12 +11,14 @@ from sqlalchemy import delete
 from sqlalchemy.future import select
 
 from service.models.database import AsyncSessionLocal, RefreshSession, User
-from service.util.configuration import ADMIN_EMAIL, ADMIN_PASSWORD, SECRET_KEY
+from service.util.configuration import settings
 
 REFRESH_COOKIE_NAME = "refresh-token"
 USER_REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60
 
-manager = LoginManager(SECRET_KEY, token_url="/api/auth/login/", use_cookie=False)
+manager = LoginManager(
+    settings.secret_key, token_url="/api/auth/login/", use_cookie=False
+)
 
 
 @manager.user_loader()
@@ -28,14 +30,16 @@ async def load_user(email: str):
 
 async def create_admin_user():
     async with AsyncSessionLocal() as session:
-        result = await session.execute(select(User).where(User.email == ADMIN_EMAIL))
+        result = await session.execute(
+            select(User).where(User.email == settings.admin_email)
+        )
         admin_user = result.scalars().first()
         if admin_user:
-            admin_user.password = Hasher.get_password_hash(ADMIN_PASSWORD)
+            admin_user.password = Hasher.get_password_hash(settings.admin_password)
         else:
             admin_user = User(
-                email=ADMIN_EMAIL,
-                password=Hasher.get_password_hash(ADMIN_PASSWORD),
+                email=settings.admin_email,
+                password=Hasher.get_password_hash(settings.admin_password),
                 is_admin=True,
                 name="Admin",
             )
@@ -57,7 +61,7 @@ def decode_user_refresh_token(refresh_token: str) -> dict | None:
     try:
         payload = jwt_decode(
             refresh_token,
-            SECRET_KEY,
+            settings.secret_key,
             algorithms=["HS256"],
             options={"verify_exp": False},
         )
@@ -85,7 +89,7 @@ async def create_refresh_token_and_session(
             "token_use": "user_refresh",
             "jti": jti,
         },
-        SECRET_KEY,
+        settings.secret_key,
         algorithm="HS256",
     )
     async with AsyncSessionLocal() as session:

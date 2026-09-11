@@ -165,4 +165,6 @@ node_modules
 
 assets/*
 templates/*
+!templates/email/
+!templates/email/**
 .DS_Store

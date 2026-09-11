@@ -16,15 +16,16 @@ from service.api.sessions import router as sessions_router
 from service.api.status import router as status_router
 from service.api.tmdb import router as tmdb_router
 from service.api.users import router as users_router
+from service.api.wishlist import router as wishlist_router
 from service.models.database import init_db
 from service.util.auth import (
     REFRESH_COOKIE_NAME,
     create_admin_user,
     decode_user_refresh_token,
 )
-from service.util.configuration import ALLOWED_ORIGINS
+from service.util.configuration import settings
 
-allowed_origins = ALLOWED_ORIGINS
+allowed_origins = settings.allowed_origins_list
 NON_SPA_PREFIXES = ("/api", "/assets")
 
 
@@ -44,6 +45,7 @@ app.include_router(client_router, prefix="/api/client")
 app.include_router(download_router, prefix="/api/download")
 app.include_router(status_router, prefix="/api/status")
 app.include_router(tmdb_router, prefix="/api/tmdb")
+app.include_router(wishlist_router, prefix="/api/wishlist")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,

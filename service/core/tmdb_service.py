@@ -5,7 +5,7 @@ from themoviedb import aioTMDb
 from themoviedb.schemas._enums import MediaType, SizeType
 
 from service.models.api import TmdbMediaData
-from service.util.configuration import TMDB_API_KEY
+from service.util.configuration import settings
 
 DEFAULT_LANGUAGE = "en-US"
 DEFAULT_REGION = "US"
@@ -30,7 +30,10 @@ def normalize_language(language: str | None) -> tuple[str, str | None]:
 def get_tmdb(language: str | None, session: ClientSession | None = None) -> aioTMDb:
     tmdb_language, region = normalize_language(language)
     return aioTMDb(
-        key=TMDB_API_KEY, language=tmdb_language, region=region, session=session
+        key=settings.tmdb_api_key,
+        language=tmdb_language,
+        region=region,
+        session=session,
     )
 
 
@@ -127,3 +130,14 @@ async def get_imdb_id(
     async with ClientSession(raise_for_status=True) as session:
         tmdb = get_tmdb(language, session=session)
         return await fetch_imdb_id(tmdb, tmdb_id, media_type)
+
+
+async def get_english_title(imdb_id: str) -> str | None:
+    async with ClientSession(raise_for_status=True) as session:
+        tmdb = get_tmdb("en", session=session)
+        result = await tmdb.find().by_imdb(imdb_id)
+        for item in (result.movie_results or []) + (result.tv_results or []):
+            title = getattr(item, "title", None) or getattr(item, "name", None)
+            if title:
+                return title
+    return None

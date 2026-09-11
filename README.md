@@ -131,6 +131,14 @@ sequenceDiagram
 - Search for movies and series using TMDB.
 - Get a downloadable list of movies and series with a single click.
 
+### Wishlist
+- Add movies to a wishlist from the TMDB view (bookmark icon on any movie card).
+- Select target device and preferred NCore quality (e.g. `HD_HUN`).
+- Download attempt starts immediately in the background via Celery worker.
+- If the movie is not yet on NCore, it stays in the wishlist and is retried automatically every week (Monday 03:00 UTC).
+- On success the wishlist row is deleted and an HTML email is sent to the user.
+- View and manage pending wishlist items in the **Wishlist** tab on the TMDB page.
+
 ## Installation and configuration
 Pull the container:
 ``` bash
@@ -183,6 +191,37 @@ services:
 - `NCORE_USERNAME` and `NCORE_PASSWORD` also need for the searching logic
 - `TMDB_API_KEY` - Create your own key [here](https://www.themoviedb.org/settings/api).
 - `SECRET_KEY` is need session and credential encryption. It is a 32 url-safe base64-encoded string.
+
+### Wishlist worker
+
+The wishlist feature requires a second container running the Celery worker. Add `cdm-worker` alongside `cdm-server` in your compose file using the same image with a different command:
+
+``` yaml
+  cdm-worker:
+    image: ghcr.io/radaron/cdmserver:latest
+    container_name: cdm-worker
+    command: >
+      python -m celery -A worker.celery_app worker
+      --beat --loglevel=info
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      # same env vars as cdm-server, plus:
+      SMTP_FROM: cdm@example.com
+      SMTP_TOKEN: your_smtp_token
+      SMTP_HOST: smtp.protonmail.ch
+      SMTP_PORT: 587
+```
+
+Additional environment variables for the worker (optional — email is silently skipped if not set):
+
+| Variable | Description |
+|---|---|
+| `SMTP_FROM` | Sender address |
+| `SMTP_TOKEN` | SMTP password / app token |
+| `SMTP_HOST` | SMTP server hostname (default: `smtp.protonmail.ch`) |
+| `SMTP_PORT` | SMTP port (default: `587`) |
 
 ## See also
 * [cdm client](https://github.com/radaron/CDMClient)

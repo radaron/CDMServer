@@ -119,5 +119,18 @@
   "SESSION_REVOKE_BUTTON": "Revoke",
   "SESSION_REVOKE_SUCCESS": "Session revoked successfully.",
   "SESSION_REVOKE_ERROR": "Could not revoke session.",
-  "SESSION_FETCH_ERROR": "Could not fetch sessions."
+  "SESSION_FETCH_ERROR": "Could not fetch sessions.",
+  "WISHLIST_TAB": "Wishlist",
+  "WISHLIST_ADD_BUTTON": "Add to wishlist",
+  "WISHLIST_MODAL_TITLE": "Add to Wishlist",
+  "WISHLIST_DEVICE_LABEL": "Device",
+  "WISHLIST_TYPE_LABEL": "Quality",
+  "WISHLIST_ADDED": "Added to wishlist. Download will start shortly.",
+  "WISHLIST_ALREADY_EXISTS": "Already in your wishlist.",
+  "WISHLIST_ADD_ERROR": "Could not add to wishlist.",
+  "WISHLIST_FETCH_ERROR": "Could not fetch wishlist.",
+  "WISHLIST_DELETE_ERROR": "Could not remove from wishlist.",
+  "WISHLIST_REMOVE": "Remove from wishlist",
+  "WISHLIST_ADDED_DATE": "Added",
+  "WISHLIST_EMPTY": "Your wishlist is empty."
 }
