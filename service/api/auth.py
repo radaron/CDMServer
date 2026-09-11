@@ -19,7 +19,7 @@ from service.util.auth import (
 )
 
 router = APIRouter()
-ACCESS_TOKEN_EXPIRATION = timedelta(minutes=30)
+ACCESS_TOKEN_EXPIRATION = timedelta(minutes=10)
 
 
 @router.post("/login/")
