@@ -256,180 +256,180 @@ export const Tmdb = () => {
   return (
     <Box>
       <>
-          <Box
-            component="form"
-            onSubmit={submitSearch}
+        <Box
+          component="form"
+          onSubmit={submitSearch}
+          sx={{
+            marginBottom: 2,
+            padding: 2,
+            backgroundColor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 1,
+            justifyContent: 'space-between',
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 2,
+            maxWidth: { sm: '1000px' },
+            mx: 'auto',
+          }}
+        >
+          <FormControl
             sx={{
-              marginBottom: 2,
-              padding: 2,
-              backgroundColor: 'background.paper',
-              borderRadius: 1,
-              boxShadow: 1,
-              justifyContent: 'space-between',
-              display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
-              gap: 2,
-              maxWidth: { sm: '1000px' },
-              mx: 'auto',
+              width: { xs: 'auto', sm: 'auto', md: '100%' },
             }}
           >
-            <FormControl
+            <TextField
+              placeholder={t('SEARCH_PLACEHOLDER')}
+              value={pattern}
+              onChange={(e) => setPattern(e.target.value)}
+              required
+              fullWidth
+              focused
               sx={{
-                width: { xs: 'auto', sm: 'auto', md: '100%' },
+                width: { xs: '100%', sm: 'auto' },
+                minWidth: { xs: 0, sm: 200 },
               }}
-            >
-              <TextField
-                placeholder={t('SEARCH_PLACEHOLDER')}
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value)}
-                required
-                fullWidth
-                focused
-                sx={{
-                  width: { xs: '100%', sm: 'auto' },
-                  minWidth: { xs: 0, sm: 200 },
-                }}
-              />
-            </FormControl>
-            <Button variant="contained" type="submit" disabled={isLoading}>
-              {isLoading ? <CircularProgress /> : t('SEARCH')}
-            </Button>
-          </Box>
-          {isSearchActive ? (
-            searchResults.data.length > 0 ? (
-              <>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    borderRadius: 1,
-                    boxShadow: 1,
-                    padding: 1,
-                    marginBottom: 2,
-                    backgroundColor: 'background.paper',
-                    maxWidth: { sm: '1000px' },
-                    mx: 'auto',
-                  }}
-                >
-                  <Pagination
-                    count={searchResults.meta.totalPages}
-                    page={page}
-                    onChange={submitPageChange}
-                    disabled={isLoading}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    maxWidth: { sm: '1000px' },
-                    mx: 'auto',
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-                    gap: 2,
-                  }}
-                >
-                  {searchResults.data.map(
-                    (result) =>
-                      result.imdbId && (
-                        <TmdbCard
-                          key={result.tmdbId}
-                          result={result}
-                          onWishlist={setWishlistMovie}
-                        />
-                      )
-                  )}
-                </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    borderRadius: 1,
-                    boxShadow: 1,
-                    padding: 1,
-                    marginTop: 2,
-                    backgroundColor: 'background.paper',
-                    maxWidth: { sm: '1000px' },
-                    mx: 'auto',
-                  }}
-                >
-                  <Pagination
-                    count={searchResults.meta.totalPages}
-                    page={page}
-                    onChange={submitPageChange}
-                    disabled={isLoading}
-                  />
-                </Box>
-              </>
-            ) : (
+            />
+          </FormControl>
+          <Button variant="contained" type="submit" disabled={isLoading}>
+            {isLoading ? <CircularProgress /> : t('SEARCH')}
+          </Button>
+        </Box>
+        {isSearchActive ? (
+          searchResults.data.length > 0 ? (
+            <>
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
                   borderRadius: 1,
                   boxShadow: 1,
-                  padding: 2,
+                  padding: 1,
+                  marginBottom: 2,
                   backgroundColor: 'background.paper',
                   maxWidth: { sm: '1000px' },
                   mx: 'auto',
                 }}
               >
-                <Typography sx={{ color: 'text.secondary' }}>
-                  {isLoading ? t('LOADING') : t('NO_RESULTS')}
-                </Typography>
+                <Pagination
+                  count={searchResults.meta.totalPages}
+                  page={page}
+                  onChange={submitPageChange}
+                  disabled={isLoading}
+                />
               </Box>
-            )
-          ) : (
-            <>
               <Box
                 sx={{
                   maxWidth: { sm: '1000px' },
                   mx: 'auto',
                   display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
                   gap: 2,
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-                    gap: 2,
-                  }}
-                >
-                  {popularResults.data.movies.map((result) => (
-                    <TmdbCard
-                      key={result.tmdbId}
-                      result={result}
-                      onWishlist={setWishlistMovie}
-                    />
-                  ))}
-                </Box>
+                {searchResults.data.map(
+                  (result) =>
+                    result.imdbId && (
+                      <TmdbCard
+                        key={result.tmdbId}
+                        result={result}
+                        onWishlist={setWishlistMovie}
+                      />
+                    )
+                )}
               </Box>
               <Box
                 sx={{
-                  maxWidth: { sm: '1000px' },
-                  mx: 'auto',
-                  display: 'grid',
-                  gap: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderRadius: 1,
+                  boxShadow: 1,
+                  padding: 1,
                   marginTop: 2,
+                  backgroundColor: 'background.paper',
+                  maxWidth: { sm: '1000px' },
+                  mx: 'auto',
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-                    gap: 2,
-                  }}
-                >
-                  {popularResults.data.tvs.map((result) => (
-                    <TmdbCard
-                      key={result.tmdbId}
-                      result={result}
-                      onWishlist={setWishlistMovie}
-                    />
-                  ))}
-                </Box>
+                <Pagination
+                  count={searchResults.meta.totalPages}
+                  page={page}
+                  onChange={submitPageChange}
+                  disabled={isLoading}
+                />
               </Box>
             </>
-          )}
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                borderRadius: 1,
+                boxShadow: 1,
+                padding: 2,
+                backgroundColor: 'background.paper',
+                maxWidth: { sm: '1000px' },
+                mx: 'auto',
+              }}
+            >
+              <Typography sx={{ color: 'text.secondary' }}>
+                {isLoading ? t('LOADING') : t('NO_RESULTS')}
+              </Typography>
+            </Box>
+          )
+        ) : (
+          <>
+            <Box
+              sx={{
+                maxWidth: { sm: '1000px' },
+                mx: 'auto',
+                display: 'grid',
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                  gap: 2,
+                }}
+              >
+                {popularResults.data.movies.map((result) => (
+                  <TmdbCard
+                    key={result.tmdbId}
+                    result={result}
+                    onWishlist={setWishlistMovie}
+                  />
+                ))}
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                maxWidth: { sm: '1000px' },
+                mx: 'auto',
+                display: 'grid',
+                gap: 2,
+                marginTop: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                  gap: 2,
+                }}
+              >
+                {popularResults.data.tvs.map((result) => (
+                  <TmdbCard
+                    key={result.tmdbId}
+                    result={result}
+                    onWishlist={setWishlistMovie}
+                  />
+                ))}
+              </Box>
+            </Box>
+          </>
+        )}
       </>
 
       {wishlistMovie && (
