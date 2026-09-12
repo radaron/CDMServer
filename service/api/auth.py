@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from fastapi_login.exceptions import InvalidCredentialsException
 
 from service.models.api import LoginData
+from service.models.database import User
 from service.util.auth import (
     REFRESH_COOKIE_NAME,
     USER_REFRESH_TOKEN_TTL_SECONDS,
@@ -23,7 +24,7 @@ ACCESS_TOKEN_EXPIRATION = timedelta(minutes=10)
 
 
 @router.post("/login/")
-async def login(request: Request, data: LoginData):
+async def login(request: Request, data: LoginData) -> JSONResponse:
     user = await load_user(data.email)
     if not user or not Hasher.verify_password(data.password, user.password):
         raise InvalidCredentialsException
@@ -54,7 +55,7 @@ async def login(request: Request, data: LoginData):
 
 
 @router.post("/logout/")
-async def logout(request: Request, _=Depends(manager)):
+async def logout(request: Request, _: User = Depends(manager)) -> JSONResponse:
     token = request.cookies.get(REFRESH_COOKIE_NAME)
     if token:
         payload = decode_user_refresh_token(token)
@@ -66,7 +67,7 @@ async def logout(request: Request, _=Depends(manager)):
 
 
 @router.post("/refresh/")
-async def refresh(request: Request):
+async def refresh(request: Request) -> JSONResponse:
     body = {}
     try:
         body = await request.json()

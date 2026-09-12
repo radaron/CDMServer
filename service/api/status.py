@@ -23,8 +23,8 @@ router = APIRouter()
 async def get_status(
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-    device_id: int = None,
-):
+    device_id: int | None = None,
+) -> JSONResponse:
     result = await session.execute(
         select(Device)
         .join(user_device_association)
@@ -45,8 +45,8 @@ async def post_instructions(
     body: InstructionsData,
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-    device_id: int = None,
-):
+    device_id: int | None = None,
+) -> JSONResponse:
     result = await session.execute(
         select(Device)
         .join(user_device_association)

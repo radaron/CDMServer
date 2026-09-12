@@ -21,16 +21,23 @@ format:
 	cd frontend && \
 	nvm use && \
 	pnpm format
-	uv run ruff format service/
-	uv run ruff check --select I --fix service/
+	uv run ruff format service/ worker/
+	uv run ruff check --fix service/ worker/
+	cd cli && uv run ruff format CDMServerCli/
+	cd cli && uv run ruff check --fix CDMServerCli/
 
 check-format-ci:
-	uv run ruff format --check service/
-	uv run ruff check --select I service/
+	uv run ruff format --check service/ worker/
+	uv run ruff check service/ worker/
+	cd cli && uv run ruff format --check CDMServerCli/
+	cd cli && uv run ruff check CDMServerCli/
 	cd frontend && pnpm format:check
 
 lint:
-	uv run ruff check service/
+	uv run ruff check service/ worker/
+	cd cli && uv run ruff check CDMServerCli/
+	uv run ty check service/ worker/
+	cd cli && uv run ty check CDMServerCli/
 
 start-backend:
 	source .env.sh && uv run uvicorn service.main:app --host 0.0.0.0 --port 8000 --reload
@@ -59,3 +66,6 @@ docker-compose: build-frontend
 
 bump:
 	uv version --bump $(filter-out $@,$(MAKECMDGOALS))
+
+bump-cli:
+	cd cli && uv version --bump $(filter-out $@,$(MAKECMDGOALS))

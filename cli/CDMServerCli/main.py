@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import Annotated, Optional
+from typing import Annotated, Never, Optional
 
 import httpx
 import typer
@@ -12,7 +12,10 @@ from rich.table import Table
 from rich.text import Text
 
 from . import config
-from .client import CDMClient, CLI_USER_AGENT  # CLI_USER_AGENT used for pre-auth requests
+from .client import (  # CLI_USER_AGENT used for pre-auth requests
+    CLI_USER_AGENT,
+    CDMClient,
+)
 
 app = typer.Typer(
     name="cdm",
@@ -45,7 +48,7 @@ def _ok(msg: str) -> None:
     err.print(f"[bold green]✓[/bold green] {msg}")
 
 
-def _fail(msg: str, code: int = 1) -> None:
+def _fail(msg: str, code: int = 1) -> Never:
     err.print(f"[bold red]✗[/bold red] {msg}")
     raise SystemExit(code)
 
@@ -83,9 +86,13 @@ def _status_color(status: str) -> str:
 
 @app.command()
 def login(
-    server: Annotated[Optional[str], typer.Option("--server", "-s", help="Server URL")] = None,
+    server: Annotated[
+        Optional[str], typer.Option("--server", "-s", help="Server URL")
+    ] = None,
     email: Annotated[Optional[str], typer.Option("--email", "-e")] = None,
-    password: Annotated[Optional[str], typer.Option("--password", "-p", hide_input=True)] = None,
+    password: Annotated[
+        Optional[str], typer.Option("--password", "-p", hide_input=True)
+    ] = None,
 ) -> None:
     """Login to CDM Server and save credentials."""
     _banner()
@@ -136,11 +143,15 @@ def whoami() -> None:
     if resp.status_code != 200:
         _fail(f"Failed ({resp.status_code})")
     d = resp.json()
+    admin_str = "[green]yes[/green]" if d.get("isAdmin") else "[dim]no[/dim]"
+    ncore_str = (
+        "[green]set[/green]" if d.get("isNcoreCredentialSet") else "[dim]not set[/dim]"
+    )
     panel = Panel(
         f"[bold]{d.get('name', '')}[/bold]\n"
         f"[dim]Email:[/dim]  {d.get('email', '')}\n"
-        f"[dim]Admin:[/dim]  {'[green]yes[/green]' if d.get('isAdmin') else '[dim]no[/dim]'}\n"
-        f"[dim]nCore:[/dim]  {'[green]set[/green]' if d.get('isNcoreCredentialSet') else '[dim]not set[/dim]'}",
+        f"[dim]Admin:[/dim]  {admin_str}\n"
+        f"[dim]nCore:[/dim]  {ncore_str}",
         title="[bold cyan]Current User[/bold cyan]",
         border_style="cyan",
         padding=(0, 2),
@@ -175,12 +186,20 @@ def users_list() -> None:
 def users_add(
     email: Annotated[str, typer.Option("--email", "-e", prompt=True)],
     name: Annotated[str, typer.Option("--name", "-n", prompt=True)],
-    password: Annotated[str, typer.Option("--password", "-p", prompt=True, hide_input=True, confirmation_prompt=True)],
+    password: Annotated[
+        str,
+        typer.Option(
+            "--password", "-p", prompt=True, hide_input=True, confirmation_prompt=True
+        ),
+    ],
     admin: Annotated[bool, typer.Option("--admin/--no-admin")] = False,
 ) -> None:
     """Create a new user (admin only)."""
     c = CDMClient()
-    resp = c.post("/api/users/", json={"email": email, "name": name, "password": password, "isAdmin": admin})
+    resp = c.post(
+        "/api/users/",
+        json={"email": email, "name": name, "password": password, "isAdmin": admin},
+    )
     if resp.status_code == 403:
         _fail("Admin access required")
     if resp.status_code == 200:
@@ -208,7 +227,12 @@ def users_delete(
 @users_app.command("passwd")
 def users_passwd(
     user_id: Annotated[int, typer.Option("--user-id", "-u", prompt=True)],
-    password: Annotated[str, typer.Option("--password", "-p", prompt=True, hide_input=True, confirmation_prompt=True)],
+    password: Annotated[
+        str,
+        typer.Option(
+            "--password", "-p", prompt=True, hide_input=True, confirmation_prompt=True
+        ),
+    ],
 ) -> None:
     """Change a user's password (admin only)."""
     c = CDMClient()
@@ -223,10 +247,14 @@ def users_passwd(
 
 @users_app.command("me")
 def users_me(
-    password: Annotated[Optional[str], typer.Option("--password", "-p", hide_input=True)] = None,
+    password: Annotated[
+        Optional[str], typer.Option("--password", "-p", hide_input=True)
+    ] = None,
     name: Annotated[Optional[str], typer.Option("--name", "-n")] = None,
     ncore_user: Annotated[Optional[str], typer.Option("--ncore-user")] = None,
-    ncore_pass: Annotated[Optional[str], typer.Option("--ncore-pass", hide_input=True)] = None,
+    ncore_pass: Annotated[
+        Optional[str], typer.Option("--ncore-pass", hide_input=True)
+    ] = None,
 ) -> None:
     """Update own profile."""
     payload: dict = {}
@@ -316,12 +344,14 @@ def devices_token(
     device = next((d for d in devices if d["id"] == device_id), None)
     if not device:
         _fail(f"Device {device_id} not found")
-    out.print(Panel(
-        f"[bold yellow]{device['token']}[/bold yellow]",
-        title=f"[bold cyan]Token — {device['name']}[/bold cyan]",
-        border_style="cyan",
-        padding=(0, 2),
-    ))
+    out.print(
+        Panel(
+            f"[bold yellow]{device['token']}[/bold yellow]",
+            title=f"[bold cyan]Token — {device['name']}[/bold cyan]",
+            border_style="cyan",
+            padding=(0, 2),
+        )
+    )
 
 
 # ─── Status ──────────────────────────────────────────────────────────────────
@@ -389,7 +419,13 @@ def _resolve_device_id(c: CDMClient, device_id: Optional[int]) -> int:
     return devices[0]["id"]
 
 
-def _send_instruction(c: CDMClient, device_id: int, instruction: str, torrent_id: Optional[int] = None, paths: Optional[list] = None) -> None:
+def _send_instruction(
+    c: CDMClient,
+    device_id: int,
+    instruction: str,
+    torrent_id: Optional[int] = None,
+    paths: Optional[list] = None,
+) -> None:
     body: dict = {"instructions": {}}
     if torrent_id is not None:
         body["instructions"][instruction] = {"torrent_id": torrent_id}
@@ -409,7 +445,9 @@ def status_start(
 ) -> None:
     """Resume a torrent. [dim]Uses first device if --device omitted.[/dim]"""
     c = CDMClient()
-    _send_instruction(c, _resolve_device_id(c, device_id), "start", torrent_id=torrent_id)
+    _send_instruction(
+        c, _resolve_device_id(c, device_id), "start", torrent_id=torrent_id
+    )
 
 
 @status_app.command("stop")
@@ -419,7 +457,9 @@ def status_stop(
 ) -> None:
     """Pause a torrent. [dim]Uses first device if --device omitted.[/dim]"""
     c = CDMClient()
-    _send_instruction(c, _resolve_device_id(c, device_id), "stop", torrent_id=torrent_id)
+    _send_instruction(
+        c, _resolve_device_id(c, device_id), "stop", torrent_id=torrent_id
+    )
 
 
 @status_app.command("delete")
@@ -438,7 +478,9 @@ def status_delete(
 def status_clean(
     device_id: Annotated[Optional[int], typer.Option("--device", "-d")] = None,
 ) -> None:
-    """Send clean instruction to device. [dim]Uses first device if --device omitted.[/dim]"""
+    """Send clean instruction to device.
+
+    [dim]Uses first device if --device omitted.[/dim]"""
     c = CDMClient()
     resolved = _resolve_device_id(c, device_id)
     devices = c.get("/api/devices/").json()["data"]["devices"]
@@ -455,8 +497,12 @@ def status_clean(
 @app.command()
 def search(
     pattern: Annotated[str, typer.Option("--pattern", "-p", prompt=True)],
-    where: Annotated[str, typer.Option("--where", "-w", help="name|leiras|imdb|cimke")] = "name",
-    category: Annotated[str, typer.Option("--category", "-c", help="all_own|hd|hd_hun|xvid|...")] = "all_own",
+    where: Annotated[
+        str, typer.Option("--where", "-w", help="name|leiras|imdb|cimke")
+    ] = "name",
+    category: Annotated[
+        str, typer.Option("--category", "-c", help="all_own|hd|hd_hun|xvid|...")
+    ] = "all_own",
     page: Annotated[int, typer.Option("--page")] = 1,
 ) -> None:
     """Search for torrents."""
@@ -494,12 +540,18 @@ def search(
             tor["title"],
             tor.get("category", ""),
             tor.get("size", ""),
-            f"[green]{tor.get('seeders', 0)}[/green]/[red]{tor.get('leechers', 0)}[/red]",
+            (
+                f"[green]{tor.get('seeders', 0)}[/green]"
+                f"/[red]{tor.get('leechers', 0)}[/red]"
+            ),
         )
     out.print(t)
 
     if total_pages > 1:
-        out.print(f"[dim]Use [bold]--page[/bold] to navigate. Total: {total_pages} pages.[/dim]")
+        out.print(
+            f"[dim]Use [bold]--page[/bold] to navigate."
+            f" Total: {total_pages} pages.[/dim]"
+        )
 
 
 @app.command()
@@ -509,9 +561,14 @@ def download(
 ) -> None:
     """Add a torrent to a device's download queue."""
     c = CDMClient()
-    resp = c.post("/api/download/", json={"torrentId": torrent_id, "deviceId": device_id})
+    resp = c.post(
+        "/api/download/", json={"torrentId": torrent_id, "deviceId": device_id}
+    )
     if resp.status_code == 200:
-        _ok(f"Torrent [bold]{torrent_id}[/bold] queued on device [bold]{device_id}[/bold]")
+        _ok(
+            f"Torrent [bold]{torrent_id}[/bold]"
+            f" queued on device [bold]{device_id}[/bold]"
+        )
     else:
         _fail(f"Failed ({resp.status_code})")
 
@@ -556,7 +613,10 @@ def tmdb_search(
 ) -> None:
     """Search TMDB."""
     c = CDMClient()
-    resp = c.get("/api/tmdb/search/", params={"pattern": pattern, "page": page, "language": language})
+    resp = c.get(
+        "/api/tmdb/search/",
+        params={"pattern": pattern, "page": page, "language": language},
+    )
     if resp.status_code != 200:
         _fail(f"Failed ({resp.status_code})")
     data = resp.json()

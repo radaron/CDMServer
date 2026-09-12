@@ -14,7 +14,7 @@ router = APIRouter()
 async def list_sessions(
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
-):
+) -> JSONResponse:
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     result = await session.execute(
@@ -46,7 +46,7 @@ async def delete_session(
     jti: str,
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
-):
+) -> JSONResponse:
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     result = await session.execute(

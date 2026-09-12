@@ -1,9 +1,10 @@
+from collections.abc import Awaitable, Callable
 from contextlib import asynccontextmanager
 from urllib.parse import quote
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette import status
@@ -58,17 +59,19 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(request: Request) -> RedirectResponse:
     return RedirectResponse(url="/manage/tmdb", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/login", response_class=HTMLResponse)
-async def login(request: Request):
+async def login(request: Request) -> Response:
     return templates.TemplateResponse(request=request, name="index.html")
 
 
 @app.middleware("http")
-async def spa_fallback(request: Request, call_next):
+async def spa_fallback(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
     response = await call_next(request)
     if request.method != "GET" or response.status_code != status.HTTP_404_NOT_FOUND:
         return response

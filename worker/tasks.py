@@ -3,7 +3,15 @@ from copy import copy
 from celery import group
 from celery.result import allow_join_result
 from cryptography.fernet import Fernet
-from ncoreparser import Client, NcoreConnectionError, NcoreCredentialError, ParamSeq, ParamSort, SearchParamType, SearchParamWhere
+from ncoreparser import (
+    Client,
+    NcoreConnectionError,
+    NcoreCredentialError,
+    ParamSeq,
+    ParamSort,
+    SearchParamType,
+    SearchParamWhere,
+)
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
@@ -56,7 +64,10 @@ def _download(user: User, torrent_id: int, device: Device) -> None:
     )
 
     existing_files = copy(device.file_list)
-    existing_files[torrent_id] = {"file_path": file_path, "downloading_path": download_path}
+    existing_files[torrent_id] = {
+        "file_path": file_path,
+        "downloading_path": download_path,
+    }
 
     with SyncSession() as session:
         dev = session.get(Device, device.id)
@@ -115,7 +126,9 @@ def try_download_wishlist_item(item_id: int) -> dict | None:
             session.delete(item)
             session.commit()
 
-    logger.info("Wishlist item %d: '%s' downloaded to '%s'", item_id, title, device_name)
+    logger.info(
+        "Wishlist item %d: '%s' downloaded to '%s'", item_id, title, device_name
+    )
     return outcome
 
 

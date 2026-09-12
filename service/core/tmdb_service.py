@@ -1,4 +1,5 @@
 import asyncio
+from typing import Any
 
 from aiohttp import ClientSession
 from themoviedb import aioTMDb
@@ -37,7 +38,7 @@ def get_tmdb(language: str | None, session: ClientSession | None = None) -> aioT
     )
 
 
-def build_media_data(item, imdb_id: str | None = None) -> dict:
+def build_media_data(item: Any, imdb_id: str | None = None) -> dict:
     title = (
         getattr(item, "title", None)
         or getattr(item, "name", None)
@@ -84,14 +85,18 @@ async def search_media(
         items = [item for item in (search_result.results or [])]
         semaphore = asyncio.Semaphore(8)
 
-        async def fetch_with_limit(item):
+        async def fetch_with_limit(item: Any) -> dict:
             async with semaphore:
                 media_type = {
                     item.is_movie(): "movie",
                     item.is_tv(): "tv",
                     item.is_person(): "person",
                 }.get(True)
-                imdb_id = await fetch_imdb_id(tmdb, item.id, media_type)
+                imdb_id = (
+                    await fetch_imdb_id(tmdb, item.id, media_type)
+                    if media_type
+                    else None
+                )
                 return build_media_data(item, imdb_id=imdb_id)
 
         data = await asyncio.gather(*(fetch_with_limit(item) for item in items))
@@ -109,7 +114,7 @@ async def popular_media(page: int = 1, language: str | None = None) -> dict:
 
         semaphore = asyncio.Semaphore(8)
 
-        async def fetch_with_limit(item, media_type: str):
+        async def fetch_with_limit(item: Any, media_type: str) -> dict:
             async with semaphore:
                 imdb_id = await fetch_imdb_id(tmdb, item.id, media_type)
                 return build_media_data(item, imdb_id=imdb_id)

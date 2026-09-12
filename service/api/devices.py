@@ -26,7 +26,7 @@ router = APIRouter()
 @router.get("/")
 async def get_devices(
     user: User = Depends(manager), session: AsyncSession = Depends(get_session)
-):
+) -> JSONResponse:
     result = await session.execute(
         select(Device)
         .join(user_device_association)
@@ -44,7 +44,7 @@ async def add_device(
     data: NewDeviceData,
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-):
+) -> JSONResponse:
     new_device = Device(name=data.name, token=token_hex(16))
     new_device.users.append(user)
     session.add(new_device)
@@ -65,8 +65,8 @@ async def modify_device(
     data: EditDeviceData,
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-    device_id: int = None,
-):
+    device_id: int | None = None,
+) -> JSONResponse:
     result = await session.execute(
         select(Device)
         .join(user_device_association)
@@ -101,8 +101,8 @@ async def modify_device(
 async def delete_device(
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-    device_id: int = None,
-):
+    device_id: int | None = None,
+) -> JSONResponse:
     result = await session.execute(
         select(Device)
         .join(user_device_association)

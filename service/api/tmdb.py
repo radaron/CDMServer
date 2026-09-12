@@ -18,7 +18,7 @@ router = APIRouter()
 @router.get("/popular/")
 async def get_popular(
     page: int = 1, language: str | None = None, _: User = Depends(manager)
-):
+) -> JSONResponse:
     popular_data = await popular_media(page=page, language=language)
     return JSONResponse(
         TmdbPopularResponse(data=TmdbPopularData(**popular_data)).model_dump()
@@ -31,7 +31,7 @@ async def search(
     page: int = 1,
     language: str | None = None,
     _: User = Depends(manager),
-):
+) -> JSONResponse:
     data, total_pages = await search_media(
         pattern=pattern, page=page, language=language
     )
@@ -48,6 +48,6 @@ async def get_imdb(
     media_type: str,
     language: str | None = None,
     _: User = Depends(manager),
-):
+) -> JSONResponse:
     imdb_id = await get_imdb_id(tmdb_id, media_type, language=language)
     return JSONResponse(TmdbImdbResponse(imdb_id=imdb_id).model_dump())

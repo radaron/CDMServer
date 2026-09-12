@@ -12,6 +12,15 @@ dependencies = [
 [project.scripts]
 cdm = "CDMServerCli.main:app"
 
+[dependency-groups]
+dev = [
+    "ruff>=0.14.1",
+    "ty>=0.0.1a6",
+]
+
+[tool.ty.environment]
+python-version = "3.11"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

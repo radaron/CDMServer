@@ -21,7 +21,8 @@ def send_wishlist_status_email(to_email: str, outcomes: list[dict]) -> None:
     subject = f"CDM Wishlist: {downloaded}/{total} downloaded this week"
 
     plain = "\n".join(
-        f"{'✓' if o.get('success') else ('✗' if o.get('found') else '⏳')} {o['title']} ({o['device_name']}, {o['torrent_type'].upper()})"
+        f"{'✓' if o.get('success') else ('✗' if o.get('found') else '⏳')} "
+        f"{o['title']} ({o['device_name']}, {o['torrent_type'].upper()})"
         for o in outcomes
     )
 

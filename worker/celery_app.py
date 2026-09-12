@@ -5,7 +5,9 @@ from service.util.configuration import settings
 
 broker_url = f"redis://{settings.redis_host}:{settings.redis_port}/0"
 
-app = Celery("cdm_worker", broker=broker_url, backend=broker_url, include=["worker.tasks"])
+app = Celery(
+    "cdm_worker", broker=broker_url, backend=broker_url, include=["worker.tasks"]
+)
 app.conf.task_serializer = "json"
 app.conf.result_serializer = "json"
 app.conf.accept_content = ["json"]

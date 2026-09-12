@@ -30,4 +30,18 @@ dependencies = [
 dev = [
     "pytest>=8.4.2",
     "ruff>=0.14.1",
+    "ty>=0.0.1a6",
 ]
+
+[tool.ty.environment]
+python-version = "3.13"
+
+[tool.ty.rules]
+# SQLAlchemy 1.4-style Column types are not recognised by ty — suppress until migration to Mapped[]
+invalid-assignment = "ignore"
+invalid-argument-type = "ignore"
+invalid-return-type = "ignore"
+# FastAPI-login @manager.user_loader() decorator opaque to ty
+call-non-callable = "ignore"
+# pydantic ConfigDict keys not in ty's TypedDict stubs
+invalid-key = "ignore"

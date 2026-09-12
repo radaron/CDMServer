@@ -20,11 +20,11 @@ router = APIRouter()
 @router.get("/search/")
 async def search_torrents(
     user: User = Depends(manager),
-    pattern: str = None,
+    pattern: str | None = None,
     category: str = SearchParamType.ALL_OWN.value,
     where: str = SearchParamWhere.NAME.value,
     page: int = 1,
-):
+) -> JSONResponse:
     torrents, total_pages = await search_torrents_for_user(
         user=user, pattern=pattern, category=category, where=where, page=page
     )
@@ -40,7 +40,7 @@ async def add_download(
     data: AddDownloadData,
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-):
+) -> JSONResponse:
     try:
         await add_download_for_user(
             session=session,

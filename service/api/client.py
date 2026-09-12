@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get("/")
 async def get_order(
     session: AsyncSession = Depends(get_session), x_api_key: str = Header(None)
-):
+) -> JSONResponse:
     devices = await session.execute(
         select(Device).where(Device.token == x_api_key).with_for_update()
     )
@@ -45,8 +45,8 @@ async def get_order(
 async def download_file(
     session: AsyncSession = Depends(get_session),
     x_api_key: str = Header(None),
-    file_id: str = None,
-):
+    file_id: str | None = None,
+) -> FileResponse | JSONResponse:
     devices = await session.execute(
         select(Device).where(Device.token == x_api_key).with_for_update()
     )
@@ -81,7 +81,7 @@ async def add_device(
     data: StatusData,
     session: AsyncSession = Depends(get_session),
     x_api_key: str = Header(None),
-):
+) -> JSONResponse:
     result = await session.execute(select(Device).where(Device.token == x_api_key))
     device = result.scalars().first()
     if device is None:

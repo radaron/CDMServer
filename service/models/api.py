@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict, EmailStr
 from pydantic.alias_generators import to_camel
 
@@ -12,10 +14,10 @@ class BaseData(BaseModel):
         use_enum_values=True,
     )
 
-    def model_dump(self, **kwargs) -> dict:
+    def model_dump(self, **kwargs: Any) -> dict:
         return super().model_dump(by_alias=True, **kwargs)
 
-    def model_dump_snake_case(self, **kwargs) -> dict:
+    def model_dump_snake_case(self, **kwargs: Any) -> dict:
         return super().model_dump(by_alias=False, **kwargs)
 
 

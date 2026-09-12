@@ -1,5 +1,6 @@
 import sys
 from importlib.metadata import version
+from typing import Any
 
 import httpx
 from rich.console import Console
@@ -19,12 +20,16 @@ class CDMClient:
     def __init__(self, require_auth: bool = True):
         server_url = config.get_server_url()
         if not server_url:
-            console.print("[bold red]✗[/bold red] Not configured. Run [bold]cdm login[/bold] first.")
+            console.print(
+                "[bold red]✗[/bold red] Not configured — run [bold]cdm login[/bold]"
+            )
             sys.exit(1)
         self.base = server_url
         self._access, self._refresh = config.get_tokens()
         if require_auth and not self._refresh:
-            console.print("[bold red]✗[/bold red] Not logged in. Run [bold]cdm login[/bold] first.")
+            console.print(
+                "[bold red]✗[/bold red] Not logged in — run [bold]cdm login[/bold]"
+            )
             sys.exit(1)
         self._http = httpx.Client(headers={"User-Agent": CLI_USER_AGENT})
 
@@ -53,30 +58,34 @@ class CDMClient:
             pass
         return False
 
-    def request(self, method: str, path: str, **kwargs) -> httpx.Response:
+    def request(self, method: str, path: str, **kwargs: Any) -> httpx.Response:
         url = f"{self.base}{path}"
         kwargs.setdefault("timeout", 30)
         resp = self._http.request(method, url, headers=self._auth_headers(), **kwargs)
         if resp.status_code == 401:
             if self._do_refresh():
-                resp = self._http.request(method, url, headers=self._auth_headers(), **kwargs)
+                resp = self._http.request(
+                    method, url, headers=self._auth_headers(), **kwargs
+                )
         if resp.status_code == 401:
             config.clear_tokens()
-            console.print("[bold red]✗[/bold red] Session expired. Run [bold]cdm login[/bold] again.")
+            console.print(
+                "[bold red]✗[/bold red] Session expired — run [bold]cdm login[/bold]"
+            )
             sys.exit(1)
         return resp
 
-    def get(self, path: str, **kwargs) -> httpx.Response:
+    def get(self, path: str, **kwargs: Any) -> httpx.Response:
         return self.request("GET", path, **kwargs)
 
-    def post(self, path: str, **kwargs) -> httpx.Response:
+    def post(self, path: str, **kwargs: Any) -> httpx.Response:
         return self.request("POST", path, **kwargs)
 
-    def put(self, path: str, **kwargs) -> httpx.Response:
+    def put(self, path: str, **kwargs: Any) -> httpx.Response:
         return self.request("PUT", path, **kwargs)
 
-    def patch(self, path: str, **kwargs) -> httpx.Response:
+    def patch(self, path: str, **kwargs: Any) -> httpx.Response:
         return self.request("PATCH", path, **kwargs)
 
-    def delete(self, path: str, **kwargs) -> httpx.Response:
+    def delete(self, path: str, **kwargs: Any) -> httpx.Response:
         return self.request("DELETE", path, **kwargs)

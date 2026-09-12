@@ -21,7 +21,7 @@ router = APIRouter()
 
 
 @router.get("/types/")
-async def get_wishlist_types():
+async def get_wishlist_types() -> JSONResponse:
     return JSONResponse({"data": MOVIE_TORRENT_TYPES})
 
 
@@ -29,7 +29,7 @@ async def get_wishlist_types():
 async def get_wishlist(
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-):
+) -> JSONResponse:
     result = await session.execute(
         select(Wishlist)
         .where(Wishlist.user_id == user.id)
@@ -60,7 +60,7 @@ async def add_wishlist_item(
     data: AddWishlistData,
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-):
+) -> JSONResponse:
     if data.torrent_type not in MOVIE_TORRENT_TYPES:
         return JSONResponse({"message": "Invalid torrent type"}, status_code=400)
 
@@ -109,7 +109,7 @@ async def delete_wishlist_item(
     item_id: int,
     user: User = Depends(manager),
     session: AsyncSession = Depends(get_session),
-):
+) -> JSONResponse:
     result = await session.execute(
         select(Wishlist).where(Wishlist.id == item_id, Wishlist.user_id == user.id)
     )

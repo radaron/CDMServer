@@ -22,7 +22,7 @@ manager = LoginManager(
 
 
 @manager.user_loader()
-async def load_user(email: str):
+async def load_user(email: str) -> User | None:
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(User).where(User.email == email))
         return result.scalars().first()
@@ -134,9 +134,9 @@ class Hasher:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @classmethod
-    def verify_password(cls, plain_password, hashed_password):
+    def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
         return cls.pwd_context.verify(plain_password, hashed_password)
 
     @classmethod
-    def get_password_hash(cls, password):
+    def get_password_hash(cls, password: str) -> str:
         return cls.pwd_context.hash(password)

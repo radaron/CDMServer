@@ -30,7 +30,7 @@ async def register(
     data: NewUserData,
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
-):
+) -> JSONResponse:
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     try:
@@ -51,7 +51,7 @@ async def register(
 @router.get("/")
 async def get_users(
     session: AsyncSession = Depends(get_session), user: User = Depends(manager)
-):
+) -> JSONResponse:
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
     user_objects = await session.execute(select(User))
@@ -72,8 +72,8 @@ async def get_users(
 async def delete_user(
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
-    user_id: int = None,
-):
+    user_id: int | None = None,
+) -> JSONResponse:
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
 
@@ -110,8 +110,8 @@ async def modify_user_by_id(
     data: ModifyUserData,
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
-    user_id: int = None,
-):
+    user_id: int | None = None,
+) -> JSONResponse:
     if not user.is_admin:
         return JSONResponse({"message": "Forbidden"}, status_code=403)
 
@@ -137,7 +137,7 @@ async def modify_user(
     data: ModifyMyData,
     session: AsyncSession = Depends(get_session),
     user: User = Depends(manager),
-):
+) -> JSONResponse:
     result = await session.execute(select(User).where(User.id == user.id))
     user_object = result.scalars().first()
 
@@ -161,7 +161,7 @@ async def modify_user(
 
 
 @router.get("/me/")
-def get_user(user: User = Depends(manager)):
+def get_user(user: User = Depends(manager)) -> JSONResponse:
     return JSONResponse(
         MeData(
             email=user.email,
