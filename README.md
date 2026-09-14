@@ -224,5 +224,6 @@ Additional environment variables for the worker (optional — email is silently 
 | `SMTP_PORT` | SMTP port (default: `587`) |
 
 ## See also
+* [CDM CLI](cli/README.md) — command-line interface for CDM Server
 * [cdm client](https://github.com/radaron/CDMClient)
 * [browser extension](https://github.com/radaron/CDMBrowserExtension)

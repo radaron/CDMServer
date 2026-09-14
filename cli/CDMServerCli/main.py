@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from importlib.metadata import version as _pkg_version
 from typing import Annotated, Never, Optional
 
 import httpx
@@ -28,16 +29,18 @@ users_app = typer.Typer(help="User management", rich_markup_mode="rich")
 devices_app = typer.Typer(help="Device management", rich_markup_mode="rich")
 status_app = typer.Typer(help="Download status & control", rich_markup_mode="rich")
 tmdb_app = typer.Typer(help="TMDB browse & search", rich_markup_mode="rich")
+wishlist_app = typer.Typer(help="Wishlist management", rich_markup_mode="rich")
 
 app.add_typer(users_app, name="users")
 app.add_typer(devices_app, name="devices")
 app.add_typer(status_app, name="status")
 app.add_typer(tmdb_app, name="tmdb")
+app.add_typer(wishlist_app, name="wishlist")
 
 out = Console()
 err = Console(stderr=True)
 
-BANNER = "[bold cyan]╔═╗╔╦╗╔╦╗[/bold cyan] [dim]CDM Server CLI[/dim]"
+BANNER = "[dim]CDM Server CLI[/dim]"
 
 
 def _banner() -> None:
@@ -79,6 +82,15 @@ def _status_color(status: str) -> str:
     if "download" in s or "active" in s:
         return "cyan"
     return "yellow"
+
+
+# ─── Version ─────────────────────────────────────────────────────────────────
+
+
+@app.command()
+def version() -> None:
+    """Show the CLI version."""
+    out.print(f"[bold cyan]cdm[/bold cyan] [bold]{_pkg_version('CDMServerCli')}[/bold]")
 
 
 # ─── Auth ────────────────────────────────────────────────────────────────────
@@ -635,3 +647,99 @@ def tmdb_popular(language: Annotated[str, typer.Option("--lang", "-l")] = "en") 
     _print_tmdb_table(data["movies"], "Popular Movies")
     out.print()
     _print_tmdb_table(data["tvs"], "Popular Series")
+
+
+# ─── Wishlist ─────────────────────────────────────────────────────────────────
+
+
+@wishlist_app.command("list")
+def wishlist_list() -> None:
+    """List wishlist items."""
+    c = CDMClient()
+    resp = c.get("/api/wishlist/")
+    if resp.status_code != 200:
+        _fail(f"Failed ({resp.status_code})")
+
+    items = resp.json()["data"]
+    if not items:
+        out.print("[dim]Wishlist is empty.[/dim]")
+        return
+
+    t = Table(box=box.ROUNDED, border_style="magenta", header_style="bold magenta")
+    t.add_column("ID", style="dim", width=6)
+    t.add_column("Title", min_width=30)
+    t.add_column("IMDB ID", width=12)
+    t.add_column("Device", width=14)
+    t.add_column("Type", width=12)
+    t.add_column("Added", width=20)
+    for item in items:
+        t.add_row(
+            str(item["id"]),
+            item["title"],
+            item["imdbId"],
+            item["deviceName"],
+            item["torrentType"],
+            item["createdAt"][:19].replace("T", " "),
+        )
+    out.print(t)
+
+
+@wishlist_app.command("types")
+def wishlist_types() -> None:
+    """List available torrent types for wishlist."""
+    c = CDMClient()
+    resp = c.get("/api/wishlist/types/")
+    if resp.status_code != 200:
+        _fail(f"Failed ({resp.status_code})")
+    types = resp.json()["data"]
+    for t in types:
+        out.print(f"  [bold cyan]{t}[/bold cyan]")
+
+
+@wishlist_app.command("add")
+def wishlist_add(
+    imdb_id: Annotated[
+        str,
+        typer.Option("--imdb-id", "-i", prompt=True, help="IMDB ID (e.g. tt1234567)"),
+    ],
+    device_id: Annotated[int, typer.Option("--device-id", "-d", prompt=True)],
+    torrent_type: Annotated[
+        str,
+        typer.Option(
+            "--type", "-t", prompt=True,
+            help="Torrent type (run 'wishlist types' to list)",
+        ),
+    ],
+) -> None:
+    """Add a movie to the wishlist by IMDB ID."""
+    c = CDMClient()
+    resp = c.post(
+        "/api/wishlist/",
+        json={"imdb_id": imdb_id, "device_id": device_id, "torrent_type": torrent_type},
+    )
+    if resp.status_code == 200:
+        _ok(f"[bold]{imdb_id}[/bold] added to wishlist")
+    elif resp.status_code == 409:
+        _fail("Already in wishlist")
+    elif resp.status_code == 404:
+        _fail("Device not found")
+    elif resp.status_code == 400:
+        _fail(f"Bad request: {resp.json().get('message', '')}")
+    else:
+        _fail(f"Failed ({resp.status_code})")
+
+
+@wishlist_app.command("delete")
+def wishlist_delete(
+    item_id: Annotated[int, typer.Option("--item-id", "-i", prompt=True)],
+) -> None:
+    """Remove an item from the wishlist by ID."""
+    c = CDMClient()
+    typer.confirm(f"Remove wishlist item {item_id}?", abort=True)
+    resp = c.delete(f"/api/wishlist/{item_id}/")
+    if resp.status_code == 200:
+        _ok(f"Wishlist item {item_id} removed")
+    elif resp.status_code == 404:
+        _fail("Item not found")
+    else:
+        _fail(f"Failed ({resp.status_code})")
