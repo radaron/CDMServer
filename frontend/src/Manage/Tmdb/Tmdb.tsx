@@ -167,6 +167,16 @@ export const Tmdb = () => {
     setHeaderTitle(t('HEADER_TMDB'))
   }, [setHeaderTitle, t])
 
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        window.location.reload()
+      }
+    }
+    window.addEventListener('pageshow', handlePageShow)
+    return () => window.removeEventListener('pageshow', handlePageShow)
+  }, [])
+
   const search = useCallback(async () => {
     if (searchParams.has(PATTERN) && searchParams.get(PATTERN)) {
       const searchPattern = searchParams.get(PATTERN) || ''
