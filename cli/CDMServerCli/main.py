@@ -706,7 +706,9 @@ def wishlist_add(
     torrent_type: Annotated[
         str,
         typer.Option(
-            "--type", "-t", prompt=True,
+            "--type",
+            "-t",
+            prompt=True,
             help="Torrent type (run 'wishlist types' to list)",
         ),
     ],
