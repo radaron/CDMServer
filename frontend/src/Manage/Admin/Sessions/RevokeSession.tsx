@@ -73,11 +73,14 @@ export const RevokeSession = () => {
     }
   }
 
-  const sessionsByUser = sessions.reduce<Record<number, Session[]>>((acc, s) => {
-    if (!acc[s.userId]) acc[s.userId] = []
-    acc[s.userId].push(s)
-    return acc
-  }, {})
+  const sessionsByUser = sessions.reduce<Record<number, Session[]>>(
+    (acc, s) => {
+      if (!acc[s.userId]) acc[s.userId] = []
+      acc[s.userId].push(s)
+      return acc
+    },
+    {}
+  )
 
   return (
     <Box>
@@ -105,8 +108,12 @@ export const RevokeSession = () => {
                   {userSessions.map((s) => (
                     <TableRow key={s.jti}>
                       <TableCell>{s.clientType}</TableCell>
-                      <TableCell>{new Date(s.createdAt).toLocaleString()}</TableCell>
-                      <TableCell>{new Date(s.lastUsedAt).toLocaleString()}</TableCell>
+                      <TableCell>
+                        {new Date(s.createdAt).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(s.lastUsedAt).toLocaleString()}
+                      </TableCell>
                       <TableCell>
                         <Button
                           variant="outlined"
