@@ -41,7 +41,7 @@ async def get_order(
     )
 
 
-@router.get("/download/{file_id}/")
+@router.get("/download/{file_id}/", response_model=None)
 async def download_file(
     session: AsyncSession = Depends(get_session),
     x_api_key: str = Header(None),

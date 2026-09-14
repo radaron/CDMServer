@@ -73,46 +73,58 @@ export const RevokeSession = () => {
     }
   }
 
+  const sessionsByUser = sessions.reduce<Record<number, Session[]>>((acc, s) => {
+    if (!acc[s.userId]) acc[s.userId] = []
+    acc[s.userId].push(s)
+    return acc
+  }, {})
+
   return (
     <Box>
       <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
         {t('SESSION_TITLE')}
       </Typography>
-      <Box sx={{ overflowX: 'auto' }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('SESSION_USER')}</TableCell>
-              <TableCell>{t('SESSION_CLIENT')}</TableCell>
-              <TableCell>{t('SESSION_CREATED')}</TableCell>
-              <TableCell>{t('SESSION_LAST_USED')}</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sessions.map((s) => (
-              <TableRow key={s.jti}>
-                <TableCell>
-                  {s.userName} ({s.userEmail})
-                </TableCell>
-                <TableCell>{s.clientType}</TableCell>
-                <TableCell>{new Date(s.createdAt).toLocaleString()}</TableCell>
-                <TableCell>{new Date(s.lastUsedAt).toLocaleString()}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={() => handleRevoke(s.jti)}
-                  >
-                    {t('SESSION_REVOKE_BUTTON')}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Box>
+      {Object.values(sessionsByUser).map((userSessions) => {
+        const { userName, userEmail } = userSessions[0]
+        return (
+          <Box key={userSessions[0].userId} sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
+              {userName} ({userEmail})
+            </Typography>
+            <Box sx={{ overflowX: 'auto' }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t('SESSION_CLIENT')}</TableCell>
+                    <TableCell>{t('SESSION_CREATED')}</TableCell>
+                    <TableCell>{t('SESSION_LAST_USED')}</TableCell>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {userSessions.map((s) => (
+                    <TableRow key={s.jti}>
+                      <TableCell>{s.clientType}</TableCell>
+                      <TableCell>{new Date(s.createdAt).toLocaleString()}</TableCell>
+                      <TableCell>{new Date(s.lastUsedAt).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => handleRevoke(s.jti)}
+                        >
+                          {t('SESSION_REVOKE_BUTTON')}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Box>
+        )
+      })}
     </Box>
   )
 }
