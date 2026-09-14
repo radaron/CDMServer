@@ -24,9 +24,11 @@ jobs:
         run: uv sync --dev --frozen
 
       - name: Check formatting
+        working-directory: cli
         run: make check-format-ci
 
       - name: Lint
+        working-directory: cli
         run: make lint
 
       - name: Build and publish
