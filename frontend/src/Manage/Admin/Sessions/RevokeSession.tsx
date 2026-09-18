@@ -1,9 +1,16 @@
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
+  Avatar,
   Box,
-  Button,
+  Chip,
+  CircularProgress,
+  IconButton,
+  Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Typography,
@@ -12,7 +19,11 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { apiFetch } from '../../../api'
 import { LOGIN_PAGE } from '../../../constant'
-import { redirectToPage } from '../../../util'
+import {
+  formatDateTime,
+  formatRelativeTime,
+  redirectToPage,
+} from '../../../util'
 import { manageContext } from '../../Manage'
 
 interface Session {
@@ -25,11 +36,22 @@ interface Session {
   lastUsedAt: string
 }
 
+const getInitials = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join('')
+
 export const RevokeSession = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [sessions, setSessions] = useState<Session[]>([])
+  const [loading, setLoading] = useState(true)
+  const [revokingJti, setRevokingJti] = useState<string | null>(null)
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
+  const language = i18n.language
 
   const getSessions = useCallback(async () => {
     try {
@@ -47,6 +69,8 @@ export const RevokeSession = () => {
       }
     } catch {
       setToastData({ message: t('SESSION_FETCH_ERROR'), type: 'error' })
+    } finally {
+      setLoading(false)
     }
   }, [setToastData, t])
 
@@ -55,6 +79,7 @@ export const RevokeSession = () => {
   }, [getSessions])
 
   const handleRevoke = async (jti: string) => {
+    setRevokingJti(jti)
     try {
       const resp = await apiFetch(`/api/sessions/${jti}/`, {
         method: 'DELETE',
@@ -62,7 +87,7 @@ export const RevokeSession = () => {
       })
       if (resp.status === 200) {
         setToastData({ message: t('SESSION_REVOKE_SUCCESS'), type: 'success' })
-        getSessions()
+        await getSessions()
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
@@ -70,6 +95,8 @@ export const RevokeSession = () => {
       }
     } catch {
       setToastData({ message: t('SESSION_REVOKE_ERROR'), type: 'error' })
+    } finally {
+      setRevokingJti(null)
     }
   }
 
@@ -82,56 +109,135 @@ export const RevokeSession = () => {
     {}
   )
 
+  const userGroups = Object.values(sessionsByUser)
+    .map((userSessions) =>
+      [...userSessions].sort(
+        (a, b) =>
+          new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime()
+      )
+    )
+    .sort((a, b) => a[0].userName.localeCompare(b[0].userName))
+
+  const renderTimeCell = (value: string) => (
+    <TableCell sx={{ whiteSpace: 'nowrap' }}>
+      <Typography variant="body2">{formatDateTime(value, language)}</Typography>
+      <Typography
+        variant="caption"
+        sx={{ color: 'text.secondary', display: 'block' }}
+      >
+        {formatRelativeTime(value, language)}
+      </Typography>
+    </TableCell>
+  )
+
   return (
-    <Box>
+    <Box sx={{ maxWidth: { sm: '1000px' }, mx: 'auto', width: '100%' }}>
       <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
         {t('SESSION_TITLE')}
       </Typography>
-      {Object.values(sessionsByUser).map((userSessions) => {
-        const { userName, userEmail } = userSessions[0]
-        return (
-          <Box key={userSessions[0].userId} sx={{ mb: 3 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
-              {userName} ({userEmail})
-            </Typography>
-            <Box sx={{ overflowX: 'auto' }}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{t('SESSION_CLIENT')}</TableCell>
-                    <TableCell>{t('SESSION_CREATED')}</TableCell>
-                    <TableCell>{t('SESSION_LAST_USED')}</TableCell>
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {userSessions.map((s) => (
-                    <TableRow key={s.jti}>
-                      <TableCell>{s.clientType}</TableCell>
-                      <TableCell>
-                        {new Date(s.createdAt).toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        {new Date(s.lastUsedAt).toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={() => handleRevoke(s.jti)}
-                        >
-                          {t('SESSION_REVOKE_BUTTON')}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Box>
-        )
-      })}
+
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+          <CircularProgress />
+        </Box>
+      ) : userGroups.length === 0 ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            borderRadius: 1,
+            boxShadow: 1,
+            padding: 2,
+            backgroundColor: 'background.paper',
+          }}
+        >
+          <Typography sx={{ color: 'text.secondary' }}>
+            {t('SESSION_EMPTY')}
+          </Typography>
+        </Box>
+      ) : (
+        <Stack spacing={2}>
+          {userGroups.map((userSessions) => {
+            const { userId, userName, userEmail } = userSessions[0]
+            return (
+              <Paper
+                key={userId}
+                variant="outlined"
+                sx={{ overflow: 'hidden' }}
+              >
+                <Stack
+                  direction="row"
+                  spacing={1.5}
+                  alignItems="center"
+                  sx={{ px: 2, py: 1.5 }}
+                >
+                  <Avatar sx={{ width: 36, height: 36, fontSize: '14px' }}>
+                    {getInitials(userName)}
+                  </Avatar>
+                  <Box sx={{ minWidth: 0, flexGrow: 1 }}>
+                    <Typography variant="subtitle2" noWrap>
+                      {userName}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      noWrap
+                      sx={{ color: 'text.secondary', display: 'block' }}
+                    >
+                      {userEmail}
+                    </Typography>
+                  </Box>
+                  <Chip
+                    size="small"
+                    label={t('SESSION_COUNT', { count: userSessions.length })}
+                  />
+                </Stack>
+                <TableContainer>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>{t('SESSION_CLIENT')}</TableCell>
+                        <TableCell>{t('SESSION_CREATED')}</TableCell>
+                        <TableCell>{t('SESSION_LAST_USED')}</TableCell>
+                        <TableCell align="right" />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {userSessions.map((s) => (
+                        <TableRow key={s.jti} hover>
+                          <TableCell>
+                            <Chip
+                              label={s.clientType.toUpperCase()}
+                              size="small"
+                              variant="outlined"
+                              sx={{ fontFamily: 'monospace', fontSize: '11px' }}
+                            />
+                          </TableCell>
+                          {renderTimeCell(s.createdAt)}
+                          {renderTimeCell(s.lastUsedAt)}
+                          <TableCell align="right">
+                            <IconButton
+                              size="small"
+                              onClick={() => handleRevoke(s.jti)}
+                              disabled={revokingJti === s.jti}
+                              aria-label={t('SESSION_REVOKE_BUTTON')}
+                            >
+                              {revokingJti === s.jti ? (
+                                <CircularProgress size={16} />
+                              ) : (
+                                <DeleteIcon fontSize="small" color="error" />
+                              )}
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            )
+          })}
+        </Stack>
+      )}
     </Box>
   )
 }

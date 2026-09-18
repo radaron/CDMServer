@@ -107,7 +107,7 @@ class Device(Base):
     file_list = Column(JSON, default={})
     instructions = Column(JSON, default=[])
     settings = Column(JSON, default=DEFAULT_DEVICE_SETTINGS)
-    updated = Column(DateTime, default=datetime.now(tz=timezone.utc))
+    updated = Column(DateTime, default=lambda: datetime.now(tz=timezone.utc))
     users: Mapped[list["User"]] = relationship(
         "User", secondary=user_device_association, back_populates="devices"
     )

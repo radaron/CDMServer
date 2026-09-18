@@ -17,7 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslation } from 'react-i18next'
 import { apiFetch } from '../../api'
 import { LOGIN_PAGE } from '../../constant'
-import { redirectToPage } from '../../util'
+import { formatDate, redirectToPage } from '../../util'
 import { manageContext } from '../Manage'
 
 interface WishlistItem {
@@ -31,7 +31,7 @@ interface WishlistItem {
 }
 
 export const Wishlist = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const context = useContext(manageContext)
   const setToastData = context?.setToastData || (() => {})
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
@@ -156,7 +156,7 @@ export const Wishlist = () => {
                 />
               </TableCell>
               <TableCell sx={{ color: 'text.secondary', fontSize: '13px' }}>
-                {new Date(item.createdAt).toLocaleDateString()}
+                {formatDate(item.createdAt, i18n.language)}
               </TableCell>
               <TableCell align="right">
                 <IconButton

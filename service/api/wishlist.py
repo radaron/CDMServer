@@ -15,6 +15,7 @@ from service.models.database import (
     user_device_association,
 )
 from service.util.auth import manager
+from service.util.time import utc_isoformat
 from worker.celery_app import app as celery_app
 
 router = APIRouter()
@@ -47,7 +48,7 @@ async def get_wishlist(
                     device_id=item.device_id,
                     device_name=item.device.name,
                     torrent_type=item.torrent_type,
-                    created_at=item.created_at.isoformat(),
+                    created_at=utc_isoformat(item.created_at),
                 ).model_dump()
                 for item in items
             ]

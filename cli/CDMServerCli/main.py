@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from datetime import datetime
 from importlib.metadata import version as _pkg_version
 from typing import Annotated, Never, Optional
 
@@ -69,6 +70,11 @@ def _human_size(b: int) -> str:
     units = ["B", "KB", "MB", "GB", "TB"]
     i = int(math.floor(math.log(b, 1024)))
     return f"{b / 1024**i:.1f} {units[i]}"
+
+
+def _format_local_datetime(value: str) -> str:
+    """Render an ISO timestamp from the API in the local time zone."""
+    return datetime.fromisoformat(value).astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _status_color(status: str) -> str:
@@ -679,7 +685,7 @@ def wishlist_list() -> None:
             item["imdbId"],
             item["deviceName"],
             item["torrentType"],
-            item["createdAt"][:19].replace("T", " "),
+            _format_local_datetime(item["createdAt"]),
         )
     out.print(t)
 

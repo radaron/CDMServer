@@ -6,6 +6,7 @@ from sqlalchemy.orm import joinedload
 from service.models.api import SessionData
 from service.models.database import AsyncSession, RefreshSession, User, get_session
 from service.util.auth import manager
+from service.util.time import utc_isoformat
 
 router = APIRouter()
 
@@ -31,8 +32,8 @@ async def list_sessions(
                         user_email=r.user.email,
                         user_name=r.user.name,
                         client_type=r.client_type,
-                        created_at=r.created_at.isoformat(),
-                        last_used_at=r.last_used_at.isoformat(),
+                        created_at=utc_isoformat(r.created_at),
+                        last_used_at=utc_isoformat(r.last_used_at),
                     ).model_dump()
                     for r in rows
                 ]
