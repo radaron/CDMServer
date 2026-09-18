@@ -15,7 +15,7 @@
   "CREDENTIALS_DELETED": "Login credentials removed.",
   "DEFAULT_PATH_TITLE": "Default download path",
   "DELETE_DEVICE_CONFIRM": "Are you sure you want to delete device?",
-  "DELETE_TORRENT_CONFIRM": "Are you sure you want to delete torrent?",
+  "DELETE_TORRENT_CONFIRM": "Are you sure you want to delete torrent \"{{name}}\"?",
   "DELETE_NCORE_CREDENTIALS_CONFIRM": "Are you sure you want to delete credentials?",
   "DELETE_USER_BUTTON": "Delete",
   "DELETE_USER_CONFIRM": "Are you sure you want to delete user?",
@@ -134,6 +134,7 @@
   "WISHLIST_FETCH_ERROR": "Could not fetch wishlist.",
   "WISHLIST_DELETE_ERROR": "Could not remove from wishlist.",
   "WISHLIST_REMOVE": "Remove from wishlist",
+  "WISHLIST_REMOVE_CONFIRM": "Are you sure you want to remove \"{{title}}\" from the wishlist?",
   "WISHLIST_ADDED_DATE": "Added",
   "WISHLIST_EMPTY": "Your wishlist is empty."
 }

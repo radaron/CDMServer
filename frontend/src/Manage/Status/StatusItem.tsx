@@ -134,7 +134,11 @@ export const StatusItem = ({
   }
 
   const handleDeleteAction = async () => {
-    if (window.confirm(t('DELETE_TORRENT_CONFIRM'))) {
+    if (
+      window.confirm(
+        t('DELETE_TORRENT_CONFIRM', { name: separateWords(torrent.name) })
+      )
+    ) {
       await sendInstruction('delete')
     }
   }

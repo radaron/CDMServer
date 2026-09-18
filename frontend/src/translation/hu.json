@@ -15,7 +15,7 @@
   "CREDENTIALS_DELETED": "Bejelentkezési adatok törlődtek.",
   "DEFAULT_PATH_TITLE": "Egyéb letöltési útvonal",
   "DELETE_DEVICE_CONFIRM": "Biztosan törölni szeretné az eszközt?",
-  "DELETE_TORRENT_CONFIRM": "Biztosan törölni szeretné a torrentet?",
+  "DELETE_TORRENT_CONFIRM": "Biztosan törölni szeretné a következő torrentet: \"{{name}}\"?",
   "DELETE_NCORE_CREDENTIALS_CONFIRM": "Biztosan törölni szeretné a bejelentkezési adatokat?",
   "DELETE_USER_BUTTON": "Törlés",
   "DELETE_USER_CONFIRM": "Biztosan törölni szeretné a felhasználót?",
@@ -134,6 +134,7 @@
   "WISHLIST_FETCH_ERROR": "A kívánságlistát nem sikerült lekérni.",
   "WISHLIST_DELETE_ERROR": "Nem sikerült eltávolítani a kívánságlistáról.",
   "WISHLIST_REMOVE": "Eltávolítás a kívánságlistáról",
+  "WISHLIST_REMOVE_CONFIRM": "Biztosan eltávolítja a következőt a kívánságlistáról: \"{{title}}\"?",
   "WISHLIST_ADDED_DATE": "Hozzáadva",
   "WISHLIST_EMPTY": "A kívánságlistád üres."
 }

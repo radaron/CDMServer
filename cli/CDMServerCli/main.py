@@ -232,7 +232,6 @@ def users_delete(
 ) -> None:
     """Delete a user by ID (admin only)."""
     c = CDMClient()
-    typer.confirm(f"Delete user {user_id}?", abort=True)
     resp = c.delete(f"/api/users/{user_id}/")
     if resp.status_code == 403:
         _fail("Admin access required")
@@ -343,7 +342,6 @@ def devices_delete(
 ) -> None:
     """Delete a device by ID."""
     c = CDMClient()
-    typer.confirm(f"Delete device {device_id}?", abort=True)
     resp = c.delete(f"/api/devices/{device_id}/")
     if resp.status_code == 200:
         _ok(f"Device {device_id} deleted")
@@ -488,7 +486,6 @@ def status_delete(
     """Delete a torrent. [dim]Uses first device if --device omitted.[/dim]"""
     c = CDMClient()
     resolved = _resolve_device_id(c, device_id)
-    typer.confirm(f"Delete torrent {torrent_id} from device {resolved}?", abort=True)
     _send_instruction(c, resolved, "delete", torrent_id=torrent_id)
 
 
@@ -743,7 +740,6 @@ def wishlist_delete(
 ) -> None:
     """Remove an item from the wishlist by ID."""
     c = CDMClient()
-    typer.confirm(f"Remove wishlist item {item_id}?", abort=True)
     resp = c.delete(f"/api/wishlist/{item_id}/")
     if resp.status_code == 200:
         _ok(f"Wishlist item {item_id} removed")

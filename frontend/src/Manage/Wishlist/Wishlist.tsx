@@ -71,7 +71,10 @@ export const Wishlist = () => {
   }, [fetchWishlist])
 
   const handleDelete = useCallback(
-    async (id: number) => {
+    async (id: number, title: string) => {
+      if (!window.confirm(t('WISHLIST_REMOVE_CONFIRM', { title }))) {
+        return
+      }
       setDeletingId(id)
       try {
         const resp = await apiFetch(`/api/wishlist/${id}/`, {
@@ -161,7 +164,7 @@ export const Wishlist = () => {
               <TableCell align="right">
                 <IconButton
                   size="small"
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => handleDelete(item.id, item.title)}
                   disabled={deletingId === item.id}
                   aria-label={t('WISHLIST_REMOVE')}
                 >
