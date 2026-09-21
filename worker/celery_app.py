@@ -16,10 +16,6 @@ app.conf.timezone = "UTC"
 app.conf.beat_schedule = {
     "scan-wishlist-weekly": {
         "task": "worker.tasks.scan_all_wishlist",
-        "schedule": crontab(hour=3, minute=0, day_of_week=1),
-    },
-    # "scan-wishlist-every-minute": {
-    #     "task": "worker.tasks.scan_all_wishlist",
-    #     "schedule": crontab(),
-    # }
+        "schedule": crontab(hour=3, minute=0, day_of_week=5),
+    }
 }
