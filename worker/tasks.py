@@ -132,6 +132,29 @@ def try_download_wishlist_item(item_id: int) -> dict | None:
     return outcome
 
 
+@app.task(name="worker.tasks.scan_user_wishlist")
+def scan_user_wishlist(user_id: int) -> None:
+    with SyncSession() as session:
+        item_ids = [
+            row.id
+            for row in session.execute(
+                select(Wishlist.id).where(Wishlist.user_id == user_id)
+            ).all()
+        ]
+
+    logger.info("User %d wishlist scan: %d item(s)", user_id, len(item_ids))
+
+    job = group(try_download_wishlist_item.s(item_id) for item_id in item_ids)
+    with allow_join_result():
+        outcomes = [o for o in job.apply_async().get() if o]
+
+    if not outcomes:
+        return
+
+    user_email = outcomes[0]["user_email"]
+    send_wishlist_status_email(user_email, outcomes)
+
+
 @app.task(name="worker.tasks.scan_all_wishlist")
 def scan_all_wishlist():
     with SyncSession() as session:

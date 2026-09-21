@@ -135,6 +135,9 @@
   "WISHLIST_DELETE_ERROR": "Nem sikerült eltávolítani a kívánságlistáról.",
   "WISHLIST_REMOVE": "Eltávolítás a kívánságlistáról",
   "WISHLIST_REMOVE_CONFIRM": "Biztosan eltávolítja a következőt a kívánságlistáról: \"{{title}}\"?",
+  "WISHLIST_START_TASK": "Letöltési feladat indítása",
+  "WISHLIST_TASK_STARTED": "Feladat elindítva.",
+  "WISHLIST_TASK_START_ERROR": "Nem sikerült elindítani a feladatot.",
   "WISHLIST_ADDED_DATE": "Hozzáadva",
   "WISHLIST_EMPTY": "A kívánságlistád üres."
 }

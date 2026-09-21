@@ -105,6 +105,14 @@ async def add_wishlist_item(
     return JSONResponse({"message": "Added to wishlist"})
 
 
+@router.post("/start/")
+async def start_wishlist_scan(
+    user: User = Depends(manager),
+) -> JSONResponse:
+    celery_app.send_task("worker.tasks.scan_user_wishlist", args=[user.id])
+    return JSONResponse({"message": "Task started"})
+
+
 @router.delete("/{item_id}/")
 async def delete_wishlist_item(
     item_id: int,

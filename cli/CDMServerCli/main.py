@@ -734,6 +734,17 @@ def wishlist_add(
         _fail(f"Failed ({resp.status_code})")
 
 
+@wishlist_app.command("start")
+def wishlist_start() -> None:
+    """Start the download task for the whole wishlist."""
+    c = CDMClient()
+    resp = c.post("/api/wishlist/start/")
+    if resp.status_code == 200:
+        _ok("Wishlist task started")
+    else:
+        _fail(f"Failed ({resp.status_code})")
+
+
 @wishlist_app.command("delete")
 def wishlist_delete(
     item_id: Annotated[int, typer.Option("--item-id", "-i", prompt=True)],

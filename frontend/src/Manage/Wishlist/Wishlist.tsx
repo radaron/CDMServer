@@ -3,6 +3,7 @@ import {
   Box,
   Typography,
   IconButton,
+  Button,
   Chip,
   CircularProgress,
   Table,
@@ -14,6 +15,7 @@ import {
   Paper,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import { useTranslation } from 'react-i18next'
 import { apiFetch } from '../../api'
 import { LOGIN_PAGE } from '../../constant'
@@ -39,6 +41,7 @@ export const Wishlist = () => {
   const [items, setItems] = useState<WishlistItem[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [starting, setStarting] = useState(false)
 
   useEffect(() => {
     setHeaderTitle(t('WISHLIST_TAB'))
@@ -97,6 +100,27 @@ export const Wishlist = () => {
     [setToastData, t]
   )
 
+  const handleStart = useCallback(async () => {
+    setStarting(true)
+    try {
+      const resp = await apiFetch('/api/wishlist/start/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      if (resp.status === 200) {
+        setToastData({ message: t('WISHLIST_TASK_STARTED'), type: 'success' })
+      } else if (resp.status === 401) {
+        redirectToPage(LOGIN_PAGE)
+      } else {
+        setToastData({ message: t('WISHLIST_TASK_START_ERROR'), type: 'error' })
+      }
+    } catch {
+      setToastData({ message: t('UNEXPECTED_ERROR'), type: 'error' })
+    } finally {
+      setStarting(false)
+    }
+  }, [setToastData, t])
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -127,58 +151,70 @@ export const Wishlist = () => {
   }
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ maxWidth: { sm: '1000px' }, mx: 'auto' }}
-    >
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('TITLE')}</TableCell>
-            <TableCell>{t('WISHLIST_DEVICE_LABEL')}</TableCell>
-            <TableCell>{t('CATEGORY')}</TableCell>
-            <TableCell>{t('WISHLIST_ADDED_DATE')}</TableCell>
-            <TableCell align="right"></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>
-                <Typography variant="body2" fontWeight={500}>
-                  {item.title}
-                </Typography>
-              </TableCell>
-              <TableCell>{item.deviceName}</TableCell>
-              <TableCell>
-                <Chip
-                  label={item.torrentType.toUpperCase()}
-                  size="small"
-                  variant="outlined"
-                  sx={{ fontFamily: 'monospace', fontSize: '11px' }}
-                />
-              </TableCell>
-              <TableCell sx={{ color: 'text.secondary', fontSize: '13px' }}>
-                {formatDate(item.createdAt, i18n.language)}
-              </TableCell>
-              <TableCell align="right">
-                <IconButton
-                  size="small"
-                  onClick={() => handleDelete(item.id, item.title)}
-                  disabled={deletingId === item.id}
-                  aria-label={t('WISHLIST_REMOVE')}
-                >
-                  {deletingId === item.id ? (
-                    <CircularProgress size={16} />
-                  ) : (
-                    <DeleteIcon fontSize="small" color="error" />
-                  )}
-                </IconButton>
-              </TableCell>
+    <Box sx={{ maxWidth: { sm: '1000px' }, mx: 'auto' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={
+            starting ? <CircularProgress size={16} /> : <PlayArrowIcon />
+          }
+          onClick={handleStart}
+          disabled={starting}
+        >
+          {t('WISHLIST_START_TASK')}
+        </Button>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('TITLE')}</TableCell>
+              <TableCell>{t('WISHLIST_DEVICE_LABEL')}</TableCell>
+              <TableCell>{t('CATEGORY')}</TableCell>
+              <TableCell>{t('WISHLIST_ADDED_DATE')}</TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {items.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>
+                  <Typography variant="body2" fontWeight={500}>
+                    {item.title}
+                  </Typography>
+                </TableCell>
+                <TableCell>{item.deviceName}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={item.torrentType.toUpperCase()}
+                    size="small"
+                    variant="outlined"
+                    sx={{ fontFamily: 'monospace', fontSize: '11px' }}
+                  />
+                </TableCell>
+                <TableCell sx={{ color: 'text.secondary', fontSize: '13px' }}>
+                  {formatDate(item.createdAt, i18n.language)}
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleDelete(item.id, item.title)}
+                    disabled={deletingId === item.id}
+                    aria-label={t('WISHLIST_REMOVE')}
+                  >
+                    {deletingId === item.id ? (
+                      <CircularProgress size={16} />
+                    ) : (
+                      <DeleteIcon fontSize="small" color="error" />
+                    )}
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }

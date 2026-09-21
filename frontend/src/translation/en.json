@@ -135,6 +135,9 @@
   "WISHLIST_DELETE_ERROR": "Could not remove from wishlist.",
   "WISHLIST_REMOVE": "Remove from wishlist",
   "WISHLIST_REMOVE_CONFIRM": "Are you sure you want to remove \"{{title}}\" from the wishlist?",
+  "WISHLIST_START_TASK": "Start download task",
+  "WISHLIST_TASK_STARTED": "Task started.",
+  "WISHLIST_TASK_START_ERROR": "Could not start task.",
   "WISHLIST_ADDED_DATE": "Added",
   "WISHLIST_EMPTY": "Your wishlist is empty."
 }
