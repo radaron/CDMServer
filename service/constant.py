@@ -30,57 +30,54 @@ DEFAULT_DEVICE_SETTINGS = {
 }
 
 
+CATEGORY_PATH_MAP = {
+    # Movies
+    SearchParamType.SD_HUN: MOVIES_PATH_NAME,
+    SearchParamType.SD: MOVIES_PATH_NAME,
+    SearchParamType.DVD_HUN: MOVIES_PATH_NAME,
+    SearchParamType.DVD: MOVIES_PATH_NAME,
+    SearchParamType.DVD9_HUN: MOVIES_PATH_NAME,
+    SearchParamType.DVD9: MOVIES_PATH_NAME,
+    SearchParamType.HD_HUN: MOVIES_PATH_NAME,
+    SearchParamType.HD: MOVIES_PATH_NAME,
+    # Series
+    SearchParamType.SDSER_HUN: SERIES_PATH_NAME,
+    SearchParamType.SDSER: SERIES_PATH_NAME,
+    SearchParamType.DVDSER_HUN: SERIES_PATH_NAME,
+    SearchParamType.DVDSER: SERIES_PATH_NAME,
+    SearchParamType.HDSER_HUN: SERIES_PATH_NAME,
+    SearchParamType.HDSER: SERIES_PATH_NAME,
+    # Music
+    SearchParamType.MP3_HUN: MUSICS_PATH_NAME,
+    SearchParamType.MP3: MUSICS_PATH_NAME,
+    SearchParamType.LOSSLESS_HUN: MUSICS_PATH_NAME,
+    SearchParamType.LOSSLESS: MUSICS_PATH_NAME,
+    SearchParamType.CLIP: MUSICS_PATH_NAME,
+    # Games
+    SearchParamType.GAME_ISO: GAMES_PATH_NAME,
+    SearchParamType.GAME_RIP: GAMES_PATH_NAME,
+    SearchParamType.CONSOLE: GAMES_PATH_NAME,
+    # Books
+    SearchParamType.EBOOK_HUN: BOOKS_PATH_NAME,
+    SearchParamType.EBOOK: BOOKS_PATH_NAME,
+    # Programs
+    SearchParamType.ISO: PROGRAMS_PATH_NAME,
+    SearchParamType.MISC: PROGRAMS_PATH_NAME,
+    SearchParamType.MOBIL: PROGRAMS_PATH_NAME,
+    # XXX/Default
+    SearchParamType.XXX_IMG: DEFAULT_PATH_NAME,
+    SearchParamType.XXX_SD: DEFAULT_PATH_NAME,
+    SearchParamType.XXX_DVD: DEFAULT_PATH_NAME,
+    SearchParamType.XXX_HD: DEFAULT_PATH_NAME,
+}
+
+
 MOVIE_TORRENT_TYPES = [
-    "hd_hun",
-    "hd",
-    "dvd_hun",
-    "dvd",
-    "dvd9_hun",
-    "dvd9",
-    "sd_hun",
-    "sd",
+    category.value
+    for category, path in CATEGORY_PATH_MAP.items()
+    if path == MOVIES_PATH_NAME
 ]
 
 
 def map_category_path(category: SearchParamType) -> str:
-    category_map = {
-        # Movies
-        SearchParamType.SD_HUN: MOVIES_PATH_NAME,
-        SearchParamType.SD: MOVIES_PATH_NAME,
-        SearchParamType.DVD_HUN: MOVIES_PATH_NAME,
-        SearchParamType.DVD: MOVIES_PATH_NAME,
-        SearchParamType.DVD9_HUN: MOVIES_PATH_NAME,
-        SearchParamType.DVD9: MOVIES_PATH_NAME,
-        SearchParamType.HD_HUN: MOVIES_PATH_NAME,
-        SearchParamType.HD: MOVIES_PATH_NAME,
-        # Series
-        SearchParamType.SDSER_HUN: SERIES_PATH_NAME,
-        SearchParamType.SDSER: SERIES_PATH_NAME,
-        SearchParamType.DVDSER_HUN: SERIES_PATH_NAME,
-        SearchParamType.DVDSER: SERIES_PATH_NAME,
-        SearchParamType.HDSER_HUN: SERIES_PATH_NAME,
-        SearchParamType.HDSER: SERIES_PATH_NAME,
-        # Music
-        SearchParamType.MP3_HUN: MUSICS_PATH_NAME,
-        SearchParamType.MP3: MUSICS_PATH_NAME,
-        SearchParamType.LOSSLESS_HUN: MUSICS_PATH_NAME,
-        SearchParamType.LOSSLESS: MUSICS_PATH_NAME,
-        SearchParamType.CLIP: MUSICS_PATH_NAME,
-        # Games
-        SearchParamType.GAME_ISO: GAMES_PATH_NAME,
-        SearchParamType.GAME_RIP: GAMES_PATH_NAME,
-        SearchParamType.CONSOLE: GAMES_PATH_NAME,
-        # Books
-        SearchParamType.EBOOK_HUN: BOOKS_PATH_NAME,
-        SearchParamType.EBOOK: BOOKS_PATH_NAME,
-        # Programs
-        SearchParamType.ISO: PROGRAMS_PATH_NAME,
-        SearchParamType.MISC: PROGRAMS_PATH_NAME,
-        SearchParamType.MOBIL: PROGRAMS_PATH_NAME,
-        # XXX/Default
-        SearchParamType.XXX_IMG: DEFAULT_PATH_NAME,
-        SearchParamType.XXX_SD: DEFAULT_PATH_NAME,
-        SearchParamType.XXX_DVD: DEFAULT_PATH_NAME,
-        SearchParamType.XXX_HD: DEFAULT_PATH_NAME,
-    }
-    return category_map.get(category, DEFAULT_PATH_NAME)
+    return CATEGORY_PATH_MAP.get(category, DEFAULT_PATH_NAME)
