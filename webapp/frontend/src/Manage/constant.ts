@@ -6,6 +6,9 @@ export const SETTINGS_PAGE = 'settings'
 export const TMDB_PAGE = 'tmdb'
 export const WISHLIST_PAGE = 'wishlist'
 
+export const WISHLIST_DESCRIPTION_DISMISSED_KEY =
+  'wishlist_description_dismissed'
+
 export const DRAWER_WIDTH = 240
 
 const MOVIES_PATH_NAME = 'movies_path'

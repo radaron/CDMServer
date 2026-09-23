@@ -139,5 +139,7 @@
   "WISHLIST_TASK_STARTED": "Feladat elindítva.",
   "WISHLIST_TASK_START_ERROR": "Nem sikerült elindítani a feladatot.",
   "WISHLIST_ADDED_DATE": "Hozzáadva",
-  "WISHLIST_EMPTY": "A kívánságlistád üres."
+  "WISHLIST_EMPTY": "A kívánságlistád üres.",
+  "WISHLIST_DESCRIPTION_CLOSE": "Leírás elrejtése",
+  "WISHLIST_DESCRIPTION": "A TMDB oldalon könyvjelzővel megjelölt filmek ide kerülnek a kiválasztott eszközzel és minőséggel. Hozzáadás után egy háttérfeladat azonnal rákeres az NCore-on, és ha megtalálja, elküldi a torrentet az eszközre. Ami még nem érhető el, az a listán marad, és hetente egyszer automatikusan újra próbáljuk. A \"Letöltési feladat indítása\" gombbal az összes elemet azonnal újra lehet próbálni. A sikeres letöltések lekerülnek a listáról, az eredményekről pedig e-mail összefoglalót kapsz."
 }

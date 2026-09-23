@@ -139,5 +139,7 @@
   "WISHLIST_TASK_STARTED": "Task started.",
   "WISHLIST_TASK_START_ERROR": "Could not start task.",
   "WISHLIST_ADDED_DATE": "Added",
-  "WISHLIST_EMPTY": "Your wishlist is empty."
+  "WISHLIST_EMPTY": "Your wishlist is empty.",
+  "WISHLIST_DESCRIPTION_CLOSE": "Hide description",
+  "WISHLIST_DESCRIPTION": "Movies you bookmark on the TMDB page land here with the chosen device and quality. Right after adding, a background task searches NCore and, if found, sends the torrent to the device. Items not yet available stay on the list and are retried automatically once a week. Use \"Start download task\" to retry all items now. Successful downloads are removed from the list and you get an email summary of the results."
 }

@@ -15,10 +15,12 @@ import {
   Paper,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
+import CloseIcon from '@mui/icons-material/Close'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import { useTranslation } from 'react-i18next'
 import { apiFetch } from '../../api'
 import { LOGIN_PAGE } from '../../constant'
+import { WISHLIST_DESCRIPTION_DISMISSED_KEY } from '../constant'
 import { formatDate, redirectToPage } from '../../util'
 import { manageContext } from '../Manage'
 
@@ -42,6 +44,22 @@ export const Wishlist = () => {
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<number | null>(null)
   const [starting, setStarting] = useState(false)
+  const [descriptionOpen, setDescriptionOpen] = useState(() => {
+    try {
+      return localStorage.getItem(WISHLIST_DESCRIPTION_DISMISSED_KEY) !== '1'
+    } catch {
+      return true
+    }
+  })
+
+  const handleDescriptionClose = useCallback(() => {
+    setDescriptionOpen(false)
+    try {
+      localStorage.setItem(WISHLIST_DESCRIPTION_DISMISSED_KEY, '1')
+    } catch {
+      // ignore storage errors
+    }
+  }, [])
 
   useEffect(() => {
     setHeaderTitle(t('WISHLIST_TAB'))
@@ -129,29 +147,48 @@ export const Wishlist = () => {
     )
   }
 
+  const description = descriptionOpen ? (
+    <Paper
+      sx={{ p: 2, mb: 2, display: 'flex', alignItems: 'flex-start', gap: 1 }}
+    >
+      <Typography variant="body2" sx={{ color: 'text.secondary', flex: 1 }}>
+        {t('WISHLIST_DESCRIPTION')}
+      </Typography>
+      <IconButton
+        size="small"
+        onClick={handleDescriptionClose}
+        aria-label={t('WISHLIST_DESCRIPTION_CLOSE')}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Paper>
+  ) : null
+
   if (items.length === 0) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          borderRadius: 1,
-          boxShadow: 1,
-          padding: 2,
-          backgroundColor: 'background.paper',
-          maxWidth: { sm: '1000px' },
-          mx: 'auto',
-        }}
-      >
-        <Typography sx={{ color: 'text.secondary' }}>
-          {t('WISHLIST_EMPTY')}
-        </Typography>
+      <Box sx={{ maxWidth: { sm: '1000px' }, mx: 'auto' }}>
+        {description}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            borderRadius: 1,
+            boxShadow: 1,
+            padding: 2,
+            backgroundColor: 'background.paper',
+          }}
+        >
+          <Typography sx={{ color: 'text.secondary' }}>
+            {t('WISHLIST_EMPTY')}
+          </Typography>
+        </Box>
       </Box>
     )
   }
 
   return (
     <Box sx={{ maxWidth: { sm: '1000px' }, mx: 'auto' }}>
+      {description}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
         <Button
           variant="outlined"
