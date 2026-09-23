@@ -9,7 +9,7 @@ This client communicates with the CDM Server to periodically send the download s
 ### Install or Upgrade the Package
 Run the following command to install or upgrade CDMClient:
 ```shell
-python3 -m pip install --upgrade CDMClient --user
+python3 -m pip install --upgrade cdmclient --user
 ```
 
 ### Create a Systemd Service
@@ -49,7 +49,7 @@ crontab -e
 ```
 Then add the following line to the crontab file:
 ```shell
-0 3 * * * /usr/bin/python3 -m pip install --upgrade CDMClient --user && systemctl restart cdm-client.service
+0 3 * * * /usr/bin/python3 -m pip install --upgrade cdmclient --user && systemctl restart cdm-client.service
 ```
 
 ## Configuration
