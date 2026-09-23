@@ -46,13 +46,13 @@ build-frontend:
 	cd frontend && \
 	nvm use && \
 	pnpm build
-	cp -r frontend/build/assets/ assets/
+	mkdir -p assets && cp -r frontend/build/assets/. assets/
 	cp frontend/build/index.html templates/index.html
 
 build-frontend-ci:
 	rm -rf assets/* templates/index.html
 	cd frontend && pnpm build
-	cp -r frontend/build/assets/ assets/
+	mkdir -p assets && cp -r frontend/build/assets/. assets/
 	cp frontend/build/index.html templates/index.html
 
 docker-compose: build-frontend
