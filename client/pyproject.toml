@@ -2,7 +2,7 @@
 name = "cdmclient"
 version = "1.2.7"
 description = "CDM - Centralized Download Manager Client"
-authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
+authors = [{name = "Aron Radics", email = "radaron@radaron.hu"}]
 requires-python = ">=3.9"
 readme = "README.md"
 classifiers = [

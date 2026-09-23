@@ -1,8 +1,14 @@
 [project]
 name = "cdmctl"
-version = "1.5.5"
-description = "cdmctl - command-line control for CDM Server"
+version = "1.5.6"
+description = "CDM - Centralized Download Manager CLI"
+authors = [{name = "Aron Radics", email = "radaron@radaron.hu"}]
 requires-python = ">=3.11"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "typer>=0.12",
     "rich>=13",

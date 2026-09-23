@@ -2,7 +2,7 @@
 name = "CDMServer"
 version = "3.5.6"
 description = "A short description of your project"
-authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
+authors = [{name = "Aron Radics", email = "radaron@radaron.hu"}]
 requires-python = ">=3.13"
 dependencies = [
   "fastapi",
