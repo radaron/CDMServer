@@ -1,11 +1,10 @@
 [project]
 name = "cdmclient"
-version = "1.2.5"
+version = "1.2.7"
 description = "CDM - Centralized Download Manager Client"
 authors = [{name = "Aron Radics", email = "radics.aron.jozsef@gmail.com"}]
 requires-python = ">=3.9"
 readme = "README.md"
-license = {file = "LICENSE"}
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -27,15 +26,15 @@ cdm-client = "cdm_client.cdm_client:main"
 
 [dependency-groups]
 dev = [
-    "dev-dependencies",
     "types-requests>=2.32.4.20250913",
 ]
 
-[tool.uv.sources]
-dev-dependencies = { path = "../common/dev_dependencies", editable = true }
-
 [tool.ty.environment]
 python-version = "3.9"
+
+[tool.ty.rules]
+# SQLAlchemy 1.4-style Column types are not recognised by ty — suppress until migration to Mapped[]
+invalid-assignment = "ignore"
 
 [build-system]
 requires = ["hatchling"]

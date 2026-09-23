@@ -29,7 +29,7 @@ webapp/templates/*
 !webapp/templates/email/**
 
 # Browser extension
-browser-extension/cdm.zip
+browser_extension/cdm.zip
 
 # Editor / OS
 .idea/

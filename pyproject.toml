@@ -1,0 +1,19 @@
+[project]
+name = "cdm"
+version = "0.0.0"
+description = "CDM - Centralized Download Manager (workspace root)"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.1",
+    "ty>=0.0.18",
+    "pytest>=8.4.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["webapp", "cli", "client"]

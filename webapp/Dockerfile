@@ -3,21 +3,20 @@ FROM ghcr.io/astral-sh/uv:latest AS uv
 
 FROM python:3.13 AS builder
 
-# Change the working directory to the `app` directory
 WORKDIR /app
 
-# Install dependencies
 RUN --mount=from=uv,source=/uv,target=/bin/uv \
     --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv export --frozen --no-emit-workspace --no-dev --no-editable -o requirements.txt && \
+    --mount=type=bind,source=uv.lock,target=/ws/uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=/ws/pyproject.toml \
+    --mount=type=bind,source=webapp/pyproject.toml,target=/ws/webapp/pyproject.toml \
+    uv export --directory /ws --package cdmserver --frozen --no-emit-workspace --no-dev --no-editable -o /app/requirements.txt && \
     uv pip install -r requirements.txt --target /app
 
-COPY service/ /app/service/
-COPY worker/ /app/worker/
-COPY templates/ /app/templates/
-COPY assets/ /app/assets/
+COPY webapp/service/ /app/service/
+COPY webapp/worker/ /app/worker/
+COPY webapp/templates/ /app/templates/
+COPY webapp/assets/ /app/assets/
 
 FROM python:3.13-slim
 WORKDIR /app

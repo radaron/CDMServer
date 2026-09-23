@@ -12,4 +12,4 @@ For comprehensive guidance on using the webpage, refer to the [Usage Guide](doc/
 * [CDM Server](webapp/README.md) — the web application (API, frontend, wishlist worker). Architecture, features, installation and configuration are documented there.
 * [CDM CLI](cli/README.md) — command-line interface for CDM Server
 * [CDM Client](client/README.md) — client daemon that talks to Transmission/QBittorrent, published to PyPI as `cdmclient`
-* [Browser Extension](browser-extension/README.md) — Chrome/Firefox extension adding a CDM button to IMDb pages
+* [Browser Extension](browser_extension/README.md) — Chrome/Firefox extension adding a CDM button to IMDb pages

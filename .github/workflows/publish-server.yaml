@@ -1,4 +1,4 @@
-name: Deploy to GitHub Container Registry
+name: Publish Server to GitHub Container Registry
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
       - master
     paths:
       - 'webapp/pyproject.toml'
+      - 'uv.lock'
 
 permissions:
   contents: write
@@ -36,8 +37,11 @@ jobs:
           cache-dependency-path: webapp/frontend/pnpm-lock.yaml
 
       - name: Install dependencies
-        working-directory: webapp
         run: make reqs-ci
+
+      - name: Install frontend dependencies
+        working-directory: webapp
+        run: make reqs-fe-ci
 
       - name: Check formatting
         working-directory: webapp
@@ -65,7 +69,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: webapp
+          context: .
+          file: webapp/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/cdmserver:${{ steps.get_version.outputs.VERSION }}

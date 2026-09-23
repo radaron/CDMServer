@@ -20,8 +20,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Install dependencies
-        working-directory: cli
-        run: uv sync --dev --frozen
+        run: make reqs-ci
 
       - name: Check formatting
         working-directory: cli
@@ -34,7 +33,7 @@ jobs:
       - name: Build and publish
         working-directory: cli
         run: |
-          uv build
+          uv build --out-dir dist
           uv publish
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.CLI_PYPI_TOKEN }}

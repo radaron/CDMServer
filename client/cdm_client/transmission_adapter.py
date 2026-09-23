@@ -24,7 +24,7 @@ class TransmissionAdapter(TorrentClientAdapterBase):
     def _get_status_dict(self, torrent: Torrent) -> dict:
         return {
             "id": torrent.id,
-            "hash": torrent.hashString,
+            "hash": torrent.hash_string,
             "name": torrent.name,
             "status": torrent.status.value,
             "progress": int(torrent.progress),
