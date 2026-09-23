@@ -1,7 +1,7 @@
 [project]
-name = "CDMServerCli"
+name = "CDMCli"
 version = "1.5.2"
-description = "CDM Server CLI"
+description = "CDM CLI"
 requires-python = ">=3.11"
 dependencies = [
     "typer>=0.12",
@@ -10,13 +10,15 @@ dependencies = [
 ]
 
 [project.scripts]
-cdm = "CDMServerCli.main:app"
+cdm = "CDMCli.main:app"
 
 [dependency-groups]
 dev = [
-    "ruff>=0.14.1",
-    "ty>=0.0.1a6",
+    "dev-dependencies",
 ]
+
+[tool.uv.sources]
+dev-dependencies = { path = "../common/dev_dependencies", editable = true }
 
 [tool.ty.environment]
 python-version = "3.11"

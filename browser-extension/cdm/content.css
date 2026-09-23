@@ -1,0 +1,26 @@
+.cdm-button {
+  margin-left: 10px;
+  background-color: #000000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px;
+}
+
+.cdm-button:hover {
+  background-color: #4a5254;
+}
+
+.cdm-button__char-0 {
+  color: #39FF14;
+}
+
+.cdm-button__char-1 {
+  color: #1F51FF;
+}
+
+.cdm-button__char-2 {
+  color: #FF3131;
+}

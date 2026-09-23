@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - 'pyproject.toml'
+      - 'webapp/pyproject.toml'
 
 permissions:
   contents: write
@@ -25,20 +25,22 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.0.0
         with:
-          package_json_file: 'frontend/package.json'
+          package_json_file: 'webapp/frontend/package.json'
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'frontend/.nvmrc'
+          node-version-file: 'webapp/frontend/.nvmrc'
           registry-url: https://npm.pkg.github.com/
           cache: pnpm
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          cache-dependency-path: webapp/frontend/pnpm-lock.yaml
 
-      - name : Install dependencies
+      - name: Install dependencies
+        working-directory: webapp
         run: make reqs-ci
 
       - name: Check formatting
+        working-directory: webapp
         run: make check-format-ci
 
       - name: Log in to GitHub Container Registry
@@ -50,18 +52,20 @@ jobs:
 
       - name: Get version
         id: get_version
+        working-directory: webapp
         run: |
           VERSION=$(uv version --short)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build frontend
+        working-directory: webapp
         run: |
           make build-frontend-ci
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: webapp
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/cdmserver:${{ steps.get_version.outputs.VERSION }}

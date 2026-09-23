@@ -28,10 +28,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pytest>=8.4.2",
-    "ruff>=0.14.1",
-    "ty>=0.0.1a6",
+    "dev-dependencies",
 ]
+
+[tool.uv.sources]
+dev-dependencies = { path = "../common/dev_dependencies", editable = true }
 
 [tool.ty.environment]
 python-version = "3.13"
