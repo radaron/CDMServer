@@ -6,7 +6,7 @@ from logging.handlers import SysLogHandler
 from time import sleep
 from typing import Optional
 
-import requests
+import httpx
 
 from cdm_client.config import Config
 from cdm_client.database_adapter import DatabaseAdapter
@@ -49,21 +49,22 @@ class CDMClient:
         return logger
 
     def _update_status(self, status_data: list[dict]) -> None:
-        resp = requests.post(
+        resp = httpx.post(
             f"{self._config['server_host']}/api/client/status/",
             json={"data": status_data},
             headers={"x-api-key": self._config["api_key"]},
             timeout=5,
+            follow_redirects=True,
         )
         resp.raise_for_status()
 
     def _download_files(self, files: dict[int, str]) -> None:
         for tracker_id, path in files.items():
-            resp = requests.get(
+            resp = httpx.get(
                 f"{self._config['server_host']}/api/client/download/{tracker_id}/",
                 headers={"x-api-key": self._config["api_key"]},
-                stream=True,
                 timeout=5,
+                follow_redirects=True,
             )
             resp.raise_for_status()
             new_torrent = self._torrent_client_adapter.add_torrent(
@@ -192,10 +193,11 @@ class CDMClient:
                 self._logger.warning("File not found during deletion")
 
     def _get_order(self) -> None:
-        resp = requests.get(
+        resp = httpx.get(
             f"{self._config['server_host']}/api/client/",
             headers={"x-api-key": self._config["api_key"]},
             timeout=5,
+            follow_redirects=True,
         )
         resp.raise_for_status()
 

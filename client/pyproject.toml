@@ -1,6 +1,6 @@
 [project]
 name = "cdmclient"
-version = "1.2.7"
+version = "1.3.0"
 description = "CDM - Centralized Download Manager Client"
 authors = [{name = "Aron Radics", email = "radaron@radaron.hu"}]
 requires-python = ">=3.9"
@@ -10,7 +10,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "requests",
+  "httpx>=0.27",
   "transmission_rpc",
   "cryptography",
   "sqlalchemy>=2.0.0",
@@ -23,11 +23,6 @@ Repository = "https://github.com/radaron/CDMServer"
 
 [project.scripts]
 cdm-client = "cdm_client.cdm_client:main"
-
-[dependency-groups]
-dev = [
-    "types-requests>=2.32.4.20250913",
-]
 
 [tool.ty.environment]
 python-version = "3.9"
