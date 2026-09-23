@@ -49,7 +49,7 @@ async def create_admin_user():
 
 def client_type_from_user_agent(user_agent: str) -> str:
     match user_agent:
-        case ua if ua.startswith(("cdm-server-cli/", "CDMServerCli/")):
+        case ua if ua.startswith(("cdmctl/", "CDMServerCli/")):
             return "cli"
         case ua if "Mozilla" in ua:
             return "browser"

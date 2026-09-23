@@ -5,7 +5,7 @@ Command-line interface for [CDM Server](../README.md).
 ## Installation
 
 ```bash
-pip install cdm-server-cli
+pip install cdmctl
 ```
 
 ## Quick Start

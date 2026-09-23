@@ -9,7 +9,7 @@ from . import config
 
 console = Console(stderr=True)
 
-CLI_USER_AGENT = f"cdm-server-cli/{version('cdm-server-cli')}"
+CLI_USER_AGENT = f"cdmctl/{version('cdmctl')}"
 
 
 class CDMError(Exception):

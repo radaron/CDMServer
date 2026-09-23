@@ -37,4 +37,4 @@ jobs:
           uv build
           uv publish
         env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          UV_PUBLISH_TOKEN: ${{ secrets.CLI_PYPI_TOKEN }}
