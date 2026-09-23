@@ -105,11 +105,15 @@ sequenceDiagram
 
 ## Available Features
 
-### Users
-- Admins can add or remove users.
-- Manage user permissions (admin or regular user).
-- Users can update their own passwords.
-- Users can utilize their Ncore credentials for downloads.
+### Admin
+- Add new users (name, email, password) and delete existing ones.
+- Grant or revoke admin permission per user.
+- Change any user's password.
+- View active login sessions grouped by user (client type, created and last used time) and revoke any of them.
+
+### Settings
+- Users can change their own login password.
+- Users can set or delete their own Ncore credentials, which are then used for their downloads instead of the server defaults.
 
 ### Devices
 - Support for multiple devices.
