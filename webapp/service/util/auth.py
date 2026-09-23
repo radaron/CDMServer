@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 from sqlalchemy import delete
 from sqlalchemy.future import select
 
+from service.constant import MOBILE_UA_MARKERS, ClientType
 from service.models.database import AsyncSessionLocal, RefreshSession, User
 from service.util.configuration import settings
 
@@ -47,14 +48,20 @@ async def create_admin_user():
         await session.commit()
 
 
-def client_type_from_user_agent(user_agent: str) -> str:
+def _is_mobile_user_agent(user_agent: str) -> bool:
+    return any(marker in user_agent for marker in MOBILE_UA_MARKERS)
+
+
+def client_type_from_user_agent(user_agent: str) -> ClientType:
     match user_agent:
         case ua if ua.startswith(("cdmctl/", "CDMServerCli/")):
-            return "cli"
+            return ClientType.CLI
+        case ua if "Mozilla" in ua and _is_mobile_user_agent(ua):
+            return ClientType.MOBILE
         case ua if "Mozilla" in ua:
-            return "browser"
+            return ClientType.BROWSER
         case _:
-            return "unknown"
+            return ClientType.UNKNOWN
 
 
 def decode_user_refresh_token(refresh_token: str) -> dict | None:
@@ -79,7 +86,7 @@ def decode_user_refresh_token(refresh_token: str) -> dict | None:
 
 
 async def create_refresh_token_and_session(
-    user_email: str, user_id: int, client_type: str = "browser"
+    user_email: str, user_id: int, client_type: ClientType = ClientType.BROWSER
 ) -> str:
     jti = str(uuid.uuid4())
     token = jwt_encode(
@@ -93,13 +100,15 @@ async def create_refresh_token_and_session(
         algorithm="HS256",
     )
     async with AsyncSessionLocal() as session:
-        session.add(RefreshSession(jti=jti, user_id=user_id, client_type=client_type))
+        session.add(
+            RefreshSession(jti=jti, user_id=user_id, client_type=client_type.value)
+        )
         await session.commit()
     return token
 
 
 async def validate_and_touch_session(
-    jti: str, client_type: str
+    jti: str, client_type: ClientType
 ) -> RefreshSession | None:
     async with AsyncSessionLocal() as session:
         result = await session.execute(
@@ -109,7 +118,7 @@ async def validate_and_touch_session(
         if not row:
             return None
         row.last_used_at = datetime.now(tz=timezone.utc)
-        row.client_type = client_type
+        row.client_type = client_type.value
         await session.commit()
         return row
 

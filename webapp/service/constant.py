@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, StrEnum
 
 from ncoreparser import SearchParamType
 
@@ -8,6 +8,16 @@ class Instruction(Enum):
     STOP = "stop"
     DELETE = "delete"
     CLEAN = "clean"
+
+
+class ClientType(StrEnum):
+    CLI = "cli"
+    MOBILE = "mobile"
+    BROWSER = "browser"
+    UNKNOWN = "unknown"
+
+
+MOBILE_UA_MARKERS = ("Mobile", "Android", "iPhone", "iPad", "iPod", "Windows Phone")
 
 
 MOVIES_PATH_NAME = "movies_path"
