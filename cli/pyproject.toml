@@ -1,5 +1,5 @@
 [project]
-name = "CDMCli"
+name = "cdm-server-cli"
 version = "1.5.3"
 description = "CDM CLI"
 requires-python = ">=3.11"
@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-cdm = "CDMCli.main:app"
+cdm = "cdm_server_cli.main:app"
 
 [dependency-groups]
 dev = [

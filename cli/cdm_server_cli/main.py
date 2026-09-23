@@ -96,7 +96,8 @@ def _status_color(status: str) -> str:
 @app.command()
 def version() -> None:
     """Show the CLI version."""
-    out.print(f"[bold cyan]cdm[/bold cyan] [bold]{_pkg_version('CDMCli')}[/bold]")
+    ver = _pkg_version("cdm-server-cli")
+    out.print(f"[bold cyan]cdm[/bold cyan] [bold]{ver}[/bold]")
 
 
 # ─── Auth ────────────────────────────────────────────────────────────────────
