@@ -18,7 +18,7 @@ dependencies = [
   "ncoreparser",
   "redis",
   "aiohttp>=3.13.3",
-  "themoviedb>=1.0.2",
+  "themoviedb>=2.0.2",
   # It is need because: https://github.com/pyca/bcrypt/issues/684
   "bcrypt==3.2.2",
   "celery[redis]>=5.4",

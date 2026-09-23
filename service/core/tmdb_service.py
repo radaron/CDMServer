@@ -31,7 +31,7 @@ def normalize_language(language: str | None) -> tuple[str, str | None]:
 def get_tmdb(language: str | None, session: ClientSession | None = None) -> aioTMDb:
     tmdb_language, region = normalize_language(language)
     return aioTMDb(
-        key=settings.tmdb_api_key,
+        api_key=settings.tmdb_api_key,
         language=tmdb_language,
         region=region,
         session=session,

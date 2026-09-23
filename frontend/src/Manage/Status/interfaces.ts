@@ -3,11 +3,6 @@ export interface Torrent {
   name: string
   progress: number
   status:
-    | 'seeding'
-    | 'downloading'
-    | 'stopped'
-    | 'error'
-    | 'complete'
-    | 'queued'
+    'seeding' | 'downloading' | 'stopped' | 'error' | 'complete' | 'queued'
   detailsUrl?: string
 }

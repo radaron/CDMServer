@@ -308,13 +308,11 @@ export const Download = () => {
     getDevices()
   }, [getDevices])
   useEffect(() => {
-    if (
-      !(
-        searchParams.has(PATTERN) ||
-        searchParams.has(SEARCH_CATEGORY) ||
-        searchParams.has(SEARCH_WHERE)
-      )
-    ) {
+    if (!(
+      searchParams.has(PATTERN) ||
+      searchParams.has(SEARCH_CATEGORY) ||
+      searchParams.has(SEARCH_WHERE)
+    )) {
       submitSearch(
         new Event('submit') as unknown as React.FormEvent<HTMLFormElement>
       )

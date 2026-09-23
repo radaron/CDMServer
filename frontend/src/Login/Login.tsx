@@ -89,7 +89,10 @@ export const Login = () => {
   }
 
   return (
-    <SignInContainer direction="column" justifyContent="space-between">
+    <SignInContainer
+      direction="column"
+      sx={{ justifyContent: 'space-between' }}
+    >
       <Card>
         <Typography
           component="h1"

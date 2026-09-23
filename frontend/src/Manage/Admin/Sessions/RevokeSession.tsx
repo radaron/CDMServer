@@ -168,8 +168,7 @@ export const RevokeSession = () => {
                 <Stack
                   direction="row"
                   spacing={1.5}
-                  alignItems="center"
-                  sx={{ px: 2, py: 1.5 }}
+                  sx={{ px: 2, py: 1.5, alignItems: 'center' }}
                 >
                   <Avatar sx={{ width: 36, height: 36, fontSize: '14px' }}>
                     {getInitials(userName)}

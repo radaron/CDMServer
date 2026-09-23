@@ -180,7 +180,7 @@ export const Wishlist = () => {
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
-                  <Typography variant="body2" fontWeight={500}>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     {item.title}
                   </Typography>
                 </TableCell>
