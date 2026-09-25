@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next'
 import { apiFetch } from '../../api'
 import { LOGIN_PAGE } from '../../constant'
 import { WISHLIST_DESCRIPTION_DISMISSED_KEY } from '../constant'
-import { formatDate, redirectToPage } from '../../util'
+import { formatDate, formatDateTime, redirectToPage } from '../../util'
 import { manageContext } from '../Manage'
 
 interface WishlistItem {
@@ -34,6 +34,11 @@ interface WishlistItem {
   createdAt: string
 }
 
+interface WishlistLastScan {
+  ranAt: string
+  trigger: 'scheduled' | 'manual'
+}
+
 export const Wishlist = () => {
   const { t, i18n } = useTranslation()
   const context = useContext(manageContext)
@@ -41,6 +46,7 @@ export const Wishlist = () => {
   const setHeaderTitle = context?.setHeaderTitle || (() => {})
 
   const [items, setItems] = useState<WishlistItem[]>([])
+  const [lastScan, setLastScan] = useState<WishlistLastScan | null>(null)
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<number | null>(null)
   const [starting, setStarting] = useState(false)
@@ -75,6 +81,7 @@ export const Wishlist = () => {
       if (resp.status === 200) {
         const data = await resp.json()
         setItems(data.data)
+        setLastScan(data.meta?.lastScan ?? null)
       } else if (resp.status === 401) {
         redirectToPage(LOGIN_PAGE)
       } else {
@@ -164,10 +171,35 @@ export const Wishlist = () => {
     </Paper>
   ) : null
 
+  const lastScanLabel = (
+    <Typography
+      variant="body2"
+      sx={{
+        color: 'common.white',
+        backgroundColor: 'common.black',
+        px: 1.5,
+        py: 0.5,
+        borderRadius: 1,
+      }}
+    >
+      {lastScan
+        ? t('WISHLIST_LAST_SCAN', {
+            date: formatDateTime(lastScan.ranAt, i18n.language),
+            trigger: t(
+              lastScan.trigger === 'manual'
+                ? 'WISHLIST_LAST_SCAN_MANUAL'
+                : 'WISHLIST_LAST_SCAN_SCHEDULED'
+            ),
+          })
+        : t('WISHLIST_LAST_SCAN_NEVER')}
+    </Typography>
+  )
+
   if (items.length === 0) {
     return (
       <Box sx={{ maxWidth: { sm: '1000px' }, mx: 'auto' }}>
         {description}
+        <Box sx={{ mb: 1 }}>{lastScanLabel}</Box>
         <Box
           sx={{
             display: 'flex',
@@ -189,7 +221,17 @@ export const Wishlist = () => {
   return (
     <Box sx={{ maxWidth: { sm: '1000px' }, mx: 'auto' }}>
       {description}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 1,
+          mb: 1,
+        }}
+      >
+        {lastScanLabel}
         <Button
           variant="outlined"
           size="small"

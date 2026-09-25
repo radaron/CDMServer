@@ -1,4 +1,5 @@
 from copy import copy
+from datetime import datetime, timezone
 
 from celery import group
 from celery.result import allow_join_result
@@ -16,7 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
 from service.constant import map_category_path
-from service.models.database import Base, Device, User, Wishlist
+from service.models.database import Base, Device, User, Wishlist, WishlistScan
 from service.util.configuration import settings
 from service.util.logger import logger
 from worker.celery_app import app
@@ -72,6 +73,20 @@ def _download(user: User, torrent_id: int, device: Device) -> None:
     with SyncSession() as session:
         dev = session.get(Device, device.id)
         dev.file_list = existing_files
+        session.commit()
+
+
+def _record_scan(trigger: str, user_id: int | None = None) -> None:
+    """Upsert the last-run marker for this scope, so the UI/CLI can show it."""
+    scope = WishlistScan.scope_for(user_id)
+    now = datetime.now(tz=timezone.utc)
+    with SyncSession() as session:
+        scan = session.get(WishlistScan, scope)
+        if scan is None:
+            session.add(WishlistScan(scope=scope, trigger=trigger, ran_at=now))
+        else:
+            scan.trigger = trigger
+            scan.ran_at = now
         session.commit()
 
 
@@ -148,6 +163,8 @@ def scan_user_wishlist(user_id: int) -> None:
     with allow_join_result():
         outcomes = [o for o in job.apply_async().get() if o]
 
+    _record_scan("manual", user_id=user_id)
+
     if not outcomes:
         return
 
@@ -165,6 +182,8 @@ def scan_all_wishlist():
     job = group(try_download_wishlist_item.s(item_id) for item_id in item_ids)
     with allow_join_result():
         outcomes = job.apply_async().get()
+
+    _record_scan("scheduled")
 
     user_outcomes: dict[str, list[dict]] = {}
     for outcome in outcomes:

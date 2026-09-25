@@ -200,3 +200,12 @@ class WishlistItemData(BaseData):
     device_name: str
     torrent_type: str
     created_at: str
+
+
+class WishlistLastScanData(BaseData):
+    ran_at: str
+    trigger: str
+
+
+class WishlistResponseMeta(BaseData):
+    last_scan: WishlistLastScanData | None

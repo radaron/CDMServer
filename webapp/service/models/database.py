@@ -25,6 +25,7 @@ __all__ = [
     "RefreshSession",
     "User",
     "Wishlist",
+    "WishlistScan",
     "get_session",
     "init_db",
     "user_device_association",
@@ -133,3 +134,21 @@ class Wishlist(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(tz=timezone.utc))
     user: Mapped["User"] = relationship("User")
     device: Mapped["Device"] = relationship("Device")
+
+
+class WishlistScan(Base):
+    """Last finished wishlist availability scan, one row per scope.
+
+    ``scope`` is ``"all"`` for the scheduled scan that covers every user, and
+    ``"user:<id>"`` for a scan a user started manually. Rows are upserted, so
+    the table only ever holds the most recent run per scope.
+    """
+
+    __tablename__ = "wishlist_scans"
+    scope: Mapped[str] = mapped_column(String(32), primary_key=True)
+    trigger = Column(String(16), nullable=False)
+    ran_at = Column(DateTime, nullable=False)
+
+    @staticmethod
+    def scope_for(user_id: int | None) -> str:
+        return "all" if user_id is None else f"user:{user_id}"

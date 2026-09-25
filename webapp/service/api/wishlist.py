@@ -5,12 +5,18 @@ from sqlalchemy.orm import selectinload
 
 from service.constant import MOVIE_TORRENT_TYPES
 from service.core.tmdb_service import get_english_title
-from service.models.api import AddWishlistData, WishlistItemData
+from service.models.api import (
+    AddWishlistData,
+    WishlistItemData,
+    WishlistLastScanData,
+    WishlistResponseMeta,
+)
 from service.models.database import (
     AsyncSession,
     Device,
     User,
     Wishlist,
+    WishlistScan,
     get_session,
     user_device_association,
 )
@@ -38,8 +44,30 @@ async def get_wishlist(
         .order_by(Wishlist.created_at.desc())
     )
     items = result.scalars().all()
+
+    last_scan = (
+        await session.execute(
+            select(WishlistScan)
+            .where(
+                WishlistScan.scope.in_(
+                    [WishlistScan.scope_for(None), WishlistScan.scope_for(user.id)]
+                )
+            )
+            .order_by(WishlistScan.ran_at.desc())
+            .limit(1)
+        )
+    ).scalar_one_or_none()
+    meta = WishlistResponseMeta(
+        last_scan=WishlistLastScanData(
+            ran_at=utc_isoformat(last_scan.ran_at), trigger=last_scan.trigger
+        )
+        if last_scan
+        else None
+    )
+
     return JSONResponse(
         {
+            "meta": meta.model_dump(),
             "data": [
                 WishlistItemData(
                     id=item.id,
@@ -51,7 +79,7 @@ async def get_wishlist(
                     created_at=utc_isoformat(item.created_at),
                 ).model_dump()
                 for item in items
-            ]
+            ],
         }
     )
 

@@ -250,7 +250,7 @@ requires-dist = [
 
 [[package]]
 name = "cdmctl"
-version = "1.5.6"
+version = "1.6.0"
 source = { editable = "cli" }
 dependencies = [
     { name = "httpx" },
@@ -267,7 +267,7 @@ requires-dist = [
 
 [[package]]
 name = "cdmserver"
-version = "3.5.7"
+version = "3.6.0"
 source = { virtual = "webapp" }
 dependencies = [
     { name = "aiohttp" },

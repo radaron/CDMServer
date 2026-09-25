@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import math
+import sys
 from datetime import datetime
 from importlib.metadata import version as _pkg_version
 from typing import Annotated, Never, Optional
@@ -44,15 +46,54 @@ err = Console(stderr=True)
 BANNER = "[dim]CDM Server CLI[/dim]"
 
 
+class _State:
+    json: bool = False
+
+
+state = _State()
+
+
+@app.callback()
+def main(
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Print machine-readable JSON to stdout instead of tables. "
+            "Must come before the subcommand, "
+            "e.g. [bold]cdm --json wishlist list[/bold].",
+        ),
+    ] = False,
+) -> None:
+    """CDM Server CLI"""
+    state.json = json_output
+
+
+def _emit_json(data: object) -> None:
+    sys.stdout.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+
+
+def _plain(msg: str) -> str:
+    return Text.from_markup(msg).plain
+
+
 def _banner() -> None:
+    if state.json:
+        return
     out.print(Panel(BANNER, border_style="cyan", padding=(0, 2)), height=3)
 
 
 def _ok(msg: str) -> None:
+    if state.json:
+        _emit_json({"ok": True, "message": _plain(msg)})
+        return
     err.print(f"[bold green]✓[/bold green] {msg}")
 
 
 def _fail(msg: str, code: int = 1) -> Never:
+    if state.json:
+        sys.stderr.write(json.dumps({"ok": False, "message": _plain(msg)}) + "\n")
+        raise SystemExit(code)
     err.print(f"[bold red]✗[/bold red] {msg}")
     raise SystemExit(code)
 
@@ -90,17 +131,14 @@ def _status_color(status: str) -> str:
     return "yellow"
 
 
-# ─── Version ─────────────────────────────────────────────────────────────────
-
-
 @app.command()
 def version() -> None:
     """Show the CLI version."""
     ver = _pkg_version("cdmctl")
+    if state.json:
+        _emit_json({"version": ver})
+        return
     out.print(f"[bold cyan]cdm[/bold cyan] [bold]{ver}[/bold]")
-
-
-# ─── Auth ────────────────────────────────────────────────────────────────────
 
 
 @app.command()
@@ -162,6 +200,9 @@ def whoami() -> None:
     if resp.status_code != 200:
         _fail(f"Failed ({resp.status_code})")
     d = resp.json()
+    if state.json:
+        _emit_json(d)
+        return
     admin_str = "[green]yes[/green]" if d.get("isAdmin") else "[dim]no[/dim]"
     ncore_str = (
         "[green]set[/green]" if d.get("isNcoreCredentialSet") else "[dim]not set[/dim]"
@@ -178,9 +219,6 @@ def whoami() -> None:
     out.print(panel)
 
 
-# ─── Users ────────────────────────────────────────────────────────────────────
-
-
 @users_app.command("list")
 def users_list() -> None:
     """List all users (admin only)."""
@@ -192,6 +230,9 @@ def users_list() -> None:
         _fail(f"Failed ({resp.status_code})")
 
     users = resp.json()["data"]["users"]
+    if state.json:
+        _emit_json(users)
+        return
     t = Table(box=box.ROUNDED, border_style="cyan", header_style="bold cyan")
     t.add_column("ID", style="dim", width=6)
     t.add_column("Name")
@@ -294,9 +335,6 @@ def users_me(
         _fail(f"Failed: {resp.json().get('message', resp.status_code)}")
 
 
-# ─── Devices ─────────────────────────────────────────────────────────────────
-
-
 @devices_app.command("list")
 def devices_list() -> None:
     """List all devices."""
@@ -306,6 +344,9 @@ def devices_list() -> None:
         _fail(f"Failed ({resp.status_code})")
 
     devices = resp.json()["data"]["devices"]
+    if state.json:
+        _emit_json(devices)
+        return
     if not devices:
         out.print("[dim]No devices.[/dim]")
         return
@@ -361,6 +402,11 @@ def devices_token(
     device = next((d for d in devices if d["id"] == device_id), None)
     if not device:
         _fail(f"Device {device_id} not found")
+    if state.json:
+        _emit_json(
+            {"id": device["id"], "name": device["name"], "token": device["token"]}
+        )
+        return
     out.print(
         Panel(
             f"[bold yellow]{device['token']}[/bold yellow]",
@@ -369,9 +415,6 @@ def devices_token(
             padding=(0, 2),
         )
     )
-
-
-# ─── Status ──────────────────────────────────────────────────────────────────
 
 
 @status_app.callback(invoke_without_command=True)
@@ -386,6 +429,9 @@ def status_default(
     resp = c.get("/api/devices/")
     devices = resp.json()["data"]["devices"]
     if not devices:
+        if state.json:
+            _emit_json({"deviceId": None, "deviceName": None, "torrents": []})
+            return
         out.print("[dim]No devices.[/dim]")
         return
 
@@ -399,6 +445,11 @@ def status_default(
         _fail(f"Failed ({resp.status_code})")
 
     torrents = resp.json()["data"]["torrents"]
+    if state.json:
+        _emit_json(
+            {"deviceId": device_id, "deviceName": device_name, "torrents": torrents}
+        )
+        return
     if not torrents:
         out.print(f"[dim]No active downloads on [bold]{device_name}[/bold].[/dim]")
         return
@@ -507,9 +558,6 @@ def status_clean(
     _send_instruction(c, resolved, "clean", paths=paths)
 
 
-# ─── Search / Download ───────────────────────────────────────────────────────
-
-
 @app.command()
 def search(
     pattern: Annotated[str, typer.Option("--pattern", "-p", prompt=True)],
@@ -534,6 +582,9 @@ def search(
     torrents = data["data"]["torrents"]
     total_pages = data["meta"]["totalPages"]
 
+    if state.json:
+        _emit_json({"page": page, "totalPages": total_pages, "torrents": torrents})
+        return
     if not torrents:
         out.print("[dim]No results.[/dim]")
         return
@@ -589,9 +640,6 @@ def download(
         _fail(f"Failed ({resp.status_code})")
 
 
-# ─── TMDB ────────────────────────────────────────────────────────────────────
-
-
 def _print_tmdb_table(items: list, title: str) -> None:
     if not items:
         out.print(f"[dim]No {title.lower()}.[/dim]")
@@ -637,6 +685,9 @@ def tmdb_search(
         _fail(f"Failed ({resp.status_code})")
     data = resp.json()
     total = data["meta"]["totalPages"]
+    if state.json:
+        _emit_json({"page": page, "totalPages": total, "results": data["data"]})
+        return
     _print_tmdb_table(data["data"], f"TMDB: {pattern} (page {page}/{total})")
 
 
@@ -648,12 +699,12 @@ def tmdb_popular(language: Annotated[str, typer.Option("--lang", "-l")] = "en") 
     if resp.status_code != 200:
         _fail(f"Failed ({resp.status_code})")
     data = resp.json()["data"]
+    if state.json:
+        _emit_json(data)
+        return
     _print_tmdb_table(data["movies"], "Popular Movies")
     out.print()
     _print_tmdb_table(data["tvs"], "Popular Series")
-
-
-# ─── Wishlist ─────────────────────────────────────────────────────────────────
 
 
 @wishlist_app.command("list")
@@ -664,7 +715,22 @@ def wishlist_list() -> None:
     if resp.status_code != 200:
         _fail(f"Failed ({resp.status_code})")
 
-    items = resp.json()["data"]
+    body = resp.json()
+    items = body["data"]
+    last_scan = body.get("meta", {}).get("lastScan")
+    if state.json:
+        _emit_json({"lastScan": last_scan, "items": items})
+        return
+
+    if last_scan:
+        out.print(
+            f"[dim]Last availability check:[/dim] "
+            f"{_format_local_datetime(last_scan['ranAt'])} "
+            f"[dim]({last_scan['trigger']})[/dim]"
+        )
+    else:
+        out.print("[dim]Availability has not been checked yet.[/dim]")
+
     if not items:
         out.print("[dim]Wishlist is empty.[/dim]")
         return
@@ -696,6 +762,9 @@ def wishlist_types() -> None:
     if resp.status_code != 200:
         _fail(f"Failed ({resp.status_code})")
     types = resp.json()["data"]
+    if state.json:
+        _emit_json(types)
+        return
     for t in types:
         out.print(f"  [bold cyan]{t}[/bold cyan]")
 

@@ -34,6 +34,18 @@ cdm download --torrent-id 12345 --device-id 1
 
 Run `cdm <command> --help` for options.
 
+### JSON output
+
+Pass the global `--json` flag **before** the subcommand to get machine-readable
+output on stdout (tables and colors are suppressed). Read commands print the
+data as-is; mutating commands print `{"ok": true|false, "message": "..."}`.
+
+```bash
+cdm --json wishlist list | jq '.items[].title'
+cdm --json status --device 1 | jq '.torrents | length'
+cdm --json devices list
+```
+
 ### Wishlist
 
 Add movies by IMDB ID; the server retries weekly until the torrent appears on nCore.
@@ -41,6 +53,7 @@ Add movies by IMDB ID; the server retries weekly until the torrent appears on nC
 ```bash
 cdm wishlist types                                              # list quality types
 cdm wishlist add --imdb-id tt1375666 --device-id 1 --type hd_hun
-cdm wishlist list
+cdm wishlist list                                               # also shows last availability check
+cdm wishlist start                                              # re-check every item now
 cdm wishlist delete --item-id 3
 ```
