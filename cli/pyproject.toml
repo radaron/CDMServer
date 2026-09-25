@@ -1,6 +1,6 @@
 [project]
 name = "cdmctl"
-version = "1.6.0"
+version = "1.6.1"
 description = "CDM - Centralized Download Manager CLI"
 authors = [{name = "Aron Radics", email = "radaron@radaron.hu"}]
 requires-python = ">=3.11"

@@ -8,6 +8,9 @@ on:
     paths:
       - 'client/pyproject.toml'
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
